@@ -27,6 +27,7 @@
  
 #include <Arduino.h>
 #include "scheduler.h"
+#include "recourses/util.h"
  
 uint8_t pulse1_pin = 3;
 uint8_t pulse2_pin = 4;

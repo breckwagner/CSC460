@@ -28,7 +28,7 @@
 #include <Arduino.h>
 #include <Servo.h>
 #include "scheduler.h"
-#include "util.h"
+#include "recourses/util.h"
  
 uint8_t laser_pin = 23;
 uint8_t servo_pin = 22;
