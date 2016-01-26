@@ -26,66 +26,78 @@
  */
  
 #include <Arduino.h>
+#include <Servo.h>
 #include "scheduler.h"
+#include "util.h"
  
-uint8_t pulse1_pin = 3;
-uint8_t pulse2_pin = 4;
-uint8_t idle_pin = 7;
+uint8_t laser_pin = 23;
+uint8_t servo_pin = 22;
+bool laser_state = false;
+char serial_buffer;
 
-bool abc = true;
-bool abcd = true;
- 
-// task function for PulsePin task
-void pulse_pin1_task()
-{
-  if(abc=!abc) digitalWrite(pulse1_pin, HIGH);
-  //else digitalWrite(pulse1_pin, LOW);
-  delay(50);
-}
- 
-// task function for PulsePin task
-void pulse_pin2_task()
-{
-  if(abcd=!abcd) digitalWrite(pulse2_pin, HIGH);
-  //else digitalWrite(pulse2_pin, LOW);
-  delay(50);
+
+
+
+
+
+Servo servo_x;
+int servoVal;
+int theta;
+
+int photoCellReading;         
+
+void pole_serial () {
+    if(Serial1.available()) {
+        serial_buffer = Serial1.read();
+        if(serial_buffer == 0x30){ // This is '0'
+          digitalWrite(laser_pin, LOW);
+          Serial1.println("LASER_LOW");
+        } else if (serial_buffer == 0x31) {
+          digitalWrite(laser_pin, HIGH);
+          Serial1.println("LASER_HIGH");
+        } else if (serial_buffer == 's') {
+          if(Serial1.available()) 
+            theta = Serial1.parseInt();
+            //theta = int(0x03 & serial_buffer);
+            //serial_buffer = Serial.read();
+            //theta = theta + (serial_buffer << 2);
+
+            
+            Serial1.println(theta);
+          
+        }
+
+        
+    }
 }
  
 // idle task
-void idle(uint32_t idle_period)
-{
-	// this function can perform some low-priority task while the scheduler has nothing to run.
-	// It should return before the idle period (measured in ms) has expired.  For example, it
-	// could sleep or respond to I/O.
+void idle(uint32_t idle_period) {}
  
-	// example idle function that just pulses a pin.
-	digitalWrite(idle_pin, HIGH);
-	delay(idle_period);
-	digitalWrite(idle_pin, LOW);
+void setup() {
+    // Setup Servo
+    servo_x.attach(servo_pin);
+    servo_x.writeMicroseconds(SERVO_CENTER);
+    delay(15);
+    
+    // Setup Laser
+    pinMode(laser_pin, OUTPUT);
+    digitalWrite(laser_pin, LOW);
+    
+    // Setup Bluetooth
+    Serial.begin(9600);
+    Serial1.begin(9600);
+    
+    // Setup Scheduler
+    Scheduler_Init();
+    Scheduler_StartTask(0, 10, pole_serial);
 }
  
-void setup()
-{
-	pinMode(pulse1_pin, OUTPUT);
-	pinMode(pulse2_pin, OUTPUT);
-	pinMode(idle_pin, OUTPUT);
- 
-	Scheduler_Init();
- 
-	// Start task arguments are:
-	//		start offset in ms, period in ms, function callback
- 
-	Scheduler_StartTask(0, 500, pulse_pin1_task);
-	Scheduler_StartTask(0, 300, pulse_pin2_task);
-}
- 
-void loop()
-{
-	uint32_t idle_period = Scheduler_Dispatch();
-	if (idle_period)
-	{
-		idle(idle_period);
-	}
+void loop() {
+    uint32_t idle_period = Scheduler_Dispatch();
+    if (idle_period) {
+    	  idle(idle_period);
+    }
 }
  
 
