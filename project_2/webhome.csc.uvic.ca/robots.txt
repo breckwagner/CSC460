@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /~mcheng/100
+Disallow: /~mcheng/samples
