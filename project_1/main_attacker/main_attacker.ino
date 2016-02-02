@@ -28,12 +28,12 @@
 #include <Arduino.h>
 #include <Servo.h>
 #include "scheduler.h"
-#include "recourses/util.h"
+//#include "recourses/util.h"
  
 uint8_t laser_pin = 23;
 uint8_t servo_pin = 22;
 bool laser_state = false;
-char serial_buffer;
+int serial_buffer;
 
 
 
@@ -47,6 +47,20 @@ int theta;
 int photoCellReading;         
 
 void pole_serial () {
+  if(Serial1.available()) {
+    serial_buffer = Serial1.read();
+    laser_state = ((serial_buffer & 0x80) ==  0x80);
+    servoVal = (serial_buffer & 0x7F);
+    Serial.println(serial_buffer);
+    servo_x.writeMicroseconds(map(servoVal, 0, 127, 1000, 2000));
+    digitalWrite(laser_pin, (laser_state?HIGH:LOW));
+  }
+
+
+// (laserstate << 7) & map(serval,0,1023,0,127)
+
+  
+  /*
     if(Serial1.available()) {
         serial_buffer = Serial1.read();
         if(serial_buffer == 0x30){ // This is '0'
@@ -68,7 +82,7 @@ void pole_serial () {
         }
 
         
-    }
+    }*/
 }
  
 // idle task
@@ -77,7 +91,7 @@ void idle(uint32_t idle_period) {}
 void setup() {
     // Setup Servo
     servo_x.attach(servo_pin);
-    servo_x.writeMicroseconds(SERVO_CENTER);
+   // servo_x.writeMicroseconds(SERVO_CENTER);
     delay(15);
     
     // Setup Laser
