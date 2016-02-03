@@ -63,9 +63,11 @@ void sendState() {
 /**
  * 
  */
-void isHit(){
-  if (analogRead(photoCellPin) > 600) {   //this value was chosen after reading the examples by AdaFruit, anything less than this is too dark to be the lazer
-    targetHit();                  //add status for target missed 
+void whileHit(){
+  if (isHit()) {
+    targetHit();
+  } else if(laserState) {
+  //  missed_target();
   }
  /* static byte i = 0;
   static int reading[20];
@@ -81,13 +83,16 @@ void isHit(){
   */
 }
 
+bool isHit() {
+  return (analogRead(photoCellPin) > 800);
+}
+
 void missed_target() {
-  if ((laserState == HIGH) && (photoCellReading < 800) ){
+  if ((laserState) && (!isHit()) ){
     lcd.setCursor(0,1);
     lcd.print("                ");
     lcd.setCursor(0,1);
     lcd.print("Missed Target");  
-   
   }
 }
 
@@ -98,13 +103,27 @@ void clear_bottom_row(){
 
 //the seonsor has detected the laser's light
 void targetHit(){
-  clear_bottom_row();
-  lcd.setCursor(0,1);
-  lcd.print("Target is hit");
-  lcd.setBacklight(LOW);      // Backlight off
-  delay(100);
-  lcd.setBacklight(HIGH);     // Backlight on
-  delay(100);
+
+  static bool hit = true;
+  static bool toggle = false;
+  static int time_delay = millis();
+
+  if (hit=isHit()) {
+    clear_bottom_row();
+    lcd.setCursor(0,1);
+    lcd.print("Target is hit");
+  } else {
+    toggle = false;
+  }
+  
+  if (millis() - time_delay > 100) {
+    if (toggle=!toggle) {
+      lcd.setBacklight(LOW);
+    } else {
+      lcd.setBacklight(HIGH);
+    }
+    time_delay = millis();
+  }
 }
 
 
@@ -132,16 +151,17 @@ void setup() {
   lcd.print("x:");
   
 
-  pinMode(SW_pin, INPUT);     //joystick button
+  pinMode(SW_pin, INPUT_PULLUP);     //joystick button
+  
   Serial1.begin(9600);
 
  
 	Scheduler_Init();
- // Scheduler_StartTask(0, 10, isHit);
+  Scheduler_StartTask(0, 10, whileHit);
   Scheduler_StartTask(0, 10, sendState);
  // Scheduler_StartTask(0, 10, missed_target);
 
-  //attachInterrupt(digitalPinToInterrupt(SW_pin), fire_laser, CHANGE);
+  //attachInterrupt(digitalPinToInterrupt(SW_pin), whileHit, CHANGE);
   //Scheduler_StartTask(0, 2, clear_bottom_row); 
  
 }
