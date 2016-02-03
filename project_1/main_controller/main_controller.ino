@@ -1,7 +1,7 @@
 
 #include <Arduino.h>
 #include "scheduler.h"
-#include "util.h"
+#include "assets/util.h"
 
 #include <Wire.h>
 #include <LCD.h>
@@ -64,36 +64,36 @@ void sendState() {
  * 
  */
 void whileHit(){
-  if (isHit()) {
-    targetHit();
-  } else if(laserState) {
-  //  missed_target();
+  static bool last_hit_state = false;
+  static bool last_laser_state = false;
+  bool hit = isHit();
+  
+  if (hit) {
+    targetHit(hit, last_hit_state);
   }
- /* static byte i = 0;
-  static int reading[20];
-  int avg = (int)mean(reading[5]);
+  else if (!hit && last_hit_state) {
+    lcd.setBacklight(HIGH);
+    clear_bottom_row();
+  } else if (laserState && !last_laser_state) {
+      printLaserState();
+  } else if (!laserState && last_laser_state) {
+      clear_bottom_row();
+  }
 
-  
-  
-  photoCellReading = analogRead(photoCellPin);  //take in reading from the light sensor
-  reading[i%20] = photoCellReading;
-  if (photoCellReading > avg) {   //this value was chosen after reading the examples by AdaFruit, anything less than this is too dark to be the lazer
-    targetHit();                  //add status for target missed 
-  }
-  */
+  last_laser_state = laserState;
+  last_hit_state = hit;
 }
 
 bool isHit() {
   return (analogRead(photoCellPin) > 800);
 }
 
-void missed_target() {
-  if ((laserState) && (!isHit()) ){
-    lcd.setCursor(0,1);
-    lcd.print("                ");
+void printLaserState() {
+  //if ((laserState) && (!tmp_hit) ){
+    clear_bottom_row();
     lcd.setCursor(0,1);
     lcd.print("Missed Target");  
-  }
+  //} 
 }
 
 void clear_bottom_row(){
@@ -102,18 +102,16 @@ void clear_bottom_row(){
 }
 
 //the seonsor has detected the laser's light
-void targetHit(){
+void targetHit(bool hit_state, bool last_hit_state){
 
-  static bool hit = true;
   static bool toggle = false;
-  static int time_delay = millis();
-
-  if (hit=isHit()) {
+  static long time_delay = millis();
+  
+  if (!last_hit_state && hit_state) {
+  //if (tmp_hit){
     clear_bottom_row();
     lcd.setCursor(0,1);
-    lcd.print("Target is hit");
-  } else {
-    toggle = false;
+    lcd.print("HIT");
   }
   
   if (millis() - time_delay > 100) {
@@ -125,6 +123,7 @@ void targetHit(){
     time_delay = millis();
   }
 }
+
 
 
 // idle task
@@ -158,8 +157,9 @@ void setup() {
  
 	Scheduler_Init();
   Scheduler_StartTask(0, 10, whileHit);
+  //Scheduler_StartTask(0, 10, targetHit);
   Scheduler_StartTask(0, 10, sendState);
- // Scheduler_StartTask(0, 10, missed_target);
+  //Scheduler_StartTask(0, 10, missed_target);
 
   //attachInterrupt(digitalPinToInterrupt(SW_pin), whileHit, CHANGE);
   //Scheduler_StartTask(0, 2, clear_bottom_row); 
