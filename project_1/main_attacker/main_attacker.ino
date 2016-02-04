@@ -12,6 +12,8 @@
 #include "scheduler.h"
 #include "util.h"
 
+#define DEBUG true
+
 // pin number on the Arduino ATMEGA2560 used for the laser
 uint8_t laserPin = 23;
 
@@ -38,6 +40,9 @@ int8_t servoVelocity = 0;
  * @return (void)
  */
 void pole_serial () {
+  #ifdef DEBUG
+    digitalWrite(2, HIGH);
+  #endif
   if(Serial1.available()) {
     // A byte used to read from the serial buffer highest order bit encodes 
     // laser and the next 7 bits encode the servo acceleration
@@ -57,6 +62,10 @@ void pole_serial () {
     
     
     update_actuator_states();
+
+    #ifdef DEBUG
+      digitalWrite(2, LOW);
+    #endif
   }
 }
 
@@ -92,6 +101,10 @@ void setup() {
   servo_x.attach(servoPin);
   servo_x.writeMicroseconds(servoValue);
   delay(15);
+  #ifdef DEBUG
+  pinMode(2,OUTPUT);
+  pinMode(3,OUTPUT);
+  #endif
 
   // Setup Laser
   pinMode(laserPin, OUTPUT);

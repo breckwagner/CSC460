@@ -1,7 +1,7 @@
 
 #include <Arduino.h>
 #include "scheduler.h"
-#include "assets/util.h"
+#include "util.h"
 
 #include <Wire.h>
 #include <LCD.h>
@@ -17,6 +17,8 @@
 #define D5_pin  5
 #define D6_pin  6
 #define D7_pin  7
+
+#define DEBUG true
 
 LiquidCrystal_I2C  lcd(I2C_ADDR,En_pin,Rw_pin,Rs_pin,D4_pin,D5_pin,D6_pin,D7_pin);
 
@@ -37,12 +39,18 @@ byte laserState = false;           //initally the laser should be OFF
 int lastValue = 0;
 int lastLaserState = laserState;
 
+int ambiantLightConstant;
+
 
 
 /**
  * Sends a Byte of data with the the PS2 stae and push button state
  */
 void sendState() {
+  #ifdef DEBUG
+    digitalWrite(3, HIGH);
+  #endif
+  
   byte encode;
   laserState = !digitalRead(SW_pin);
   servoVal = analogRead(X_pin); 
@@ -57,6 +65,10 @@ void sendState() {
   lcd.print(servoVal);
   lastValue = servoVal;
   lastLaserState = laserState;
+  
+  #ifdef DEBUG
+    digitalWrite(3, LOW);
+  #endif
 }
 
 
@@ -64,6 +76,9 @@ void sendState() {
  * 
  */
 void whileHit(){
+  #ifdef DEBUG
+    digitalWrite(4, HIGH);
+  #endif
   static bool last_hit_state = false;
   static bool last_laser_state = false;
   bool hit = isHit();
@@ -82,10 +97,15 @@ void whileHit(){
 
   last_laser_state = laserState;
   last_hit_state = hit;
+
+  #ifdef DEBUG
+    digitalWrite(4, LOW);
+  #endif
 }
 
 bool isHit() {
-  return (analogRead(photoCellPin) > 800);
+  
+  return (analogRead(photoCellPin) > ambiantLightConstant);
 }
 
 void printLaserState() {
@@ -152,17 +172,20 @@ void setup() {
 
   pinMode(SW_pin, INPUT_PULLUP);     //joystick button
   
+  #ifdef DEBUG
+  pinMode(3,OUTPUT);
+  pinMode(4,OUTPUT);
+  #endif
+  
+
+  ambiantLightConstant = analogRead(photoCellPin) + 20;
+  
   Serial1.begin(9600);
 
  
 	Scheduler_Init();
   Scheduler_StartTask(0, 10, whileHit);
-  //Scheduler_StartTask(0, 10, targetHit);
   Scheduler_StartTask(0, 10, sendState);
-  //Scheduler_StartTask(0, 10, missed_target);
-
-  //attachInterrupt(digitalPinToInterrupt(SW_pin), whileHit, CHANGE);
-  //Scheduler_StartTask(0, 2, clear_bottom_row); 
  
 }
  
