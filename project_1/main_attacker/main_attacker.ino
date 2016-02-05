@@ -31,6 +31,8 @@ uint16_t servoValue = SG91R_SERVO_CENTER;
 
 int8_t servoVelocity = 0;
 
+uint8_t previous_encoded_byte = 0;
+
 //int8_t servoAcceleration = 0;
 
 
@@ -43,30 +45,38 @@ void pole_serial () {
   #ifdef DEBUG
     digitalWrite(2, HIGH);
   #endif
+  
   if(Serial1.available()) {
     // A byte used to read from the serial buffer highest order bit encodes 
     // laser and the next 7 bits encode the servo acceleration
     uint8_t encoded_byte = Serial1.read();
 
     // Bitmask 10000000 over the recieved byte
-    laserState = ((encoded_byte & 0x80) ==  0x80);
+    laserState = (encoded_byte >> 7) & 0x01;
 
     // Bitmask 01111111 over the recieved byte
-    if ((encoded_byte & 0x7F) > 71 || (encoded_byte & 0x7F) < 55)
+    //if ((encoded_byte & 0x7F) > 71 || (encoded_byte & 0x7F) < 55)
+    if( (encoded_byte & 0x7F) != previous_encoded_byte)
       servoValue += map((encoded_byte & 0x7F), 0, 127, - SG91R_MAX_ACCELERATION, SG91R_MAX_ACCELERATION);
-    
+    else if ((previous_encoded_byte & 0x7F) > 71 || (previous_encoded_byte & 0x7F) < 55)
+      servoValue += map((previous_encoded_byte & 0x7F), 0, 127, - SG91R_MAX_ACCELERATION, SG91R_MAX_ACCELERATION);
     //servoVelocity += map((encoded_byte & 0x7F), 0, 127, - SG91R_MAX_ACCELERATION, SG91R_MAX_ACCELERATION);
     //if (abs(servoVelocity) > SG91R_MAX_SPEED) {
     //  servoVelocity = ((servoVelocity < 0)?-SG91R_MAX_SPEED:SG91R_MAX_SPEED);
     //}
     
     
-    update_actuator_states();
+    
 
-    #ifdef DEBUG
-      digitalWrite(2, LOW);
-    #endif
+
   }
+  update_actuator_states();
+
+  previous_encoded_byte = servoValue;
+  
+  #ifdef DEBUG
+    digitalWrite(2, LOW);
+  #endif
 }
 
 /** 
@@ -82,7 +92,7 @@ void update_actuator_states () {
     else if (servoValue > SG91R_SERVO_RIGHT) servoValue = SG91R_SERVO_RIGHT;
     
     servo_x.writeMicroseconds(servoValue);
-    digitalWrite(laserPin, (laserState?HIGH:LOW));
+    digitalWrite(laserPin, laserState);
 }
  
 /** 
@@ -91,6 +101,16 @@ void update_actuator_states () {
  */
 void idle(uint32_t idle_period) {
   
+}
+
+/**
+ * @param period in ms
+ * @return frequancy in Hz
+ * 
+ * Note: The number will be truncated not rounded because of the division
+ */
+long Period_MSToFrequancy_HZ(long period) {
+  return 1000/period;
 }
 
 /** 
@@ -111,12 +131,12 @@ void setup() {
   digitalWrite(laserPin, LOW);
 
   // Setup Bluetooth
-  Serial.begin(9600);
+  // Serial.begin(9600);
   Serial1.begin(9600);
   
   // Setup Scheduler
   Scheduler_Init();
-  Scheduler_StartTask(0, 10, pole_serial);
+  Scheduler_StartTask(0, 50, pole_serial);
 }
 
 /** 

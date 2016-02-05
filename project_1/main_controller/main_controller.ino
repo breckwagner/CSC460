@@ -38,7 +38,7 @@ byte laserState = false;           //initally the laser should be OFF
 
 int lastValue = 0;
 int lastLaserState = laserState;
-
+byte lastEncodeState = 0;
 int ambiantLightConstant;
 
 
@@ -51,18 +51,27 @@ void sendState() {
     digitalWrite(3, HIGH);
   #endif
   
-  byte encode;
-  laserState = !digitalRead(SW_pin);
+  byte encode = 0;
+  laserState = !digitalRead(SW_pin); 
+  encode += (laserState << 7);
+  
   servoVal = analogRead(X_pin); 
-  //if((laserState != lastLaserState) || (servoVal != lastValue)){
-     encode = ((laserState << 7) + map(servoVal,0,1023,0,127));
-    Serial1.write(encode);  
+  //if(servoVal != lastValue){
+    encode += map(servoVal,0,1023,0,127);
   //}
+  Serial1.write(encode);
+  
+  if ((encode & 0xFC) != (lastEncodeState & 0xFC)) {
+    
+    lcd.setCursor(15,0);
+    lcd.print(" ");
+    lcd.setCursor(12,0);
+    lcd.print(servoVal);
+  }
 
-  lcd.setCursor(15,0);
-  lcd.print(" ");
-  lcd.setCursor(12,0);
-  lcd.print(servoVal);
+  
+
+  lastEncodeState = encode;
   lastValue = servoVal;
   lastLaserState = laserState;
   
@@ -152,6 +161,16 @@ void idle(uint32_t idle_period)
 	// this function can perform some low-priority task while the scheduler has nothing to run.
 	// It should return before the idle period (measured in ms) has expired.  For example, it
 	// could sleep or respond to I/O.
+}
+
+/**
+ * @param period in ms
+ * @return frequancy in Hz
+ * 
+ * Note: The number will be truncated not rounded because of the division
+ */
+long Frequancy_HZToPeriod_MS(long period) {
+  return 1000/period;
 }
  
 void setup() {
