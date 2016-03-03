@@ -1,0 +1,209 @@
+   1               	# 1 "cswitch.S"
+   1               	
+   0               	
+   2               	// locations of well-known registers
+   3               	SREG   = 0x3F
+   4               	SPH    = 0x3E
+   5               	SPL    = 0x3D
+   6               	EIND   = 0X3C
+   7               	
+   8               	/*
+   9               	  * MACROS
+  10               	  */
+  11               	;
+  12               	; Push all registers and then the status register.
+  13               	; It is important to keep the order of SAVECTX and RESTORECTX  exactly
+  14               	; in reverse. Also, when a new process is created, it is important to
+  15               	; initialize its "initial" context in the same order as SAVECTX.
+  16               	;
+  17               	.macro	SAVECTX
+  18               		push	r0
+  19               		push	r1
+  20               		push	r2
+  21               		push	r3
+  22               		push	r4
+  23               		push	r5
+  24               		push	r6
+  25               		push	r7
+  26               		push	r8
+  27               		push	r9
+  28               		push	r10
+  29               		push	r11
+  30               		push	r12
+  31               		push	r13
+  32               		push	r14
+  33               		push	r15
+  34               		push	r16
+  35               		push	r17
+  36               		push	r18
+  37               		push	r19
+  38               		push	r20
+  39               		push	r21
+  40               		push	r22
+  41               		push	r23
+  42               		push	r24
+  43               		push	r25
+  44               		push	r26
+  45               		push	r27
+  46               		push	r28
+  47               		push	r29
+  48               		push	r30
+  49               		push	r31
+  50               	
+  51               	  in r16, EIND
+  52               	  push    r16
+  53               	  in r16, SREG
+  54               	  push    r16
+  55               	.endm
+  56               	;
+  57               	; Pop all registers and the status registers
+  58               	;
+  59               	.macro	RESTORECTX
+  60               	  pop r31
+  61               	  out SREG,r31
+  62               	  pop r31
+  63               	  out EIND,r31
+  64               	
+  65               		pop	r31
+  66               		pop	r30
+  67               		pop	r29
+  68               		pop	r28
+  69               		pop	r27
+  70               		pop	r26
+  71               		pop	r25
+  72               		pop	r24
+  73               		pop	r23
+  74               		pop	r22
+  75               		pop	r21
+  76               		pop	r20
+  77               		pop	r19
+  78               		pop	r18
+  79               		pop	r17
+  80               		pop	r16
+  81               		pop	r15
+  82               		pop	r14
+  83               		pop	r13
+  84               		pop	r12
+  85               		pop	r11
+  86               		pop	r10
+  87               		pop	r9
+  88               		pop	r8
+  89               		pop	r7
+  90               		pop	r6
+  91               		pop	r5
+  92               		pop	r4
+  93               		pop	r3
+  94               		pop	r2
+  95               		pop	r1
+  96               		pop	r0
+  97               	.endm
+  98               	
+  99               	        .section .text
+ 100               	        .global CSwitch
+ 101               	        .global Exit_Kernel
+ 102               	        .global Enter_Kernel
+ 103               	        .extern  KernelSp
+ 104               	        .extern  CurrentSp
+ 105               	/*
+ 106               	  * The actual CSwitch() code begins here.
+ 107               	  *
+ 108               	  * This function is called by the kernel. Upon entry, we are using
+ 109               	  * the kernel stack, on top of which contains the return address
+ 110               	  * of the call to CSwitch() (or Exit_Kernel()).
+ 111               	  *
+ 112               	  * Assumption: Our kernel is executed with interrupts already disabled.
+ 113               	  *
+ 114               	  * Note: AVR devices use LITTLE endian format, i.e., a 16-bit value starts
+ 115               	  * with the lower-order byte first, then the higher-order byte.
+ 116               	  *
+ 117               	  * void CSwitch();
+ 118               	  * void Exit_Kernel();
+ 119               	  */
+ 120               	CSwitch:
+ 121               	Exit_Kernel:
+ 122               	        /*
+ 123               	          * This is the "top" half of CSwitch(), generally called by the kernel.
+ 124               	          * Assume I = 0, i.e., all interrupts are disabled.
+ 125               	          */
+ 126:cswitch.S     ****         SAVECTX
+ 127               	        /*
+ 128               	          * Now, we have saved the kernel's context.
+ 129               	          * Save the current H/W stack pointer into KernelSp.
+ 130               	          */
+ 131:cswitch.S     ****         in   r30, SPL
+ 132:cswitch.S     ****         in   r31, SPH
+ 133:cswitch.S     ****         sts  KernelSp, r30
+ 134:cswitch.S     ****         sts  KernelSp+1, r31
+ 135               	        /*
+ 136               	          * We are now ready to restore Cp's context, i.e.,
+ 137               	          * switching the H/W stack pointer to CurrentSp.
+ 138               	          */
+ 139:cswitch.S     ****         lds  r30, CurrentSp
+ 140:cswitch.S     ****         lds  r31, CurrentSp+1
+ 141:cswitch.S     ****         out  SPL, r30
+ 142:cswitch.S     ****         out  SPH, r31
+ 143               	        /*
+ 144               	          * We are now executing in Cp's stack.
+ 145               	          * Note: at the bottom of the Cp's context is its return address.
+ 146               	          */
+ 147:cswitch.S     ****         RESTORECTX
+ 148:cswitch.S     ****         reti         /* re-enable all global interrupts */
+ 149               	/*
+ 150               	  * All system call eventually enters here!
+ 151               	  * There are two possibilities how we get here:
+ 152               	  *  1) Cp explicitly invokes one of the kernel API call stub, which indirectly
+ 153               	  *       invoke Enter_Kernel().
+ 154               	  *  2) a timer interrupt, which somehow "jumps" into here.
+ 155               	  * Let us consider case (1) first. You have to figure out how to deal with
+ 156               	  * timer interrupts yourself.
+ 157               	  *
+ 158               	  * Assumption: All interrupts are disabled upon entering here, and
+ 159               	  *     we are still executing on Cp's stack. The return address of
+ 160               	  *     the caller of Enter_Kernel() is on the top of the stack.
+ 161               	  *
+ 162               	  * void Enter_Kernel();
+ 163               	  */
+ 164               	Enter_Kernel:
+ 165               	        /*
+ 166               	          * This is the "bottom" half of CSwitch(). We are still executing in
+ 167               	          * Cp's context.
+ 168               	          */
+ 169:cswitch.S     ****         SAVECTX
+ 170               	        /*
+ 171               	          * Now, we have saved the Cp's context.
+ 172               	          * Save the current H/W stack pointer into CurrentSp.
+ 173               	          */
+ 174:cswitch.S     ****         in   r30, SPL
+ 175:cswitch.S     ****         in   r31, SPH
+ 176:cswitch.S     ****         sts  CurrentSp, r30
+ 177:cswitch.S     ****         sts  CurrentSp+1, r31
+ 178               	        /*
+ 179               	          * We are now ready to restore kernel's context, i.e.,
+ 180               	          * switching the H/W stack pointer back to KernelSp.
+ 181               	          */
+ 182:cswitch.S     ****         lds  r30, KernelSp
+ 183:cswitch.S     ****         lds  r31, KernelSp+1
+ 184:cswitch.S     ****         out  SPL, r30
+ 185:cswitch.S     ****         out  SPH, r31
+ 186               	        /*
+ 187               	          * We are now executing in kernel's stack.
+ 188               	          */
+ 189:cswitch.S     ****        RESTORECTX
+ 190               	        /*
+ 191               	          * We are ready to return to the caller of CSwitch() (or Exit_Kernel()).
+ 192               	          * Note: We should NOT re-enable interrupts while kernel is running.
+ 193               	          *         Therefore, we use "ret", and not "reti".
+ 194               	          */
+ 195:cswitch.S     ****        ret
+DEFINED SYMBOLS
+           cswitch.S:3      *ABS*:000000000000003f SREG
+           cswitch.S:4      *ABS*:000000000000003e SPH
+           cswitch.S:5      *ABS*:000000000000003d SPL
+           cswitch.S:6      *ABS*:000000000000003c EIND
+           cswitch.S:120    .text:0000000000000000 CSwitch
+           cswitch.S:121    .text:0000000000000000 Exit_Kernel
+           cswitch.S:164    .text:00000000000000aa Enter_Kernel
+
+UNDEFINED SYMBOLS
+KernelSp
+CurrentSp

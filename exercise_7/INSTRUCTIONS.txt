@@ -1,0 +1,19 @@
+Instructions
+NO ARDUINO LIBRARY CODE IS ALLOWED!
+
+This exercise is about learning how to implement context-switching in AVR.
+
+Download a copy of "Shared Library Approach to RTOS Design" from the folder
+"Resources/RTOS Sample Code". This piece of code doesn't work on ATMega2560,
+due to "17-bit" address problem. Please read the report by Mike Krazanowsk.
+
+If you don't understand the concept of context-switching, please read this
+online report on Context Switching on AVR by Nitin Goyal and Rayhan Rahman.
+
+Modify "shared.zip" so that it works. Create two tasks so that they can
+context-switch back and forth voluntarily; when one yields, the other runs,
+and so forth. Now, add your solution from Exercise 6 (i.e., a timer interrupt
+handler) into your code, so that the tasks switch involuntarily, once every
+10 mSec (100 Hz). This will be a rudimentary round-robin scheduler.
+
+Submit your C code and observations in the submission box.

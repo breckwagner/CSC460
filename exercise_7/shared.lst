@@ -1,0 +1,1219 @@
+   1               		.file	"shared.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__RAMPZ__ = 0x3b
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.Ltext0:
+  10               		.cfi_sections	.debug_frame
+  11               	.global	Ping
+  13               	Ping:
+  14               	.LFB14:
+  15               		.file 1 "shared.c"
+   1:shared.c      **** #include <string.h>
+   2:shared.c      **** #include <avr/io.h>
+   3:shared.c      **** #include <avr/interrupt.h>
+   4:shared.c      **** #include <avr/delay.h>
+   5:shared.c      **** 
+   6:shared.c      **** #define TICKS_PER_SECOND 100ul
+   7:shared.c      **** #define ONE_SECOND (TICKS_PER_SECOND)
+   8:shared.c      **** #define ONE_MINUTE (60ul * ONE_SECOND)
+   9:shared.c      **** #define ONE_HOUR (60ul * ONE_MINUTE)
+  10:shared.c      **** 
+  11:shared.c      **** volatile unsigned long elapsed = 0;
+  12:shared.c      **** 
+  13:shared.c      **** 
+  14:shared.c      **** /**
+  15:shared.c      ****  * \file shared.c
+  16:shared.c      ****  * \brief A Skeleton Implementation of an RTOS
+  17:shared.c      ****  *
+  18:shared.c      ****  * \mainpage A Skeleton Implementation of a "Self-Served" RTOS Model
+  19:shared.c      ****  * This is an example of how to implement context-switching based on a
+  20:shared.c      ****  * self-served model. That is, the RTOS is implemented by a collection of
+  21:shared.c      ****  * user-callable functions. The kernel executes its functions using the calling
+  22:shared.c      ****  * task's stack.
+  23:shared.c      ****  *
+  24:shared.c      ****  * \author Dr. Mantis Cheng
+  25:shared.c      ****  * \date 2 October 2006
+  26:shared.c      ****  *
+  27:shared.c      ****  * ChangeLog: Modified by Alexander M. Hoole, October 2006.
+  28:shared.c      ****  *			  -Rectified errors and enabled context switching.
+  29:shared.c      ****  *			  -LED Testing code added for development (remove later).
+  30:shared.c      ****  *
+  31:shared.c      ****  * \section Implementation Note
+  32:shared.c      ****  * This example uses the ATMEL AT90USB1287 instruction set as an example
+  33:shared.c      ****  * for implementing the context switching mechanism.
+  34:shared.c      ****  * This code is ready to be loaded onto an AT90USBKey.  Once loaded the
+  35:shared.c      ****  * RTOS scheduling code will alternate lighting of the GREEN LED light on
+  36:shared.c      ****  * LED D2 and D5 whenever the correspoing PING and PONG tasks are running.
+  37:shared.c      ****  * (See the file "cswitch.S" for details.)
+  38:shared.c      ****  */
+  39:shared.c      **** 
+  40:shared.c      **** //Comment out the following line to remove debugging code from compiled version.
+  41:shared.c      **** //#define DEBUG
+  42:shared.c      **** 
+  43:shared.c      **** typedef void (*voidfuncptr)(void);       /* pointer to void f(void) */
+  44:shared.c      **** 
+  45:shared.c      **** #define WORKSPACE     256
+  46:shared.c      **** #define MAXPROCESS   4
+  47:shared.c      **** 
+  48:shared.c      **** 
+  49:shared.c      **** /*===========
+  50:shared.c      ****  * RTOS Internal
+  51:shared.c      ****  **===========
+  52:shared.c      ****  */
+  53:shared.c      **** 
+  54:shared.c      **** /**
+  55:shared.c      ****  * This internal kernel function is the context switching mechanism.
+  56:shared.c      ****  * Fundamentally, the CSwitch() function saves the current task CurrentP's
+  57:shared.c      ****  * context, selects a new running task, and then restores the new CurrentP's
+  58:shared.c      ****  * context.
+  59:shared.c      ****  * (See file "switch.S" for details.)
+  60:shared.c      ****  */
+  61:shared.c      **** extern void CSwitch();
+  62:shared.c      **** 
+  63:shared.c      **** /* Prototype */
+  64:shared.c      **** void Task_Terminate(void);
+  65:shared.c      **** 
+  66:shared.c      **** /**
+  67:shared.c      ****  * Exit_kernel() is used when OS_Start() or Task_Terminate() needs to
+  68:shared.c      ****  * switch to a new running task.
+  69:shared.c      ****  */
+  70:shared.c      **** extern void Exit_Kernel();
+  71:shared.c      **** 
+  72:shared.c      **** #define Disable_Interrupt()         asm volatile ("cli" ::)
+  73:shared.c      **** #define Enable_Interrupt()          asm volatile ("sei" ::)
+  74:shared.c      **** 
+  75:shared.c      **** /**
+  76:shared.c      ****  *  This is the set of states that a task can be in at any given time.
+  77:shared.c      ****  */
+  78:shared.c      **** typedef enum process_states
+  79:shared.c      **** {
+  80:shared.c      ****         DEAD = 0,
+  81:shared.c      ****         READY,
+  82:shared.c      ****         RUNNING
+  83:shared.c      **** } PROCESS_STATES;
+  84:shared.c      **** 
+  85:shared.c      **** 
+  86:shared.c      **** /**
+  87:shared.c      ****  * Each task is represented by a process descriptor, which contains all
+  88:shared.c      ****  * relevant information about this task. For convenience, we also store
+  89:shared.c      ****  * the task's stack, i.e., its workspace, in here.
+  90:shared.c      ****  * To simplify our "CSwitch()" assembly code, which needs to access the
+  91:shared.c      ****  * "sp" variable during context switching, "sp" MUST BE the first entry
+  92:shared.c      ****  * in the ProcessDescriptor.
+  93:shared.c      ****  * (See file "cswitch.S" for details.)
+  94:shared.c      ****  */
+  95:shared.c      **** typedef struct ProcessDescriptor
+  96:shared.c      **** {
+  97:shared.c      ****         unsigned char *sp;
+  98:shared.c      ****         unsigned char workSpace[WORKSPACE];
+  99:shared.c      ****         PROCESS_STATES state;
+ 100:shared.c      **** } PD;
+ 101:shared.c      **** 
+ 102:shared.c      **** /**
+ 103:shared.c      ****  * This table contains ALL process descriptors. It doesn't matter what
+ 104:shared.c      ****  * state a task is in.
+ 105:shared.c      ****  */
+ 106:shared.c      **** static PD Process[MAXPROCESS];
+ 107:shared.c      **** 
+ 108:shared.c      **** /**
+ 109:shared.c      ****  * The process descriptor of the currently RUNNING task.
+ 110:shared.c      ****  */
+ 111:shared.c      **** //??? Removed static because it was blocking external access.
+ 112:shared.c      **** //??? Rename Cp to CurrentP because 'cp' is reserved in assembly.
+ 113:shared.c      **** volatile PD* CurrentP;
+ 114:shared.c      **** 
+ 115:shared.c      **** /** index to next task to run */
+ 116:shared.c      **** volatile static unsigned int NextP;
+ 117:shared.c      **** 
+ 118:shared.c      **** /** 1 if kernel has been started; 0 otherwise. */
+ 119:shared.c      **** volatile static unsigned int KernelActive;
+ 120:shared.c      **** 
+ 121:shared.c      **** /** number of tasks created so far */
+ 122:shared.c      **** volatile static unsigned int Tasks;
+ 123:shared.c      **** 
+ 124:shared.c      **** 
+ 125:shared.c      **** /**
+ 126:shared.c      ****  * When creating a new task, it is important to initialize its stack just like
+ 127:shared.c      ****  * it has called "Enter_Kernel()"; so that when we switch to it later, we
+ 128:shared.c      ****  * can just restore its execution context on its stack.
+ 129:shared.c      ****  * (See file "cswitch.S" for details.)
+ 130:shared.c      ****  */
+ 131:shared.c      **** void Kernel_Create_Task_At( PD *p, voidfuncptr f )
+ 132:shared.c      **** {
+ 133:shared.c      ****         unsigned char *sp;
+ 134:shared.c      ****         #ifdef DEBUG
+ 135:shared.c      ****         int counter = 0;
+ 136:shared.c      ****         #endif
+ 137:shared.c      **** 
+ 138:shared.c      ****         sp = (unsigned char *) &(p->workSpace[WORKSPACE-1]);
+ 139:shared.c      **** 
+ 140:shared.c      ****         /*----BEGIN of NEW CODE----*/
+ 141:shared.c      ****         //Initialize the workspace (i.e., stack) and PD here!
+ 142:shared.c      **** 
+ 143:shared.c      ****         //Clear the contents of the workspace
+ 144:shared.c      ****         memset(&(p->workSpace),0,WORKSPACE);
+ 145:shared.c      **** 
+ 146:shared.c      ****         //Notice that we are placing the address (16-bit) of the functions
+ 147:shared.c      ****         //onto the stack in reverse byte order (least significant first, followed
+ 148:shared.c      ****         //by most significant).  This is because the "return" assembly instructions
+ 149:shared.c      ****         //(rtn and rti) pop addresses off in BIG ENDIAN (most sig. first, least sig.
+ 150:shared.c      ****         //second), even though the AT90 is LITTLE ENDIAN machine.
+ 151:shared.c      **** 
+ 152:shared.c      ****         //Store terminate at the bottom of stack to protect against stack underrun.
+ 153:shared.c      ****         *(unsigned char *)sp-- = ((unsigned int)Task_Terminate) & 0xff;
+ 154:shared.c      ****         *(unsigned char *)sp-- = (((unsigned int)Task_Terminate) >> 8) & 0xff;
+ 155:shared.c      ****         *(unsigned char *)sp-- = 0;
+ 156:shared.c      **** 
+ 157:shared.c      ****         //Place return address of function at bottom of stack
+ 158:shared.c      ****         *(unsigned char *)sp-- = ((unsigned int)f) & 0xff;
+ 159:shared.c      ****         *(unsigned char *)sp-- = (((unsigned int)f) >> 8) & 0xff;
+ 160:shared.c      ****         *(unsigned char *)sp-- = 0;
+ 161:shared.c      **** 
+ 162:shared.c      **** #ifdef DEBUG
+ 163:shared.c      ****         //Fill stack with initial values for development debugging
+ 164:shared.c      ****         //Registers 0 -> 31 and the status register
+ 165:shared.c      ****         for (counter = 0; counter < 34; counter++)
+ 166:shared.c      ****         {
+ 167:shared.c      ****                 *(unsigned char *)sp-- = counter;
+ 168:shared.c      ****         }
+ 169:shared.c      **** #else
+ 170:shared.c      ****         //Place stack pointer at top of stack
+ 171:shared.c      ****         sp = sp - 34;
+ 172:shared.c      **** #endif
+ 173:shared.c      **** 
+ 174:shared.c      ****         p->sp = sp; /* stack pointer into the "workSpace" */
+ 175:shared.c      **** 
+ 176:shared.c      **** 
+ 177:shared.c      ****         /*----END of NEW CODE----*/
+ 178:shared.c      **** 
+ 179:shared.c      **** 
+ 180:shared.c      **** 
+ 181:shared.c      ****         p->state = READY;
+ 182:shared.c      **** }
+ 183:shared.c      **** 
+ 184:shared.c      **** 
+ 185:shared.c      **** /**
+ 186:shared.c      ****  *  Create a new task
+ 187:shared.c      ****  */
+ 188:shared.c      **** static void Kernel_Create_Task( voidfuncptr f )
+ 189:shared.c      **** {
+ 190:shared.c      ****         int x;
+ 191:shared.c      **** 
+ 192:shared.c      ****         if (Tasks == MAXPROCESS) return;  /* Too many task! */
+ 193:shared.c      **** 
+ 194:shared.c      ****         /* find a DEAD PD that we can use  */
+ 195:shared.c      ****         for (x = 0; x < MAXPROCESS; x++) {
+ 196:shared.c      ****                 if (Process[x].state == DEAD) break;
+ 197:shared.c      ****         }
+ 198:shared.c      **** 
+ 199:shared.c      ****         ++Tasks;
+ 200:shared.c      ****         Kernel_Create_Task_At( &(Process[x]), f );
+ 201:shared.c      **** }
+ 202:shared.c      **** 
+ 203:shared.c      **** /**
+ 204:shared.c      ****  * This internal kernel function is a part of the "scheduler". It chooses the
+ 205:shared.c      ****  * next task to run, i.e., CurrentP.
+ 206:shared.c      ****  */
+ 207:shared.c      **** //Remobed static because it was blocking external access from assembly file cswitch.S.
+ 208:shared.c      **** //We desire to see a 'T' not a 't' in the avr-nm output from the object file.
+ 209:shared.c      **** void Dispatch()
+ 210:shared.c      **** {
+ 211:shared.c      ****         /* find the next READY task
+ 212:shared.c      ****          * Note: if there is no READY task, then this will loop forever!.
+ 213:shared.c      ****          */
+ 214:shared.c      ****         while(Process[NextP].state != READY) {
+ 215:shared.c      ****                 NextP = (NextP + 1) % MAXPROCESS;
+ 216:shared.c      ****         }
+ 217:shared.c      **** 
+ 218:shared.c      ****         /* we have a new CurrentP */
+ 219:shared.c      ****         CurrentP = &(Process[NextP]);
+ 220:shared.c      ****         CurrentP->state = RUNNING;
+ 221:shared.c      **** 
+ 222:shared.c      ****         //Moved to bottom (this was in the wrong place).
+ 223:shared.c      ****         NextP = (NextP + 1) % MAXPROCESS;
+ 224:shared.c      **** }
+ 225:shared.c      **** 
+ 226:shared.c      **** 
+ 227:shared.c      **** /*================
+ 228:shared.c      ****  * RTOS  API  and Stubs
+ 229:shared.c      ****  **================
+ 230:shared.c      ****  */
+ 231:shared.c      **** 
+ 232:shared.c      **** /**
+ 233:shared.c      ****  * This function initializes the RTOS and must be called before any other
+ 234:shared.c      ****  * system calls.
+ 235:shared.c      ****  */
+ 236:shared.c      **** void OS_Init()
+ 237:shared.c      **** {
+ 238:shared.c      ****         int x;
+ 239:shared.c      **** 
+ 240:shared.c      ****         Tasks = 0;
+ 241:shared.c      ****         KernelActive = 0;
+ 242:shared.c      ****         NextP = 0;
+ 243:shared.c      **** 
+ 244:shared.c      ****         for (x = 0; x < MAXPROCESS; x++) {
+ 245:shared.c      ****                 memset(&(Process[x]),0,sizeof(PD));
+ 246:shared.c      ****                 Process[x].state = DEAD;
+ 247:shared.c      ****         }
+ 248:shared.c      **** }
+ 249:shared.c      **** 
+ 250:shared.c      **** 
+ 251:shared.c      **** /**
+ 252:shared.c      ****  * This function starts the RTOS after creating a few tasks.
+ 253:shared.c      ****  */
+ 254:shared.c      **** void OS_Start()
+ 255:shared.c      **** {
+ 256:shared.c      ****         if ( (!KernelActive) && (Tasks > 0)) {
+ 257:shared.c      ****                 Disable_Interrupt();
+ 258:shared.c      **** 
+ 259:shared.c      ****                 /* here we go...  */
+ 260:shared.c      ****                 KernelActive = 1;
+ 261:shared.c      ****                 asm ( "jmp Exit_Kernel" :: );
+ 262:shared.c      ****         }
+ 263:shared.c      **** }
+ 264:shared.c      **** 
+ 265:shared.c      **** 
+ 266:shared.c      **** /**
+ 267:shared.c      ****  * For this example, we only support cooperatively multitasking, i.e.,
+ 268:shared.c      ****  * each task gives up its share of the processor voluntarily by calling
+ 269:shared.c      ****  * Task_Next().
+ 270:shared.c      ****  */
+ 271:shared.c      **** void Task_Create( voidfuncptr f) {
+ 272:shared.c      ****   Disable_Interrupt();
+ 273:shared.c      ****   Kernel_Create_Task( f );
+ 274:shared.c      ****   Enable_Interrupt();
+ 275:shared.c      **** }
+ 276:shared.c      **** 
+ 277:shared.c      **** /**
+ 278:shared.c      ****  * The calling task gives up its share of the processor voluntarily.
+ 279:shared.c      ****  */
+ 280:shared.c      **** void Task_Next()
+ 281:shared.c      **** {
+ 282:shared.c      ****         if (KernelActive) {
+ 283:shared.c      ****                 Disable_Interrupt();
+ 284:shared.c      ****                 CurrentP->state = READY;
+ 285:shared.c      ****                 CSwitch();
+ 286:shared.c      ****                 /* resume here when this task is rescheduled again later */
+ 287:shared.c      ****                 Enable_Interrupt();
+ 288:shared.c      ****         }
+ 289:shared.c      **** }
+ 290:shared.c      **** 
+ 291:shared.c      **** 
+ 292:shared.c      **** /**
+ 293:shared.c      ****  * The calling task terminates itself.
+ 294:shared.c      ****  */
+ 295:shared.c      **** void Task_Terminate()
+ 296:shared.c      **** {
+ 297:shared.c      ****         if (KernelActive) {
+ 298:shared.c      ****                 Disable_Interrupt();
+ 299:shared.c      ****                 CurrentP->state = DEAD;
+ 300:shared.c      ****                 /* we will NEVER return here! */
+ 301:shared.c      ****                 asm ( "jmp Exit_Kernel" :: );
+ 302:shared.c      ****         }
+ 303:shared.c      **** }
+ 304:shared.c      **** 
+ 305:shared.c      **** void Ping() {
+  16               		.loc 1 305 0
+  17               		.cfi_startproc
+  18               	/* prologue: function */
+  19               	/* frame size = 0 */
+  20               	/* stack size = 0 */
+  21               	.L__stack_usage = 0
+  22               	.L3:
+ 306:shared.c      ****         int x;
+ 307:shared.c      ****         //DDRB = (1<<PB6); // INIT PIN 12
+ 308:shared.c      ****         for(;;) {
+ 309:shared.c      ****                 //LED on
+ 310:shared.c      ****                 PORTB |= (1<<PB7);
+  23               		.loc 1 310 0
+  24 0000 2F9A      		sbi 0x5,7
+  25               	.LVL0:
+  26 0002 80E0      		ldi r24,0
+  27 0004 9DE7      		ldi r25,lo8(125)
+  28               	.LVL1:
+  29               	.L4:
+  30 0006 0197      		sbiw r24,1
+  31               	.LVL2:
+ 311:shared.c      **** 
+ 312:shared.c      ****                 //PORTC |= (1<<PINC7);
+ 313:shared.c      ****                 //_delay_ms(1000);
+ 314:shared.c      ****                 for( x=0; x < 32000; ++x ) ;  // do nothing
+  32               		.loc 1 314 0 discriminator 2
+  33 0008 0097      		sbiw r24,0
+  34 000a 01F4      		brne .L4
+  35 000c 00C0      		rjmp .L3
+  36               		.cfi_endproc
+  37               	.LFE14:
+  39               	.global	Pong
+  41               	Pong:
+  42               	.LFB15:
+ 315:shared.c      ****                 for( x=0; x < 32000; ++x ) ;  // do nothing
+ 316:shared.c      ****                 for( x=0; x < 32000; ++x ) ;  // do nothing
+ 317:shared.c      **** 
+ 318:shared.c      **** 
+ 319:shared.c      ****                 //LED off
+ 320:shared.c      ****                 //PORTB &= ~(1<<PB6);
+ 321:shared.c      **** 
+ 322:shared.c      ****                 // printf( "*" );
+ 323:shared.c      ****                 //Task_Next();
+ 324:shared.c      ****         }
+ 325:shared.c      **** }
+ 326:shared.c      **** 
+ 327:shared.c      **** 
+ 328:shared.c      **** /**
+ 329:shared.c      ****  * A cooperative "Pong" task.
+ 330:shared.c      ****  * Added testing code for LEDs.
+ 331:shared.c      ****  */
+ 332:shared.c      **** void Pong()
+ 333:shared.c      **** {
+  43               		.loc 1 333 0
+  44               		.cfi_startproc
+  45               	/* prologue: function */
+  46               	/* frame size = 0 */
+  47               	/* stack size = 0 */
+  48               	.L__stack_usage = 0
+  49               	.L8:
+ 334:shared.c      ****         int x;
+ 335:shared.c      **** 
+ 336:shared.c      ****         for(;;) {
+ 337:shared.c      ****                 //LED on
+ 338:shared.c      **** 
+ 339:shared.c      ****                 PORTB &= ~(1<<PB7);
+  50               		.loc 1 339 0
+  51 000e 2F98      		cbi 0x5,7
+  52               	.LVL3:
+  53 0010 80E0      		ldi r24,0
+  54 0012 9DE7      		ldi r25,lo8(125)
+  55               	.LVL4:
+  56               	.L9:
+  57 0014 0197      		sbiw r24,1
+  58               	.LVL5:
+ 340:shared.c      ****                 //PORTC |= (1<<PINC7);
+ 341:shared.c      ****                 //PORTC &= ~(1<<PINC7);
+ 342:shared.c      ****                 //_delay_ms(1000);
+ 343:shared.c      ****                 for( x=0; x < 32000; ++x ) ;  /* do nothing */
+  59               		.loc 1 343 0 discriminator 2
+  60 0016 0097      		sbiw r24,0
+  61 0018 01F4      		brne .L9
+  62 001a 00C0      		rjmp .L8
+  63               		.cfi_endproc
+  64               	.LFE15:
+  66               	.global	Task_Terminate
+  68               	Task_Terminate:
+  69               	.LFB13:
+ 296:shared.c      ****         if (KernelActive) {
+  70               		.loc 1 296 0
+  71               		.cfi_startproc
+  72               	/* prologue: function */
+  73               	/* frame size = 0 */
+  74               	/* stack size = 0 */
+  75               	.L__stack_usage = 0
+ 297:shared.c      ****                 Disable_Interrupt();
+  76               		.loc 1 297 0
+  77 001c 8091 0000 		lds r24,KernelActive
+  78 0020 9091 0000 		lds r25,KernelActive+1
+  79 0024 892B      		or r24,r25
+  80 0026 01F0      		breq .L10
+  81               	.LBB10:
+  82               	.LBB11:
+ 298:shared.c      ****                 CurrentP->state = DEAD;
+  83               		.loc 1 298 0
+  84               	/* #APP */
+  85               	 ;  298 "shared.c" 1
+  86 0028 F894      		cli
+  87               	 ;  0 "" 2
+ 299:shared.c      ****                 /* we will NEVER return here! */
+  88               		.loc 1 299 0
+  89               	/* #NOAPP */
+  90 002a E091 0000 		lds r30,CurrentP
+  91 002e F091 0000 		lds r31,CurrentP+1
+  92 0032 EE5F      		subi r30,-2
+  93 0034 FE4F      		sbci r31,-2
+  94 0036 1082      		st Z,__zero_reg__
+ 301:shared.c      ****         }
+  95               		.loc 1 301 0
+  96               	/* #APP */
+  97               	 ;  301 "shared.c" 1
+  98 0038 0C94 0000 		jmp Exit_Kernel
+  99               	 ;  0 "" 2
+ 100               	/* #NOAPP */
+ 101               	.L10:
+ 102 003c 0895      		ret
+ 103               	.LBE11:
+ 104               	.LBE10:
+ 105               		.cfi_endproc
+ 106               	.LFE13:
+ 108               	.global	Kernel_Create_Task_At
+ 110               	Kernel_Create_Task_At:
+ 111               	.LFB6:
+ 132:shared.c      ****         unsigned char *sp;
+ 112               		.loc 1 132 0
+ 113               		.cfi_startproc
+ 114               	.LVL6:
+ 115               	/* prologue: function */
+ 116               	/* frame size = 0 */
+ 117               	/* stack size = 0 */
+ 118               	.L__stack_usage = 0
+ 144:shared.c      **** 
+ 119               		.loc 1 144 0
+ 120 003e FC01      		movw r30,r24
+ 121 0040 3296      		adiw r30,2
+ 122 0042 20E0      		ldi r18,0
+ 123 0044 31E0      		ldi r19,lo8(1)
+ 124 0046 DF01      		movw r26,r30
+ 125 0048 A901      		movw r20,r18
+ 126               		0:
+ 127 004a 1D92      		st X+,__zero_reg__
+ 128 004c 4150      		subi r20,1
+ 129 004e 5040      		sbci r21,0
+ 130 0050 01F4      		brne 0b
+ 131               	.LVL7:
+ 153:shared.c      ****         *(unsigned char *)sp-- = (((unsigned int)Task_Terminate) >> 8) & 0xff;
+ 132               		.loc 1 153 0
+ 133 0052 E150      		subi r30,1
+ 134 0054 FF4F      		sbci r31,-1
+ 135 0056 20E0      		ldi r18,lo8(gs(Task_Terminate))
+ 136 0058 30E0      		ldi r19,hi8(gs(Task_Terminate))
+ 137 005a 2083      		st Z,r18
+ 138               	.LVL8:
+ 154:shared.c      ****         *(unsigned char *)sp-- = 0;
+ 139               		.loc 1 154 0
+ 140 005c 3197      		sbiw r30,1
+ 141 005e 3083      		st Z,r19
+ 142               	.LVL9:
+ 155:shared.c      **** 
+ 143               		.loc 1 155 0
+ 144 0060 3197      		sbiw r30,1
+ 145 0062 1082      		st Z,__zero_reg__
+ 146               	.LVL10:
+ 158:shared.c      ****         *(unsigned char *)sp-- = (((unsigned int)f) >> 8) & 0xff;
+ 147               		.loc 1 158 0
+ 148 0064 3197      		sbiw r30,1
+ 149 0066 6083      		st Z,r22
+ 150               	.LVL11:
+ 159:shared.c      ****         *(unsigned char *)sp-- = 0;
+ 151               		.loc 1 159 0
+ 152 0068 3197      		sbiw r30,1
+ 153 006a 7083      		st Z,r23
+ 154               	.LVL12:
+ 160:shared.c      **** 
+ 155               		.loc 1 160 0
+ 156 006c 3197      		sbiw r30,1
+ 157 006e 1082      		st Z,__zero_reg__
+ 158               	.LVL13:
+ 171:shared.c      **** #endif
+ 159               		.loc 1 171 0
+ 160 0070 9C01      		movw r18,r24
+ 161 0072 2752      		subi r18,39
+ 162 0074 3F4F      		sbci r19,-1
+ 163               	.LVL14:
+ 174:shared.c      **** 
+ 164               		.loc 1 174 0
+ 165 0076 DC01      		movw r26,r24
+ 166 0078 2D93      		st X+,r18
+ 167 007a 3C93      		st X,r19
+ 181:shared.c      **** }
+ 168               		.loc 1 181 0
+ 169 007c 3696      		adiw r30,6
+ 170 007e 21E0      		ldi r18,lo8(1)
+ 171               	.LVL15:
+ 172 0080 2083      		st Z,r18
+ 173 0082 0895      		ret
+ 174               		.cfi_endproc
+ 175               	.LFE6:
+ 178               	Kernel_Create_Task:
+ 179               	.LFB7:
+ 189:shared.c      ****         int x;
+ 180               		.loc 1 189 0
+ 181               		.cfi_startproc
+ 182               	.LVL16:
+ 183               	/* prologue: function */
+ 184               	/* frame size = 0 */
+ 185               	/* stack size = 0 */
+ 186               	.L__stack_usage = 0
+ 192:shared.c      **** 
+ 187               		.loc 1 192 0
+ 188 0084 2091 0000 		lds r18,Tasks
+ 189 0088 3091 0000 		lds r19,Tasks+1
+ 190 008c 2430      		cpi r18,4
+ 191 008e 3105      		cpc r19,__zero_reg__
+ 192 0090 01F0      		breq .L16
+ 193 0092 E0E0      		ldi r30,lo8(Process+258)
+ 194 0094 F0E0      		ldi r31,hi8(Process+258)
+ 195 0096 20E0      		ldi r18,0
+ 196 0098 30E0      		ldi r19,0
+ 197               	.L19:
+ 198               	.LVL17:
+ 196:shared.c      ****         }
+ 199               		.loc 1 196 0
+ 200 009a 4081      		ld r20,Z
+ 201 009c 4423      		tst r20
+ 202 009e 01F0      		breq .L18
+ 195:shared.c      ****                 if (Process[x].state == DEAD) break;
+ 203               		.loc 1 195 0
+ 204 00a0 2F5F      		subi r18,-1
+ 205 00a2 3F4F      		sbci r19,-1
+ 206               	.LVL18:
+ 207 00a4 ED5F      		subi r30,-3
+ 208 00a6 FE4F      		sbci r31,-2
+ 209 00a8 2430      		cpi r18,4
+ 210 00aa 3105      		cpc r19,__zero_reg__
+ 211 00ac 01F4      		brne .L19
+ 212               	.L18:
+ 199:shared.c      ****         Kernel_Create_Task_At( &(Process[x]), f );
+ 213               		.loc 1 199 0
+ 214 00ae 4091 0000 		lds r20,Tasks
+ 215 00b2 5091 0000 		lds r21,Tasks+1
+ 216 00b6 4F5F      		subi r20,-1
+ 217 00b8 5F4F      		sbci r21,-1
+ 218 00ba 5093 0000 		sts Tasks+1,r21
+ 219 00be 4093 0000 		sts Tasks,r20
+ 200:shared.c      **** }
+ 220               		.loc 1 200 0
+ 221 00c2 A901      		movw r20,r18
+ 222 00c4 440F      		lsl r20
+ 223 00c6 551F      		rol r21
+ 224 00c8 722F      		mov r23,r18
+ 225 00ca 6627      		clr r22
+ 226 00cc 460F      		add r20,r22
+ 227 00ce 571F      		adc r21,r23
+ 228 00d0 420F      		add r20,r18
+ 229 00d2 531F      		adc r21,r19
+ 230 00d4 BC01      		movw r22,r24
+ 231 00d6 CA01      		movw r24,r20
+ 232               	.LVL19:
+ 233 00d8 8050      		subi r24,lo8(-(Process))
+ 234 00da 9040      		sbci r25,hi8(-(Process))
+ 235 00dc 0C94 0000 		jmp Kernel_Create_Task_At
+ 236               	.LVL20:
+ 237               	.L16:
+ 238 00e0 0895      		ret
+ 239               		.cfi_endproc
+ 240               	.LFE7:
+ 242               	.global	Dispatch
+ 244               	Dispatch:
+ 245               	.LFB8:
+ 210:shared.c      ****         /* find the next READY task
+ 246               		.loc 1 210 0
+ 247               		.cfi_startproc
+ 248               	.L36:
+ 249               	/* prologue: function */
+ 250               	/* frame size = 0 */
+ 251               	/* stack size = 0 */
+ 252               	.L__stack_usage = 0
+ 214:shared.c      ****                 NextP = (NextP + 1) % MAXPROCESS;
+ 253               		.loc 1 214 0
+ 254 00e2 8091 0000 		lds r24,NextP
+ 255 00e6 9091 0000 		lds r25,NextP+1
+ 256 00ea FC01      		movw r30,r24
+ 257 00ec EE0F      		lsl r30
+ 258 00ee FF1F      		rol r31
+ 259 00f0 382F      		mov r19,r24
+ 260 00f2 2227      		clr r18
+ 261 00f4 E20F      		add r30,r18
+ 262 00f6 F31F      		adc r31,r19
+ 263 00f8 E80F      		add r30,r24
+ 264 00fa F91F      		adc r31,r25
+ 265 00fc E050      		subi r30,lo8(-(Process+258))
+ 266 00fe F040      		sbci r31,hi8(-(Process+258))
+ 267 0100 8081      		ld r24,Z
+ 268 0102 8130      		cpi r24,lo8(1)
+ 269 0104 01F0      		breq .L37
+ 215:shared.c      ****         }
+ 270               		.loc 1 215 0
+ 271 0106 8091 0000 		lds r24,NextP
+ 272 010a 9091 0000 		lds r25,NextP+1
+ 273 010e 0196      		adiw r24,1
+ 274 0110 8370      		andi r24,3
+ 275 0112 9927      		clr r25
+ 276 0114 9093 0000 		sts NextP+1,r25
+ 277 0118 8093 0000 		sts NextP,r24
+ 278 011c 00C0      		rjmp .L36
+ 279               	.L37:
+ 219:shared.c      ****         CurrentP->state = RUNNING;
+ 280               		.loc 1 219 0
+ 281 011e 2091 0000 		lds r18,NextP
+ 282 0122 3091 0000 		lds r19,NextP+1
+ 283 0126 C901      		movw r24,r18
+ 284 0128 880F      		lsl r24
+ 285 012a 991F      		rol r25
+ 286 012c 522F      		mov r21,r18
+ 287 012e 4427      		clr r20
+ 288 0130 840F      		add r24,r20
+ 289 0132 951F      		adc r25,r21
+ 290 0134 820F      		add r24,r18
+ 291 0136 931F      		adc r25,r19
+ 292 0138 8050      		subi r24,lo8(-(Process))
+ 293 013a 9040      		sbci r25,hi8(-(Process))
+ 294 013c 9093 0000 		sts CurrentP+1,r25
+ 295 0140 8093 0000 		sts CurrentP,r24
+ 220:shared.c      **** 
+ 296               		.loc 1 220 0
+ 297 0144 FC01      		movw r30,r24
+ 298 0146 EE5F      		subi r30,-2
+ 299 0148 FE4F      		sbci r31,-2
+ 300 014a 22E0      		ldi r18,lo8(2)
+ 301 014c 2083      		st Z,r18
+ 223:shared.c      **** }
+ 302               		.loc 1 223 0
+ 303 014e 8091 0000 		lds r24,NextP
+ 304 0152 9091 0000 		lds r25,NextP+1
+ 305 0156 0196      		adiw r24,1
+ 306 0158 8370      		andi r24,3
+ 307 015a 9927      		clr r25
+ 308 015c 9093 0000 		sts NextP+1,r25
+ 309 0160 8093 0000 		sts NextP,r24
+ 310 0164 0895      		ret
+ 311               		.cfi_endproc
+ 312               	.LFE8:
+ 314               	.global	OS_Init
+ 316               	OS_Init:
+ 317               	.LFB9:
+ 237:shared.c      ****         int x;
+ 318               		.loc 1 237 0
+ 319               		.cfi_startproc
+ 320               	/* prologue: function */
+ 321               	/* frame size = 0 */
+ 322               	/* stack size = 0 */
+ 323               	.L__stack_usage = 0
+ 240:shared.c      ****         KernelActive = 0;
+ 324               		.loc 1 240 0
+ 325 0166 1092 0000 		sts Tasks+1,__zero_reg__
+ 326 016a 1092 0000 		sts Tasks,__zero_reg__
+ 241:shared.c      ****         NextP = 0;
+ 327               		.loc 1 241 0
+ 328 016e 1092 0000 		sts KernelActive+1,__zero_reg__
+ 329 0172 1092 0000 		sts KernelActive,__zero_reg__
+ 242:shared.c      **** 
+ 330               		.loc 1 242 0
+ 331 0176 1092 0000 		sts NextP+1,__zero_reg__
+ 332 017a 1092 0000 		sts NextP,__zero_reg__
+ 333               	.LVL21:
+ 334 017e E0E0      		ldi r30,lo8(Process)
+ 335 0180 F0E0      		ldi r31,hi8(Process)
+ 245:shared.c      ****                 Process[x].state = DEAD;
+ 336               		.loc 1 245 0
+ 337 0182 83E0      		ldi r24,lo8(3)
+ 338 0184 91E0      		ldi r25,lo8(1)
+ 339               	.LVL22:
+ 340               	.L40:
+ 245:shared.c      ****                 Process[x].state = DEAD;
+ 341               		.loc 1 245 0 is_stmt 0 discriminator 2
+ 342 0186 DF01      		movw r26,r30
+ 343 0188 9C01      		movw r18,r24
+ 344               		0:
+ 345 018a 1D92      		st X+,__zero_reg__
+ 346 018c 2150      		subi r18,1
+ 347 018e 3040      		sbci r19,0
+ 348 0190 01F4      		brne 0b
+ 349 0192 DF01      		movw r26,r30
+ 350 0194 AE5F      		subi r26,-2
+ 351 0196 BE4F      		sbci r27,-2
+ 246:shared.c      ****         }
+ 352               		.loc 1 246 0 is_stmt 1 discriminator 2
+ 353 0198 1C92      		st X,__zero_reg__
+ 354 019a ED5F      		subi r30,-3
+ 355 019c FE4F      		sbci r31,-2
+ 244:shared.c      ****                 memset(&(Process[x]),0,sizeof(PD));
+ 356               		.loc 1 244 0 discriminator 2
+ 357 019e 30E0      		ldi r19,hi8(Process+1036)
+ 358 01a0 E030      		cpi r30,lo8(Process+1036)
+ 359 01a2 F307      		cpc r31,r19
+ 360 01a4 01F4      		brne .L40
+ 361               	/* epilogue start */
+ 248:shared.c      **** 
+ 362               		.loc 1 248 0
+ 363 01a6 0895      		ret
+ 364               		.cfi_endproc
+ 365               	.LFE9:
+ 367               	.global	OS_Start
+ 369               	OS_Start:
+ 370               	.LFB10:
+ 255:shared.c      ****         if ( (!KernelActive) && (Tasks > 0)) {
+ 371               		.loc 1 255 0
+ 372               		.cfi_startproc
+ 373               	/* prologue: function */
+ 374               	/* frame size = 0 */
+ 375               	/* stack size = 0 */
+ 376               	.L__stack_usage = 0
+ 256:shared.c      ****                 Disable_Interrupt();
+ 377               		.loc 1 256 0
+ 378 01a8 8091 0000 		lds r24,KernelActive
+ 379 01ac 9091 0000 		lds r25,KernelActive+1
+ 380 01b0 892B      		or r24,r25
+ 381 01b2 01F4      		brne .L41
+ 256:shared.c      ****                 Disable_Interrupt();
+ 382               		.loc 1 256 0 is_stmt 0 discriminator 1
+ 383 01b4 8091 0000 		lds r24,Tasks
+ 384 01b8 9091 0000 		lds r25,Tasks+1
+ 385 01bc 892B      		or r24,r25
+ 386 01be 01F0      		breq .L41
+ 257:shared.c      **** 
+ 387               		.loc 1 257 0 is_stmt 1
+ 388               	/* #APP */
+ 389               	 ;  257 "shared.c" 1
+ 390 01c0 F894      		cli
+ 391               	 ;  0 "" 2
+ 260:shared.c      ****                 asm ( "jmp Exit_Kernel" :: );
+ 392               		.loc 1 260 0
+ 393               	/* #NOAPP */
+ 394 01c2 81E0      		ldi r24,lo8(1)
+ 395 01c4 90E0      		ldi r25,0
+ 396 01c6 9093 0000 		sts KernelActive+1,r25
+ 397 01ca 8093 0000 		sts KernelActive,r24
+ 261:shared.c      ****         }
+ 398               		.loc 1 261 0
+ 399               	/* #APP */
+ 400               	 ;  261 "shared.c" 1
+ 401 01ce 0C94 0000 		jmp Exit_Kernel
+ 402               	 ;  0 "" 2
+ 403               	/* #NOAPP */
+ 404               	.L41:
+ 405 01d2 0895      		ret
+ 406               		.cfi_endproc
+ 407               	.LFE10:
+ 409               	.global	Task_Create
+ 411               	Task_Create:
+ 412               	.LFB11:
+ 271:shared.c      ****   Disable_Interrupt();
+ 413               		.loc 1 271 0
+ 414               		.cfi_startproc
+ 415               	.LVL23:
+ 416               	/* prologue: function */
+ 417               	/* frame size = 0 */
+ 418               	/* stack size = 0 */
+ 419               	.L__stack_usage = 0
+ 272:shared.c      ****   Kernel_Create_Task( f );
+ 420               		.loc 1 272 0
+ 421               	/* #APP */
+ 422               	 ;  272 "shared.c" 1
+ 423 01d4 F894      		cli
+ 424               	 ;  0 "" 2
+ 273:shared.c      ****   Enable_Interrupt();
+ 425               		.loc 1 273 0
+ 426               	/* #NOAPP */
+ 427 01d6 0E94 0000 		call Kernel_Create_Task
+ 428               	.LVL24:
+ 274:shared.c      **** }
+ 429               		.loc 1 274 0
+ 430               	/* #APP */
+ 431               	 ;  274 "shared.c" 1
+ 432 01da 7894      		sei
+ 433               	 ;  0 "" 2
+ 434               	/* #NOAPP */
+ 435 01dc 0895      		ret
+ 436               		.cfi_endproc
+ 437               	.LFE11:
+ 439               	.global	Task_Next
+ 441               	Task_Next:
+ 442               	.LFB12:
+ 281:shared.c      ****         if (KernelActive) {
+ 443               		.loc 1 281 0
+ 444               		.cfi_startproc
+ 445               	/* prologue: function */
+ 446               	/* frame size = 0 */
+ 447               	/* stack size = 0 */
+ 448               	.L__stack_usage = 0
+ 282:shared.c      ****                 Disable_Interrupt();
+ 449               		.loc 1 282 0
+ 450 01de 8091 0000 		lds r24,KernelActive
+ 451 01e2 9091 0000 		lds r25,KernelActive+1
+ 452 01e6 892B      		or r24,r25
+ 453 01e8 01F4      		brne .L52
+ 454 01ea 0895      		ret
+ 455               	.L52:
+ 283:shared.c      ****                 CurrentP->state = READY;
+ 456               		.loc 1 283 0
+ 457               	/* #APP */
+ 458               	 ;  283 "shared.c" 1
+ 459 01ec F894      		cli
+ 460               	 ;  0 "" 2
+ 284:shared.c      ****                 CSwitch();
+ 461               		.loc 1 284 0
+ 462               	/* #NOAPP */
+ 463 01ee E091 0000 		lds r30,CurrentP
+ 464 01f2 F091 0000 		lds r31,CurrentP+1
+ 465 01f6 EE5F      		subi r30,-2
+ 466 01f8 FE4F      		sbci r31,-2
+ 467 01fa 81E0      		ldi r24,lo8(1)
+ 468 01fc 8083      		st Z,r24
+ 285:shared.c      ****                 /* resume here when this task is rescheduled again later */
+ 469               		.loc 1 285 0
+ 470 01fe 0E94 0000 		call CSwitch
+ 471               	.LVL25:
+ 287:shared.c      ****         }
+ 472               		.loc 1 287 0
+ 473               	/* #APP */
+ 474               	 ;  287 "shared.c" 1
+ 475 0202 7894      		sei
+ 476               	 ;  0 "" 2
+ 477               	/* #NOAPP */
+ 478 0204 0895      		ret
+ 479               		.cfi_endproc
+ 480               	.LFE12:
+ 482               	.global	init_timer
+ 484               	init_timer:
+ 485               	.LFB16:
+ 344:shared.c      ****                 for( x=0; x < 32000; ++x ) ;  /* do nothing */
+ 345:shared.c      ****                 for( x=0; x < 32000; ++x ) ;  /* do nothing */
+ 346:shared.c      **** 
+ 347:shared.c      ****                 //LED off
+ 348:shared.c      **** 
+ 349:shared.c      **** 
+ 350:shared.c      ****                 /* printf( "." );  */
+ 351:shared.c      ****                 //Task_Next();
+ 352:shared.c      **** 
+ 353:shared.c      ****         }
+ 354:shared.c      **** }
+ 355:shared.c      **** 
+ 356:shared.c      **** 
+ 357:shared.c      **** void init_timer () {
+ 486               		.loc 1 357 0
+ 487               		.cfi_startproc
+ 488               	/* prologue: function */
+ 489               	/* frame size = 0 */
+ 490               	/* stack size = 0 */
+ 491               	.L__stack_usage = 0
+ 358:shared.c      ****   // initialize Timer1
+ 359:shared.c      ****   Disable_Interrupt();          // disable global interrupts
+ 492               		.loc 1 359 0
+ 493               	/* #APP */
+ 494               	 ;  359 "shared.c" 1
+ 495 0206 F894      		cli
+ 496               	 ;  0 "" 2
+ 360:shared.c      ****   TCCR1A = 0;     // set entire TCCR1A register to 0
+ 497               		.loc 1 360 0
+ 498               	/* #NOAPP */
+ 499 0208 1092 8000 		sts 128,__zero_reg__
+ 361:shared.c      ****   TCCR1B = 0;     // same for TCCR1B
+ 500               		.loc 1 361 0
+ 501 020c E1E8      		ldi r30,lo8(-127)
+ 502 020e F0E0      		ldi r31,0
+ 503 0210 1082      		st Z,__zero_reg__
+ 362:shared.c      **** 
+ 363:shared.c      ****   // set compare match register to desired timer count:
+ 364:shared.c      ****   OCR1A = 15624;
+ 504               		.loc 1 364 0
+ 505 0212 88E0      		ldi r24,lo8(8)
+ 506 0214 9DE3      		ldi r25,lo8(61)
+ 507 0216 9093 8900 		sts 136+1,r25
+ 508 021a 8093 8800 		sts 136,r24
+ 365:shared.c      **** 
+ 366:shared.c      ****   // turn on CTC mode:
+ 367:shared.c      ****   TCCR1B |= (1 << WGM12);
+ 509               		.loc 1 367 0
+ 510 021e 8081      		ld r24,Z
+ 511 0220 8860      		ori r24,lo8(8)
+ 512 0222 8083      		st Z,r24
+ 368:shared.c      **** 
+ 369:shared.c      ****   // Set CS10 and CS12 bits for 1024 prescaler:
+ 370:shared.c      ****   TCCR1B |= (1 << CS10);
+ 513               		.loc 1 370 0
+ 514 0224 8081      		ld r24,Z
+ 515 0226 8160      		ori r24,lo8(1)
+ 516 0228 8083      		st Z,r24
+ 371:shared.c      ****   TCCR1B |= (1 << CS12);
+ 517               		.loc 1 371 0
+ 518 022a 8081      		ld r24,Z
+ 519 022c 8460      		ori r24,lo8(4)
+ 520 022e 8083      		st Z,r24
+ 372:shared.c      **** 
+ 373:shared.c      ****   // enable timer compare interrupt:
+ 374:shared.c      ****   TIMSK1 |= (1 << OCIE1A);
+ 521               		.loc 1 374 0
+ 522 0230 EFE6      		ldi r30,lo8(111)
+ 523 0232 F0E0      		ldi r31,0
+ 524 0234 8081      		ld r24,Z
+ 525 0236 8260      		ori r24,lo8(2)
+ 526 0238 8083      		st Z,r24
+ 375:shared.c      **** 
+ 376:shared.c      ****   // enable global interrupts:
+ 377:shared.c      ****   Enable_Interrupt();
+ 527               		.loc 1 377 0
+ 528               	/* #APP */
+ 529               	 ;  377 "shared.c" 1
+ 530 023a 7894      		sei
+ 531               	 ;  0 "" 2
+ 532               	/* #NOAPP */
+ 533 023c 0895      		ret
+ 534               		.cfi_endproc
+ 535               	.LFE16:
+ 537               		.section	.text.startup,"ax",@progbits
+ 538               	.global	main
+ 540               	main:
+ 541               	.LFB17:
+ 378:shared.c      **** }
+ 379:shared.c      **** 
+ 380:shared.c      **** 
+ 381:shared.c      **** /**
+ 382:shared.c      ****  * This function creates two cooperative tasks, "Ping" and "Pong". Both
+ 383:shared.c      ****  * will run forever.
+ 384:shared.c      ****  */
+ 385:shared.c      **** int main() {
+ 542               		.loc 1 385 0
+ 543               		.cfi_startproc
+ 544               	/* prologue: function */
+ 545               	/* frame size = 0 */
+ 546               	/* stack size = 0 */
+ 547               	.L__stack_usage = 0
+ 386:shared.c      ****   DDRB = (1<<PB7); // INIT PIN 13
+ 548               		.loc 1 386 0
+ 549 0000 80E8      		ldi r24,lo8(-128)
+ 550 0002 84B9      		out 0x4,r24
+ 387:shared.c      ****   OS_Init();
+ 551               		.loc 1 387 0
+ 552 0004 0E94 0000 		call OS_Init
+ 553               	.LVL26:
+ 554               	.LBB12:
+ 555               	.LBB13:
+ 272:shared.c      ****   Kernel_Create_Task( f );
+ 556               		.loc 1 272 0
+ 557               	/* #APP */
+ 558               	 ;  272 "shared.c" 1
+ 559 0008 F894      		cli
+ 560               	 ;  0 "" 2
+ 273:shared.c      ****   Enable_Interrupt();
+ 561               		.loc 1 273 0
+ 562               	/* #NOAPP */
+ 563 000a 80E0      		ldi r24,lo8(gs(Pong))
+ 564 000c 90E0      		ldi r25,hi8(gs(Pong))
+ 565 000e 0E94 0000 		call Kernel_Create_Task
+ 566               	.LVL27:
+ 274:shared.c      **** }
+ 567               		.loc 1 274 0
+ 568               	/* #APP */
+ 569               	 ;  274 "shared.c" 1
+ 570 0012 7894      		sei
+ 571               	 ;  0 "" 2
+ 572               	.LVL28:
+ 573               	/* #NOAPP */
+ 574               	.LBE13:
+ 575               	.LBE12:
+ 576               	.LBB14:
+ 577               	.LBB15:
+ 272:shared.c      ****   Kernel_Create_Task( f );
+ 578               		.loc 1 272 0
+ 579               	/* #APP */
+ 580               	 ;  272 "shared.c" 1
+ 581 0014 F894      		cli
+ 582               	 ;  0 "" 2
+ 273:shared.c      ****   Enable_Interrupt();
+ 583               		.loc 1 273 0
+ 584               	/* #NOAPP */
+ 585 0016 80E0      		ldi r24,lo8(gs(Ping))
+ 586 0018 90E0      		ldi r25,hi8(gs(Ping))
+ 587 001a 0E94 0000 		call Kernel_Create_Task
+ 588               	.LVL29:
+ 274:shared.c      **** }
+ 589               		.loc 1 274 0
+ 590               	/* #APP */
+ 591               	 ;  274 "shared.c" 1
+ 592 001e 7894      		sei
+ 593               	 ;  0 "" 2
+ 594               	/* #NOAPP */
+ 595               	.LBE15:
+ 596               	.LBE14:
+ 388:shared.c      ****   Task_Create( Pong );
+ 389:shared.c      ****   Task_Create( Ping );
+ 390:shared.c      ****   init_timer();
+ 597               		.loc 1 390 0
+ 598 0020 0E94 0000 		call init_timer
+ 599               	.LVL30:
+ 600               	.LBB16:
+ 601               	.LBB17:
+ 256:shared.c      ****                 Disable_Interrupt();
+ 602               		.loc 1 256 0
+ 603 0024 8091 0000 		lds r24,KernelActive
+ 604 0028 9091 0000 		lds r25,KernelActive+1
+ 605 002c 892B      		or r24,r25
+ 606 002e 01F0      		breq .L55
+ 607               	.L57:
+ 608               	.L58:
+ 609 0030 00C0      		rjmp .L58
+ 610               	.L55:
+ 611 0032 8091 0000 		lds r24,Tasks
+ 612 0036 9091 0000 		lds r25,Tasks+1
+ 613 003a 892B      		or r24,r25
+ 614 003c 01F0      		breq .L57
+ 257:shared.c      **** 
+ 615               		.loc 1 257 0
+ 616               	/* #APP */
+ 617               	 ;  257 "shared.c" 1
+ 618 003e F894      		cli
+ 619               	 ;  0 "" 2
+ 260:shared.c      ****                 asm ( "jmp Exit_Kernel" :: );
+ 620               		.loc 1 260 0
+ 621               	/* #NOAPP */
+ 622 0040 81E0      		ldi r24,lo8(1)
+ 623 0042 90E0      		ldi r25,0
+ 624 0044 9093 0000 		sts KernelActive+1,r25
+ 625 0048 8093 0000 		sts KernelActive,r24
+ 261:shared.c      ****         }
+ 626               		.loc 1 261 0
+ 627               	/* #APP */
+ 628               	 ;  261 "shared.c" 1
+ 629 004c 0C94 0000 		jmp Exit_Kernel
+ 630               	 ;  0 "" 2
+ 631               	/* #NOAPP */
+ 632 0050 00C0      		rjmp .L57
+ 633               	.LBE17:
+ 634               	.LBE16:
+ 635               		.cfi_endproc
+ 636               	.LFE17:
+ 638               		.text
+ 639               	.global	__vector_17
+ 641               	__vector_17:
+ 642               	.LFB18:
+ 391:shared.c      ****   OS_Start();
+ 392:shared.c      ****   while (1) {}
+ 393:shared.c      ****   return 0;
+ 394:shared.c      **** }
+ 395:shared.c      **** 
+ 396:shared.c      **** ISR(TIMER1_COMPA_vect) {
+ 643               		.loc 1 396 0
+ 644               		.cfi_startproc
+ 645 023e 1F92      		push r1
+ 646               	.LCFI0:
+ 647               		.cfi_def_cfa_offset 4
+ 648               		.cfi_offset 1, -3
+ 649 0240 0F92      		push r0
+ 650               	.LCFI1:
+ 651               		.cfi_def_cfa_offset 5
+ 652               		.cfi_offset 0, -4
+ 653 0242 0FB6      		in r0,__SREG__
+ 654 0244 0F92      		push r0
+ 655 0246 1124      		clr __zero_reg__
+ 656 0248 0BB6      		in r0,__RAMPZ__
+ 657 024a 0F92      		push r0
+ 658 024c 2F93      		push r18
+ 659               	.LCFI2:
+ 660               		.cfi_def_cfa_offset 6
+ 661               		.cfi_offset 18, -5
+ 662 024e 3F93      		push r19
+ 663               	.LCFI3:
+ 664               		.cfi_def_cfa_offset 7
+ 665               		.cfi_offset 19, -6
+ 666 0250 4F93      		push r20
+ 667               	.LCFI4:
+ 668               		.cfi_def_cfa_offset 8
+ 669               		.cfi_offset 20, -7
+ 670 0252 5F93      		push r21
+ 671               	.LCFI5:
+ 672               		.cfi_def_cfa_offset 9
+ 673               		.cfi_offset 21, -8
+ 674 0254 6F93      		push r22
+ 675               	.LCFI6:
+ 676               		.cfi_def_cfa_offset 10
+ 677               		.cfi_offset 22, -9
+ 678 0256 7F93      		push r23
+ 679               	.LCFI7:
+ 680               		.cfi_def_cfa_offset 11
+ 681               		.cfi_offset 23, -10
+ 682 0258 8F93      		push r24
+ 683               	.LCFI8:
+ 684               		.cfi_def_cfa_offset 12
+ 685               		.cfi_offset 24, -11
+ 686 025a 9F93      		push r25
+ 687               	.LCFI9:
+ 688               		.cfi_def_cfa_offset 13
+ 689               		.cfi_offset 25, -12
+ 690 025c AF93      		push r26
+ 691               	.LCFI10:
+ 692               		.cfi_def_cfa_offset 14
+ 693               		.cfi_offset 26, -13
+ 694 025e BF93      		push r27
+ 695               	.LCFI11:
+ 696               		.cfi_def_cfa_offset 15
+ 697               		.cfi_offset 27, -14
+ 698 0260 EF93      		push r30
+ 699               	.LCFI12:
+ 700               		.cfi_def_cfa_offset 16
+ 701               		.cfi_offset 30, -15
+ 702 0262 FF93      		push r31
+ 703               	.LCFI13:
+ 704               		.cfi_def_cfa_offset 17
+ 705               		.cfi_offset 31, -16
+ 706               	/* prologue: Signal */
+ 707               	/* frame size = 0 */
+ 708               	/* stack size = 16 */
+ 709               	.L__stack_usage = 16
+ 397:shared.c      ****   Task_Next();
+ 710               		.loc 1 397 0
+ 711 0264 0E94 0000 		call Task_Next
+ 712               	.LVL31:
+ 713               	/* epilogue start */
+ 398:shared.c      **** }
+ 714               		.loc 1 398 0
+ 715 0268 FF91      		pop r31
+ 716 026a EF91      		pop r30
+ 717 026c BF91      		pop r27
+ 718 026e AF91      		pop r26
+ 719 0270 9F91      		pop r25
+ 720 0272 8F91      		pop r24
+ 721 0274 7F91      		pop r23
+ 722 0276 6F91      		pop r22
+ 723 0278 5F91      		pop r21
+ 724 027a 4F91      		pop r20
+ 725 027c 3F91      		pop r19
+ 726 027e 2F91      		pop r18
+ 727 0280 0F90      		pop r0
+ 728 0282 0BBE      		out __RAMPZ__,r0
+ 729 0284 0F90      		pop r0
+ 730 0286 0FBE      		out __SREG__,r0
+ 731 0288 0F90      		pop r0
+ 732 028a 1F90      		pop r1
+ 733 028c 1895      		reti
+ 734               		.cfi_endproc
+ 735               	.LFE18:
+ 737               		.local	Tasks
+ 738               		.comm	Tasks,2,1
+ 739               		.local	KernelActive
+ 740               		.comm	KernelActive,2,1
+ 741               		.local	NextP
+ 742               		.comm	NextP,2,1
+ 743               		.comm	CurrentP,2,1
+ 744               		.local	Process
+ 745               		.comm	Process,1036,1
+ 746               	.global	elapsed
+ 747               		.section .bss
+ 750               	elapsed:
+ 751 0000 0000 0000 		.zero	4
+ 752               		.text
+ 753               	.Letext0:
+ 754               		.file 2 "/usr/lib/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 shared.c
+     /tmp/ccQwz7WL.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/ccQwz7WL.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/ccQwz7WL.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/ccQwz7WL.s:5      *ABS*:000000000000003b __RAMPZ__
+     /tmp/ccQwz7WL.s:6      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/ccQwz7WL.s:7      *ABS*:0000000000000001 __zero_reg__
+     /tmp/ccQwz7WL.s:13     .text:0000000000000000 Ping
+     /tmp/ccQwz7WL.s:41     .text:000000000000000e Pong
+     /tmp/ccQwz7WL.s:68     .text:000000000000001c Task_Terminate
+     /tmp/ccQwz7WL.s:738    .bss:0000000000000006 KernelActive
+                            *COM*:0000000000000002 CurrentP
+     /tmp/ccQwz7WL.s:110    .text:000000000000003e Kernel_Create_Task_At
+     /tmp/ccQwz7WL.s:178    .text:0000000000000084 Kernel_Create_Task
+                             .bss:0000000000000004 Tasks
+     /tmp/ccQwz7WL.s:742    .bss:000000000000000a Process
+     /tmp/ccQwz7WL.s:244    .text:00000000000000e2 Dispatch
+     /tmp/ccQwz7WL.s:740    .bss:0000000000000008 NextP
+     /tmp/ccQwz7WL.s:316    .text:0000000000000166 OS_Init
+     /tmp/ccQwz7WL.s:369    .text:00000000000001a8 OS_Start
+     /tmp/ccQwz7WL.s:411    .text:00000000000001d4 Task_Create
+     /tmp/ccQwz7WL.s:441    .text:00000000000001de Task_Next
+     /tmp/ccQwz7WL.s:484    .text:0000000000000206 init_timer
+     /tmp/ccQwz7WL.s:540    .text.startup:0000000000000000 main
+     /tmp/ccQwz7WL.s:641    .text:000000000000023e __vector_17
+     /tmp/ccQwz7WL.s:750    .bss:0000000000000000 elapsed
+
+UNDEFINED SYMBOLS
+Exit_Kernel
+CSwitch
+__do_clear_bss

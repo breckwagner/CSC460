@@ -5,8 +5,9 @@
 #define WORKSPACE     256   // in bytes, per THREAD
 #define MAXMUTEX      8 
 #define MAXEVENT      8      
-#define TICK          10    // resolution of system clock in milliseconds
-#define MINPRIORITY   15   // 0 is the highest priority, 15 the lowest
+#define MSECPERTICK   10   // resolution of a system tick in milliseconds
+#define MINPRIORITY   10   // 0 is the highest priority, 10 the lowest
+
 
 #ifndef NULL
 #define NULL          0   /* undefined */
@@ -16,8 +17,9 @@ typedef unsigned int PID;        // always non-zero if it is valid
 typedef unsigned int MUTEX;      // always non-zero if it is valid
 typedef unsigned char PRIORITY;
 typedef unsigned int EVENT;      // always non-zero if it is valid
+typedef unsigned int TICK;
 
-void OS_Init(void);
+// void OS_Init(void);      redefined as main()
 void OS_Abort(void);
 
 PID  Task_Create( void (*f)(void), PRIORITY py, int arg);
@@ -27,12 +29,11 @@ int  Task_GetArg(void);
 void Task_Suspend( PID p );          
 void Task_Resume( PID p );
 
-void Task_Sleep(int t);
+void Task_Sleep(TICK t);  // sleep time is at least t*MSECPERTICK
 
 MUTEX Mutex_Init(void);
 void Mutex_Lock(MUTEX m);
 void Mutex_Unlock(MUTEX m);
-int  Mutex_TryLock(MUTEX m);
 
 EVENT Event_Init(void);
 void Event_Wait(EVENT e);

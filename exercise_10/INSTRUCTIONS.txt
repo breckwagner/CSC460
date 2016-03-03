@@ -1,0 +1,8 @@
+Instructions
+NO ARDUINO LIBRARY CODE IS ALLOWED!
+
+Use your solution to Exercise 9 and the logic analyzer to instrument various
+timing characteristics of your Tiny Kernel, including context-switching
+overhead, scheduling timeliness, and interrupt disabled time. 
+
+Submit your C code, measurements and screen captures in the submission box.

@@ -11,7 +11,8 @@ SleepQ timing wheel algorithm
 #include <avr/interrupt.h>
 #include <avr/sleep.h>
 #include <stdbool.h>
- 
+//#include <Arduino.h>
+
 // ********************************************************************************
 // Interrupt Routines
 // ********************************************************************************
@@ -20,13 +21,13 @@ ISR (TIMER1_OVF_vect) {
 	// XOR PORTA with 0x02 to toggle the LSB
 	PORTA=PORTA ^ 0x02;
 }
- 
+
 // timer0 overflow
 ISR (TIMER0_OVF_vect) {
 	// XOR PORTA with 0x01 to toggle the second bit up
 	PORTA=PORTA ^ 0x01;
 }
- 
+
 // ********************************************************************************
 // Main
 // ********************************************************************************
@@ -43,7 +44,7 @@ int main (void) {
 	// lets turn on 16 bit timer1 also with /1024
 	TCCR1B |= (1 << CS10) | (1 << CS12);
 	// enable interrupts
-	sei(); 
+	sei();
 	while (true) {
 	}
 }
