@@ -1,10 +1,10 @@
-#ifndef _OS_H_  
-#define _OS_H_  
-   
-#define MAXTHREAD     16       
+#ifndef _OS_H_
+#define _OS_H_
+
+#define MAXTHREAD     16
 #define WORKSPACE     256   // in bytes, per THREAD
-#define MAXMUTEX      8 
-#define MAXEVENT      8      
+#define MAXMUTEX      8
+#define MAXEVENT      8
 #define MSECPERTICK   10   // resolution of a system tick in milliseconds
 #define MINPRIORITY   10   // 0 is the highest priority, 10 the lowest
 
@@ -26,7 +26,7 @@ PID  Task_Create( void (*f)(void), PRIORITY py, int arg);
 void Task_Terminate(void);
 void Task_Yield(void);
 int  Task_GetArg(void);
-void Task_Suspend( PID p );          
+void Task_Suspend( PID p );
 void Task_Resume( PID p );
 
 void Task_Sleep(TICK t);  // sleep time is at least t*MSECPERTICK

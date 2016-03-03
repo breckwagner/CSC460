@@ -21,7 +21,7 @@ OBJDIR = .
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = main.c
+SRC = os.c
 
 
 # List C++ source files here. (C dependencies are automatically generated.)
@@ -542,6 +542,8 @@ clean_list :
 	$(REMOVE) $(SRC:.c=.s)
 	$(REMOVE) $(SRC:.c=.d)
 	$(REMOVE) $(SRC:.c=.i)
+	$(REMOVE) $(ASRC:%.S=$(OBJDIR)/%.o)
+	$(REMOVE) $(ASRC:%.S=$(OBJDIR)/%.lst)
 	$(REMOVEDIR) .dep
 
 
