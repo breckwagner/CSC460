@@ -32,6 +32,27 @@ volatile static ProcessDescriptor* current_process;
 
 #define soft_reset() do{wdt_enable(WDTO_15MS);for(;;){}}while(0) // TODO update
 
+void signal_start_task (uint8_t value, bool pulse) {
+bool flag = true;
+  while (flag) {
+    switch (value) {
+      case 0: PORTL ^= (1<<PL3); break;
+      case 1: PORTL ^= (1<<PL2); break;
+      case 2: PORTL ^= (1<<PL1); break;
+      case 3: PORTL ^= (1<<PL0); break;
+      case 4: PORTB ^= (1<<PB3); break;
+      case 5: PORTB ^= (1<<PB2); break;
+      case 6: PORTB ^= (1<<PB1); break;
+      case 7: PORTB ^= (1<<PB0); break;
+    }
+    if (pulse) {
+      pulse = false;
+    } else {
+      flag = false;
+    }
+  }
+}
+
 /**
  * Enables inturupts by setting the global inturupt flag
  * @param (void)
@@ -51,6 +72,7 @@ uint8_t enable_global_interrupts() {
 uint8_t disable_global_interrupts() {
   uint8_t sreg = SREG;
   asm volatile ("cli"::);
+  signal_start_task(7, true);
   return sreg;
 }
 
@@ -118,6 +140,7 @@ static void Dispatch() {
   while(Process[next_process].state != READY) {
     next_process = (next_process + 1) % MAXTHREAD;
   }
+  signal_start_task(next_process, true);
   current_process = &(Process[next_process]);
   current_stack_pointer = current_process->stack_pointer;
   current_process->state = RUNNING;
@@ -261,32 +284,101 @@ void Event_Signal(EVENT e) {
 
 }
 
+
+
+
+/*******************************************************************************
+ * OS API END
+ ******************************************************************************/
+
+/**
+ * This function initializes the RTOS and must be called before any other
+ * system calls.
+ */
+void OS_Init() {
+  int id;
+  tasks = 0;
+  KernelActive = 0;
+  next_process = 0;
+  //Reminder: Clear the memory for the task on creation.
+  for (id = 0; id < MAXTHREAD; id++) {
+    memset(&(Process[id]),0,sizeof(ProcessDescriptor));
+    Process[id].state = DEAD;
+  }
+
+  signal_start_task(3, true);
+}
+
+
+/**
+ * This function starts the RTOS after creating a few tasks.
+ */
+void OS_Start() {
+  if ((!KernelActive) && (tasks > 0)) {
+    disable_global_interrupts();
+    KernelActive = 1;
+    signal_start_task(3, true);
+    Next_Kernel_Request();
+  }
+}
+
+void Ping() {
+  unsigned long x = 0;
+  for(;;) {
+    PORTB |= (1<<PB7);    // ON
+    for(x=0; x < 1000000; x++) {}
+  }
+}
+void Pong() {
+  unsigned long x = 0;
+  for(;;) {
+    PORTB &= ~(1<<PB7); // OFF
+    for(x=0; x < 1000000; x++) {}
+  }
+}
+
 void main_r () {
   for(;;){
 
   }
 }
 
+ISR(TIMER1_COMPA_vect) {
+  Task_Yield();
+}
+
+void init_timer () {
+  // initialize Timer1
+  uint8_t interrupt_flag = disable_global_interrupts();          // disable global interrupts
+  TCCR1A = 0;     // set entire TCCR1A register to 0
+  TCCR1B = 0;     // same for TCCR1B
+
+  // set compare match register to desired timer count:
+  OCR1A = 625;
+
+  // turn on CTC mode:
+  TCCR1B |= (1 << WGM12);
+
+  // Set CS12 bits for 256 prescaler:
+  //TCCR1B |= (1 << CS10);
+  TCCR1B |= (1 << CS12);
+
+  // enable timer compare interrupt:
+  TIMSK1 |= (1 << OCIE1A);
+
+  // enable global interrupts:
+  restore_global_interrupts(interrupt_flag);
+}
+
 // OS_Init function
 int main(void) {
+  DDRB = 0xFF;
+  DDRL = 0xFF;
 
-  int id;
-  tasks = 0;
-  KernelActive = 0;
-  next_process = 0;
- //Reminder: Clear the memory for the task on creation.
-  for (id = 0; id < MAXTHREAD; id++) {
-     memset(&(Process[id]),0,sizeof(ProcessDescriptor));
-     Process[id].state = DEAD;
-  }
-
-  // OS START
-  if ((!KernelActive) && (tasks > 0)) {
-    disable_global_interrupts();
-    KernelActive = 1;
-    Task_Create(main_r, 0, 0);
-    //Next_Kernel_Request();
-    // NEVER RETURNS!!!
-  }
+  OS_Init();
+  Task_Create(Pong, 0, 0);
+  Task_Create(Ping, 0, 0);
+  init_timer();
+  OS_Start();
   return 0;
 }

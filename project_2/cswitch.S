@@ -48,9 +48,9 @@ EIND   = 0X3C
 	push	r30
 	push	r31
 
-  in r16, EIND
+  in r31, EIND
   push    r31
-  in r16, SREG
+  in r31, SREG
   push    r31
 .endm
 ;

@@ -1,0 +1,2547 @@
+   1               		.file	"os.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__RAMPZ__ = 0x3b
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.Ltext0:
+  10               		.cfi_sections	.debug_frame
+  11               		.comm	kernel_stack_pointer,2,1
+  12               		.comm	current_stack_pointer,2,1
+  13               		.local	next_process
+  14               		.comm	next_process,2,1
+  15               		.local	KernelActive
+  16               		.comm	KernelActive,2,1
+  17               		.local	tasks
+  18               		.comm	tasks,2,1
+  19               		.local	Process
+  20               		.comm	Process,4240,1
+  21               		.local	current_process
+  22               		.comm	current_process,2,1
+  23               	.global	signal_start_task
+  25               	signal_start_task:
+  26               	.LFB0:
+  27               		.file 1 "os.c"
+   1:os.c          **** #include <string.h>
+   2:os.c          **** #include <stdbool.h>
+   3:os.c          **** 
+   4:os.c          **** #include <avr/io.h>
+   5:os.c          **** #include <avr/interrupt.h>
+   6:os.c          **** #include <avr/wdt.h>
+   7:os.c          **** 
+   8:os.c          **** #include "os.h"
+   9:os.c          **** #include "kernal.h"
+  10:os.c          **** 
+  11:os.c          **** /*******************************************************************************
+  12:os.c          ****  * Global Variables
+  13:os.c          ****  ******************************************************************************/
+  14:os.c          **** 
+  15:os.c          **** volatile unsigned char * kernel_stack_pointer;
+  16:os.c          **** 
+  17:os.c          **** volatile unsigned char * current_stack_pointer;
+  18:os.c          **** 
+  19:os.c          **** volatile static unsigned int next_process;
+  20:os.c          **** 
+  21:os.c          **** volatile static unsigned int KernelActive;
+  22:os.c          **** 
+  23:os.c          **** volatile static unsigned int tasks;
+  24:os.c          **** 
+  25:os.c          **** static ProcessDescriptor Process[MAXTHREAD];
+  26:os.c          **** 
+  27:os.c          **** volatile static ProcessDescriptor* current_process;
+  28:os.c          **** 
+  29:os.c          **** /*******************************************************************************
+  30:os.c          ****  * Function Definitions (utility)
+  31:os.c          ****  ******************************************************************************/
+  32:os.c          **** 
+  33:os.c          **** #define soft_reset() do{wdt_enable(WDTO_15MS);for(;;){}}while(0) // TODO update
+  34:os.c          **** 
+  35:os.c          **** void signal_start_task (uint8_t value, bool pulse) {
+  28               		.loc 1 35 0
+  29               		.cfi_startproc
+  30 0000 CF93      		push r28
+  31               	.LCFI0:
+  32               		.cfi_def_cfa_offset 4
+  33               		.cfi_offset 28, -3
+  34 0002 DF93      		push r29
+  35               	.LCFI1:
+  36               		.cfi_def_cfa_offset 5
+  37               		.cfi_offset 29, -4
+  38 0004 00D0      		rcall .
+  39               	.LCFI2:
+  40               		.cfi_def_cfa_offset 8
+  41 0006 CDB7      		in r28,__SP_L__
+  42 0008 DEB7      		in r29,__SP_H__
+  43               	.LCFI3:
+  44               		.cfi_def_cfa_register 28
+  45               	/* prologue: function */
+  46               	/* frame size = 3 */
+  47               	/* stack size = 5 */
+  48               	.L__stack_usage = 5
+  49 000a 8A83      		std Y+2,r24
+  50 000c 6B83      		std Y+3,r22
+  36:os.c          **** bool flag = true;
+  51               		.loc 1 36 0
+  52 000e 81E0      		ldi r24,lo8(1)
+  53 0010 8983      		std Y+1,r24
+  37:os.c          ****   while (flag) {
+  54               		.loc 1 37 0
+  55 0012 00C0      		rjmp .L2
+  56               	.L14:
+  38:os.c          ****     switch (value) {
+  57               		.loc 1 38 0
+  58 0014 8A81      		ldd r24,Y+2
+  59 0016 882F      		mov r24,r24
+  60 0018 90E0      		ldi r25,0
+  61 001a AA27      		clr r26
+  62 001c 97FD      		sbrc r25,7
+  63 001e A095      		com r26
+  64 0020 BA2F      		mov r27,r26
+  65 0022 40E0      		ldi r20,0
+  66 0024 50E0      		ldi r21,0
+  67 0026 27E0      		ldi r18,lo8(7)
+  68 0028 30E0      		ldi r19,0
+  69 002a 841B      		sub r24,r20
+  70 002c 950B      		sbc r25,r21
+  71 002e 2817      		cp r18,r24
+  72 0030 3907      		cpc r19,r25
+  73 0032 00F4      		brsh .+2
+  74 0034 00C0      		rjmp .L3
+  75 0036 8050      		subi r24,lo8(-(gs(.L5)))
+  76 0038 9040      		sbci r25,hi8(-(gs(.L5)))
+  77 003a FC01      		movw r30,r24
+  78 003c 0C94 0000 		jmp __tablejump2__
+  79               		.section	.progmem.gcc_sw_table,"a",@progbits
+  80               		.p2align	1
+  81               	.L5:
+  82 0000 0000      		.word gs(.L4)
+  83 0002 0000      		.word gs(.L6)
+  84 0004 0000      		.word gs(.L7)
+  85 0006 0000      		.word gs(.L8)
+  86 0008 0000      		.word gs(.L9)
+  87 000a 0000      		.word gs(.L10)
+  88 000c 0000      		.word gs(.L11)
+  89 000e 0000      		.word gs(.L12)
+  90               		.text
+  91               	.L4:
+  39:os.c          ****       case 0: PORTL ^= (1<<PL3); break;
+  92               		.loc 1 39 0
+  93 0040 8BE0      		ldi r24,lo8(11)
+  94 0042 91E0      		ldi r25,lo8(1)
+  95 0044 2BE0      		ldi r18,lo8(11)
+  96 0046 31E0      		ldi r19,lo8(1)
+  97 0048 F901      		movw r30,r18
+  98 004a 3081      		ld r19,Z
+  99 004c 28E0      		ldi r18,lo8(8)
+ 100 004e 2327      		eor r18,r19
+ 101 0050 FC01      		movw r30,r24
+ 102 0052 2083      		st Z,r18
+ 103 0054 00C0      		rjmp .L3
+ 104               	.L6:
+  40:os.c          ****       case 1: PORTL ^= (1<<PL2); break;
+ 105               		.loc 1 40 0
+ 106 0056 8BE0      		ldi r24,lo8(11)
+ 107 0058 91E0      		ldi r25,lo8(1)
+ 108 005a 2BE0      		ldi r18,lo8(11)
+ 109 005c 31E0      		ldi r19,lo8(1)
+ 110 005e F901      		movw r30,r18
+ 111 0060 3081      		ld r19,Z
+ 112 0062 24E0      		ldi r18,lo8(4)
+ 113 0064 2327      		eor r18,r19
+ 114 0066 FC01      		movw r30,r24
+ 115 0068 2083      		st Z,r18
+ 116 006a 00C0      		rjmp .L3
+ 117               	.L7:
+  41:os.c          ****       case 2: PORTL ^= (1<<PL1); break;
+ 118               		.loc 1 41 0
+ 119 006c 8BE0      		ldi r24,lo8(11)
+ 120 006e 91E0      		ldi r25,lo8(1)
+ 121 0070 2BE0      		ldi r18,lo8(11)
+ 122 0072 31E0      		ldi r19,lo8(1)
+ 123 0074 F901      		movw r30,r18
+ 124 0076 3081      		ld r19,Z
+ 125 0078 22E0      		ldi r18,lo8(2)
+ 126 007a 2327      		eor r18,r19
+ 127 007c FC01      		movw r30,r24
+ 128 007e 2083      		st Z,r18
+ 129 0080 00C0      		rjmp .L3
+ 130               	.L8:
+  42:os.c          ****       case 3: PORTL ^= (1<<PL0); break;
+ 131               		.loc 1 42 0
+ 132 0082 8BE0      		ldi r24,lo8(11)
+ 133 0084 91E0      		ldi r25,lo8(1)
+ 134 0086 2BE0      		ldi r18,lo8(11)
+ 135 0088 31E0      		ldi r19,lo8(1)
+ 136 008a F901      		movw r30,r18
+ 137 008c 3081      		ld r19,Z
+ 138 008e 21E0      		ldi r18,lo8(1)
+ 139 0090 2327      		eor r18,r19
+ 140 0092 FC01      		movw r30,r24
+ 141 0094 2083      		st Z,r18
+ 142 0096 00C0      		rjmp .L3
+ 143               	.L9:
+  43:os.c          ****       case 4: PORTB ^= (1<<PB3); break;
+ 144               		.loc 1 43 0
+ 145 0098 85E2      		ldi r24,lo8(37)
+ 146 009a 90E0      		ldi r25,0
+ 147 009c 25E2      		ldi r18,lo8(37)
+ 148 009e 30E0      		ldi r19,0
+ 149 00a0 F901      		movw r30,r18
+ 150 00a2 3081      		ld r19,Z
+ 151 00a4 28E0      		ldi r18,lo8(8)
+ 152 00a6 2327      		eor r18,r19
+ 153 00a8 FC01      		movw r30,r24
+ 154 00aa 2083      		st Z,r18
+ 155 00ac 00C0      		rjmp .L3
+ 156               	.L10:
+  44:os.c          ****       case 5: PORTB ^= (1<<PB2); break;
+ 157               		.loc 1 44 0
+ 158 00ae 85E2      		ldi r24,lo8(37)
+ 159 00b0 90E0      		ldi r25,0
+ 160 00b2 25E2      		ldi r18,lo8(37)
+ 161 00b4 30E0      		ldi r19,0
+ 162 00b6 F901      		movw r30,r18
+ 163 00b8 3081      		ld r19,Z
+ 164 00ba 24E0      		ldi r18,lo8(4)
+ 165 00bc 2327      		eor r18,r19
+ 166 00be FC01      		movw r30,r24
+ 167 00c0 2083      		st Z,r18
+ 168 00c2 00C0      		rjmp .L3
+ 169               	.L11:
+  45:os.c          ****       case 6: PORTB ^= (1<<PB1); break;
+ 170               		.loc 1 45 0
+ 171 00c4 85E2      		ldi r24,lo8(37)
+ 172 00c6 90E0      		ldi r25,0
+ 173 00c8 25E2      		ldi r18,lo8(37)
+ 174 00ca 30E0      		ldi r19,0
+ 175 00cc F901      		movw r30,r18
+ 176 00ce 3081      		ld r19,Z
+ 177 00d0 22E0      		ldi r18,lo8(2)
+ 178 00d2 2327      		eor r18,r19
+ 179 00d4 FC01      		movw r30,r24
+ 180 00d6 2083      		st Z,r18
+ 181 00d8 00C0      		rjmp .L3
+ 182               	.L12:
+  46:os.c          ****       case 7: PORTB ^= (1<<PB0); break;
+ 183               		.loc 1 46 0
+ 184 00da 85E2      		ldi r24,lo8(37)
+ 185 00dc 90E0      		ldi r25,0
+ 186 00de 25E2      		ldi r18,lo8(37)
+ 187 00e0 30E0      		ldi r19,0
+ 188 00e2 F901      		movw r30,r18
+ 189 00e4 3081      		ld r19,Z
+ 190 00e6 21E0      		ldi r18,lo8(1)
+ 191 00e8 2327      		eor r18,r19
+ 192 00ea FC01      		movw r30,r24
+ 193 00ec 2083      		st Z,r18
+ 194 00ee 0000      		nop
+ 195               	.L3:
+  47:os.c          ****     }
+  48:os.c          ****     if (pulse) {
+ 196               		.loc 1 48 0
+ 197 00f0 8B81      		ldd r24,Y+3
+ 198 00f2 8823      		tst r24
+ 199 00f4 01F0      		breq .L13
+  49:os.c          ****       pulse = false;
+ 200               		.loc 1 49 0
+ 201 00f6 1B82      		std Y+3,__zero_reg__
+ 202 00f8 00C0      		rjmp .L2
+ 203               	.L13:
+  50:os.c          ****     } else {
+  51:os.c          ****       flag = false;
+ 204               		.loc 1 51 0
+ 205 00fa 1982      		std Y+1,__zero_reg__
+ 206               	.L2:
+  37:os.c          ****     switch (value) {
+ 207               		.loc 1 37 0 discriminator 1
+ 208 00fc 8981      		ldd r24,Y+1
+ 209 00fe 8823      		tst r24
+ 210 0100 01F0      		breq .+2
+ 211 0102 00C0      		rjmp .L14
+ 212               	/* epilogue start */
+  52:os.c          ****     }
+  53:os.c          ****   }
+  54:os.c          **** }
+ 213               		.loc 1 54 0
+ 214 0104 0F90      		pop __tmp_reg__
+ 215 0106 0F90      		pop __tmp_reg__
+ 216 0108 0F90      		pop __tmp_reg__
+ 217 010a DF91      		pop r29
+ 218 010c CF91      		pop r28
+ 219 010e 0895      		ret
+ 220               		.cfi_endproc
+ 221               	.LFE0:
+ 223               	.global	enable_global_interrupts
+ 225               	enable_global_interrupts:
+ 226               	.LFB1:
+  55:os.c          **** 
+  56:os.c          **** /**
+  57:os.c          ****  * Enables inturupts by setting the global inturupt flag
+  58:os.c          ****  * @param (void)
+  59:os.c          ****  * @return the previous state of the interrupt flag
+  60:os.c          ****  */
+  61:os.c          **** uint8_t enable_global_interrupts() {
+ 227               		.loc 1 61 0
+ 228               		.cfi_startproc
+ 229 0110 CF93      		push r28
+ 230               	.LCFI4:
+ 231               		.cfi_def_cfa_offset 4
+ 232               		.cfi_offset 28, -3
+ 233 0112 DF93      		push r29
+ 234               	.LCFI5:
+ 235               		.cfi_def_cfa_offset 5
+ 236               		.cfi_offset 29, -4
+ 237 0114 1F92      		push __zero_reg__
+ 238               	.LCFI6:
+ 239               		.cfi_def_cfa_offset 6
+ 240 0116 CDB7      		in r28,__SP_L__
+ 241 0118 DEB7      		in r29,__SP_H__
+ 242               	.LCFI7:
+ 243               		.cfi_def_cfa_register 28
+ 244               	/* prologue: function */
+ 245               	/* frame size = 1 */
+ 246               	/* stack size = 3 */
+ 247               	.L__stack_usage = 3
+  62:os.c          ****   uint8_t sreg = SREG;
+ 248               		.loc 1 62 0
+ 249 011a 8FE5      		ldi r24,lo8(95)
+ 250 011c 90E0      		ldi r25,0
+ 251 011e FC01      		movw r30,r24
+ 252 0120 8081      		ld r24,Z
+ 253 0122 8983      		std Y+1,r24
+  63:os.c          ****   asm volatile ("sei"::);
+ 254               		.loc 1 63 0
+ 255               	/* #APP */
+ 256               	 ;  63 "os.c" 1
+ 257 0124 7894      		sei
+ 258               	 ;  0 "" 2
+  64:os.c          ****   return sreg;
+ 259               		.loc 1 64 0
+ 260               	/* #NOAPP */
+ 261 0126 8981      		ldd r24,Y+1
+ 262               	/* epilogue start */
+  65:os.c          **** }
+ 263               		.loc 1 65 0
+ 264 0128 0F90      		pop __tmp_reg__
+ 265 012a DF91      		pop r29
+ 266 012c CF91      		pop r28
+ 267 012e 0895      		ret
+ 268               		.cfi_endproc
+ 269               	.LFE1:
+ 271               	.global	disable_global_interrupts
+ 273               	disable_global_interrupts:
+ 274               	.LFB2:
+  66:os.c          **** 
+  67:os.c          **** /**
+  68:os.c          ****  * Disables inturupts by setting the global inturupt flag
+  69:os.c          ****  * @param (void)
+  70:os.c          ****  * @return the previous state of the interrupt flag
+  71:os.c          ****  */
+  72:os.c          **** uint8_t disable_global_interrupts() {
+ 275               		.loc 1 72 0
+ 276               		.cfi_startproc
+ 277 0130 CF93      		push r28
+ 278               	.LCFI8:
+ 279               		.cfi_def_cfa_offset 4
+ 280               		.cfi_offset 28, -3
+ 281 0132 DF93      		push r29
+ 282               	.LCFI9:
+ 283               		.cfi_def_cfa_offset 5
+ 284               		.cfi_offset 29, -4
+ 285 0134 1F92      		push __zero_reg__
+ 286               	.LCFI10:
+ 287               		.cfi_def_cfa_offset 6
+ 288 0136 CDB7      		in r28,__SP_L__
+ 289 0138 DEB7      		in r29,__SP_H__
+ 290               	.LCFI11:
+ 291               		.cfi_def_cfa_register 28
+ 292               	/* prologue: function */
+ 293               	/* frame size = 1 */
+ 294               	/* stack size = 3 */
+ 295               	.L__stack_usage = 3
+  73:os.c          ****   uint8_t sreg = SREG;
+ 296               		.loc 1 73 0
+ 297 013a 8FE5      		ldi r24,lo8(95)
+ 298 013c 90E0      		ldi r25,0
+ 299 013e FC01      		movw r30,r24
+ 300 0140 8081      		ld r24,Z
+ 301 0142 8983      		std Y+1,r24
+  74:os.c          ****   asm volatile ("cli"::);
+ 302               		.loc 1 74 0
+ 303               	/* #APP */
+ 304               	 ;  74 "os.c" 1
+ 305 0144 F894      		cli
+ 306               	 ;  0 "" 2
+  75:os.c          ****   signal_start_task(7, true);
+ 307               		.loc 1 75 0
+ 308               	/* #NOAPP */
+ 309 0146 61E0      		ldi r22,lo8(1)
+ 310 0148 87E0      		ldi r24,lo8(7)
+ 311 014a 0E94 0000 		call signal_start_task
+  76:os.c          ****   return sreg;
+ 312               		.loc 1 76 0
+ 313 014e 8981      		ldd r24,Y+1
+ 314               	/* epilogue start */
+  77:os.c          **** }
+ 315               		.loc 1 77 0
+ 316 0150 0F90      		pop __tmp_reg__
+ 317 0152 DF91      		pop r29
+ 318 0154 CF91      		pop r28
+ 319 0156 0895      		ret
+ 320               		.cfi_endproc
+ 321               	.LFE2:
+ 323               	.global	restore_global_interrupts
+ 325               	restore_global_interrupts:
+ 326               	.LFB3:
+  78:os.c          **** 
+  79:os.c          **** /**
+  80:os.c          ****  * Restores inturupts by setting the global inturupt flag
+  81:os.c          ****  * @param (void)
+  82:os.c          ****  * @return the previous state of the interrupt flag
+  83:os.c          ****  */
+  84:os.c          **** uint8_t restore_global_interrupts(uint8_t saved_sreg) {
+ 327               		.loc 1 84 0
+ 328               		.cfi_startproc
+ 329 0158 CF93      		push r28
+ 330               	.LCFI12:
+ 331               		.cfi_def_cfa_offset 4
+ 332               		.cfi_offset 28, -3
+ 333 015a DF93      		push r29
+ 334               	.LCFI13:
+ 335               		.cfi_def_cfa_offset 5
+ 336               		.cfi_offset 29, -4
+ 337 015c 1F92      		push __zero_reg__
+ 338               	.LCFI14:
+ 339               		.cfi_def_cfa_offset 6
+ 340 015e CDB7      		in r28,__SP_L__
+ 341 0160 DEB7      		in r29,__SP_H__
+ 342               	.LCFI15:
+ 343               		.cfi_def_cfa_register 28
+ 344               	/* prologue: function */
+ 345               	/* frame size = 1 */
+ 346               	/* stack size = 3 */
+ 347               	.L__stack_usage = 3
+ 348 0162 8983      		std Y+1,r24
+  85:os.c          ****   if (saved_sreg & 0x80) {
+ 349               		.loc 1 85 0
+ 350 0164 8981      		ldd r24,Y+1
+ 351 0166 8823      		tst r24
+ 352 0168 04F4      		brge .L20
+  86:os.c          ****     return enable_global_interrupts();
+ 353               		.loc 1 86 0
+ 354 016a 0E94 0000 		call enable_global_interrupts
+ 355 016e 00C0      		rjmp .L21
+ 356               	.L20:
+  87:os.c          ****   } else {
+  88:os.c          ****     return disable_global_interrupts();
+ 357               		.loc 1 88 0
+ 358 0170 0E94 0000 		call disable_global_interrupts
+ 359               	.L21:
+ 360               	/* epilogue start */
+  89:os.c          ****   }
+  90:os.c          **** }
+ 361               		.loc 1 90 0
+ 362 0174 0F90      		pop __tmp_reg__
+ 363 0176 DF91      		pop r29
+ 364 0178 CF91      		pop r28
+ 365 017a 0895      		ret
+ 366               		.cfi_endproc
+ 367               	.LFE3:
+ 369               	.global	Kernel_Create_Task_At
+ 371               	Kernel_Create_Task_At:
+ 372               	.LFB4:
+  91:os.c          **** 
+  92:os.c          **** /**
+  93:os.c          ****  * When creating a new task, it is important to initialize its stack just like
+  94:os.c          ****  * it has called "Enter_Kernel()"; so that when we switch to it later, we
+  95:os.c          ****  * can just restore its execution context on its stack.
+  96:os.c          ****  * (See file "cswitch.S" for details.)
+  97:os.c          ****  */
+  98:os.c          **** void Kernel_Create_Task_At(ProcessDescriptor *process, voidfuncptr function){
+ 373               		.loc 1 98 0
+ 374               		.cfi_startproc
+ 375 017c CF93      		push r28
+ 376               	.LCFI16:
+ 377               		.cfi_def_cfa_offset 4
+ 378               		.cfi_offset 28, -3
+ 379 017e DF93      		push r29
+ 380               	.LCFI17:
+ 381               		.cfi_def_cfa_offset 5
+ 382               		.cfi_offset 29, -4
+ 383 0180 00D0      		rcall .
+ 384 0182 00D0      		rcall .
+ 385               	.LCFI18:
+ 386               		.cfi_def_cfa_offset 11
+ 387 0184 CDB7      		in r28,__SP_L__
+ 388 0186 DEB7      		in r29,__SP_H__
+ 389               	.LCFI19:
+ 390               		.cfi_def_cfa_register 28
+ 391               	/* prologue: function */
+ 392               	/* frame size = 6 */
+ 393               	/* stack size = 8 */
+ 394               	.L__stack_usage = 8
+ 395 0188 9C83      		std Y+4,r25
+ 396 018a 8B83      		std Y+3,r24
+ 397 018c 7E83      		std Y+6,r23
+ 398 018e 6D83      		std Y+5,r22
+  99:os.c          ****   uint8_t * stack_pointer;
+ 100:os.c          ****   stack_pointer = (unsigned char *) &(process->workSpace[WORKSPACE-1]);
+ 399               		.loc 1 100 0
+ 400 0190 8B81      		ldd r24,Y+3
+ 401 0192 9C81      		ldd r25,Y+4
+ 402 0194 8F5F      		subi r24,-1
+ 403 0196 9E4F      		sbci r25,-2
+ 404 0198 9A83      		std Y+2,r25
+ 405 019a 8983      		std Y+1,r24
+ 101:os.c          ****   memset(&(process->workSpace), 0, WORKSPACE);
+ 406               		.loc 1 101 0
+ 407 019c 8B81      		ldd r24,Y+3
+ 408 019e 9C81      		ldd r25,Y+4
+ 409 01a0 0296      		adiw r24,2
+ 410 01a2 40E0      		ldi r20,0
+ 411 01a4 51E0      		ldi r21,lo8(1)
+ 412 01a6 60E0      		ldi r22,0
+ 413 01a8 70E0      		ldi r23,0
+ 414 01aa 0E94 0000 		call memset
+ 102:os.c          **** 
+ 103:os.c          ****   *(unsigned char *)stack_pointer-- = ((unsigned int)Task_Terminate) & 0xff;
+ 415               		.loc 1 103 0
+ 416 01ae 8981      		ldd r24,Y+1
+ 417 01b0 9A81      		ldd r25,Y+2
+ 418 01b2 9C01      		movw r18,r24
+ 419 01b4 2150      		subi r18,1
+ 420 01b6 3109      		sbc r19,__zero_reg__
+ 421 01b8 3A83      		std Y+2,r19
+ 422 01ba 2983      		std Y+1,r18
+ 423 01bc 20E0      		ldi r18,lo8(gs(Task_Terminate))
+ 424 01be 30E0      		ldi r19,hi8(gs(Task_Terminate))
+ 425 01c0 FC01      		movw r30,r24
+ 426 01c2 2083      		st Z,r18
+ 104:os.c          ****   *(unsigned char *)stack_pointer-- = (((unsigned int)Task_Terminate) >> 8) & 0xff;
+ 427               		.loc 1 104 0
+ 428 01c4 8981      		ldd r24,Y+1
+ 429 01c6 9A81      		ldd r25,Y+2
+ 430 01c8 9C01      		movw r18,r24
+ 431 01ca 2150      		subi r18,1
+ 432 01cc 3109      		sbc r19,__zero_reg__
+ 433 01ce 3A83      		std Y+2,r19
+ 434 01d0 2983      		std Y+1,r18
+ 435 01d2 20E0      		ldi r18,lo8(gs(Task_Terminate))
+ 436 01d4 30E0      		ldi r19,hi8(gs(Task_Terminate))
+ 437 01d6 232F      		mov r18,r19
+ 438 01d8 3327      		clr r19
+ 439 01da FC01      		movw r30,r24
+ 440 01dc 2083      		st Z,r18
+ 105:os.c          **** 
+ 106:os.c          ****   //Place return address of function at bottom of stack
+ 107:os.c          ****   *(unsigned char *)stack_pointer-- = ((unsigned int)function) & 0xff;
+ 441               		.loc 1 107 0
+ 442 01de 8981      		ldd r24,Y+1
+ 443 01e0 9A81      		ldd r25,Y+2
+ 444 01e2 9C01      		movw r18,r24
+ 445 01e4 2150      		subi r18,1
+ 446 01e6 3109      		sbc r19,__zero_reg__
+ 447 01e8 3A83      		std Y+2,r19
+ 448 01ea 2983      		std Y+1,r18
+ 449 01ec 2D81      		ldd r18,Y+5
+ 450 01ee 3E81      		ldd r19,Y+6
+ 451 01f0 FC01      		movw r30,r24
+ 452 01f2 2083      		st Z,r18
+ 108:os.c          ****   //Store terminate at the bottom of stack to protect against stack underrun.
+ 109:os.c          ****   *(unsigned char *)stack_pointer-- = (((unsigned int)function) >> 8) & 0xff;
+ 453               		.loc 1 109 0
+ 454 01f4 8981      		ldd r24,Y+1
+ 455 01f6 9A81      		ldd r25,Y+2
+ 456 01f8 9C01      		movw r18,r24
+ 457 01fa 2150      		subi r18,1
+ 458 01fc 3109      		sbc r19,__zero_reg__
+ 459 01fe 3A83      		std Y+2,r19
+ 460 0200 2983      		std Y+1,r18
+ 461 0202 2D81      		ldd r18,Y+5
+ 462 0204 3E81      		ldd r19,Y+6
+ 463 0206 232F      		mov r18,r19
+ 464 0208 3327      		clr r19
+ 465 020a FC01      		movw r30,r24
+ 466 020c 2083      		st Z,r18
+ 110:os.c          ****   *(unsigned char *)stack_pointer-- = 0;
+ 467               		.loc 1 110 0
+ 468 020e 8981      		ldd r24,Y+1
+ 469 0210 9A81      		ldd r25,Y+2
+ 470 0212 9C01      		movw r18,r24
+ 471 0214 2150      		subi r18,1
+ 472 0216 3109      		sbc r19,__zero_reg__
+ 473 0218 3A83      		std Y+2,r19
+ 474 021a 2983      		std Y+1,r18
+ 475 021c FC01      		movw r30,r24
+ 476 021e 1082      		st Z,__zero_reg__
+ 111:os.c          **** 
+ 112:os.c          ****   // Decrement stack pointer for the 32 registers and the EIND
+ 113:os.c          ****   stack_pointer -= 34;
+ 477               		.loc 1 113 0
+ 478 0220 8981      		ldd r24,Y+1
+ 479 0222 9A81      		ldd r25,Y+2
+ 480 0224 8297      		sbiw r24,34
+ 481 0226 9A83      		std Y+2,r25
+ 482 0228 8983      		std Y+1,r24
+ 114:os.c          **** 
+ 115:os.c          ****   process->stack_pointer = stack_pointer;
+ 483               		.loc 1 115 0
+ 484 022a 8B81      		ldd r24,Y+3
+ 485 022c 9C81      		ldd r25,Y+4
+ 486 022e 2981      		ldd r18,Y+1
+ 487 0230 3A81      		ldd r19,Y+2
+ 488 0232 FC01      		movw r30,r24
+ 489 0234 3183      		std Z+1,r19
+ 490 0236 2083      		st Z,r18
+ 116:os.c          ****   process->code = function;
+ 491               		.loc 1 116 0
+ 492 0238 8B81      		ldd r24,Y+3
+ 493 023a 9C81      		ldd r25,Y+4
+ 494 023c 8D5F      		subi r24,-3
+ 495 023e 9E4F      		sbci r25,-2
+ 496 0240 2D81      		ldd r18,Y+5
+ 497 0242 3E81      		ldd r19,Y+6
+ 498 0244 FC01      		movw r30,r24
+ 499 0246 3183      		std Z+1,r19
+ 500 0248 2083      		st Z,r18
+ 117:os.c          ****   process->request = NONE;
+ 501               		.loc 1 117 0
+ 502 024a 8B81      		ldd r24,Y+3
+ 503 024c 9C81      		ldd r25,Y+4
+ 504 024e 8B5F      		subi r24,-5
+ 505 0250 9E4F      		sbci r25,-2
+ 506 0252 FC01      		movw r30,r24
+ 507 0254 1082      		st Z,__zero_reg__
+ 118:os.c          ****   process->state = READY;
+ 508               		.loc 1 118 0
+ 509 0256 8B81      		ldd r24,Y+3
+ 510 0258 9C81      		ldd r25,Y+4
+ 511 025a 8E5F      		subi r24,-2
+ 512 025c 9E4F      		sbci r25,-2
+ 513 025e 21E0      		ldi r18,lo8(1)
+ 514 0260 FC01      		movw r30,r24
+ 515 0262 2083      		st Z,r18
+ 516               	/* epilogue start */
+ 119:os.c          **** }
+ 517               		.loc 1 119 0
+ 518 0264 2696      		adiw r28,6
+ 519 0266 0FB6      		in __tmp_reg__,__SREG__
+ 520 0268 F894      		cli
+ 521 026a DEBF      		out __SP_H__,r29
+ 522 026c 0FBE      		out __SREG__,__tmp_reg__
+ 523 026e CDBF      		out __SP_L__,r28
+ 524 0270 DF91      		pop r29
+ 525 0272 CF91      		pop r28
+ 526 0274 0895      		ret
+ 527               		.cfi_endproc
+ 528               	.LFE4:
+ 531               	Kernel_Create_Task:
+ 532               	.LFB5:
+ 120:os.c          **** 
+ 121:os.c          **** 
+ 122:os.c          **** /**
+ 123:os.c          ****  * Create a new task
+ 124:os.c          ****  */
+ 125:os.c          **** static PID Kernel_Create_Task(voidfuncptr f) {
+ 533               		.loc 1 125 0
+ 534               		.cfi_startproc
+ 535 0276 CF93      		push r28
+ 536               	.LCFI20:
+ 537               		.cfi_def_cfa_offset 4
+ 538               		.cfi_offset 28, -3
+ 539 0278 DF93      		push r29
+ 540               	.LCFI21:
+ 541               		.cfi_def_cfa_offset 5
+ 542               		.cfi_offset 29, -4
+ 543 027a 00D0      		rcall .
+ 544 027c 1F92      		push __zero_reg__
+ 545               	.LCFI22:
+ 546               		.cfi_def_cfa_offset 9
+ 547 027e CDB7      		in r28,__SP_L__
+ 548 0280 DEB7      		in r29,__SP_H__
+ 549               	.LCFI23:
+ 550               		.cfi_def_cfa_register 28
+ 551               	/* prologue: function */
+ 552               	/* frame size = 4 */
+ 553               	/* stack size = 6 */
+ 554               	.L__stack_usage = 6
+ 555 0282 9C83      		std Y+4,r25
+ 556 0284 8B83      		std Y+3,r24
+ 126:os.c          ****    int id = NULL;
+ 557               		.loc 1 126 0
+ 558 0286 1A82      		std Y+2,__zero_reg__
+ 559 0288 1982      		std Y+1,__zero_reg__
+ 127:os.c          ****    if (tasks == MAXTHREAD) return id;
+ 560               		.loc 1 127 0
+ 561 028a 8091 0000 		lds r24,tasks
+ 562 028e 9091 0000 		lds r25,tasks+1
+ 563 0292 8031      		cpi r24,16
+ 564 0294 9105      		cpc r25,__zero_reg__
+ 565 0296 01F4      		brne .L24
+ 566               		.loc 1 127 0 is_stmt 0 discriminator 1
+ 567 0298 8981      		ldd r24,Y+1
+ 568 029a 9A81      		ldd r25,Y+2
+ 569 029c 00C0      		rjmp .L25
+ 570               	.L24:
+ 128:os.c          **** 
+ 129:os.c          ****    /* find a DEAD ProcessDescriptor that we can use  */
+ 130:os.c          ****    for (id = 0; id < MAXTHREAD; id++) {
+ 571               		.loc 1 130 0 is_stmt 1
+ 572 029e 1A82      		std Y+2,__zero_reg__
+ 573 02a0 1982      		std Y+1,__zero_reg__
+ 574 02a2 00C0      		rjmp .L26
+ 575               	.L29:
+ 131:os.c          ****        if (Process[id].state == DEAD) break;
+ 576               		.loc 1 131 0
+ 577 02a4 4981      		ldd r20,Y+1
+ 578 02a6 5A81      		ldd r21,Y+2
+ 579 02a8 29E0      		ldi r18,lo8(9)
+ 580 02aa 31E0      		ldi r19,lo8(1)
+ 581 02ac 429F      		mul r20,r18
+ 582 02ae C001      		movw r24,r0
+ 583 02b0 439F      		mul r20,r19
+ 584 02b2 900D      		add r25,r0
+ 585 02b4 529F      		mul r21,r18
+ 586 02b6 900D      		add r25,r0
+ 587 02b8 1124      		clr r1
+ 588 02ba 8050      		subi r24,lo8(-(Process+258))
+ 589 02bc 9040      		sbci r25,hi8(-(Process+258))
+ 590 02be FC01      		movw r30,r24
+ 591 02c0 8081      		ld r24,Z
+ 592 02c2 8823      		tst r24
+ 593 02c4 01F4      		brne .L27
+ 594               		.loc 1 131 0 is_stmt 0 discriminator 1
+ 595 02c6 00C0      		rjmp .L28
+ 596               	.L27:
+ 130:os.c          ****        if (Process[id].state == DEAD) break;
+ 597               		.loc 1 130 0 is_stmt 1
+ 598 02c8 8981      		ldd r24,Y+1
+ 599 02ca 9A81      		ldd r25,Y+2
+ 600 02cc 0196      		adiw r24,1
+ 601 02ce 9A83      		std Y+2,r25
+ 602 02d0 8983      		std Y+1,r24
+ 603               	.L26:
+ 130:os.c          ****        if (Process[id].state == DEAD) break;
+ 604               		.loc 1 130 0 is_stmt 0 discriminator 1
+ 605 02d2 8981      		ldd r24,Y+1
+ 606 02d4 9A81      		ldd r25,Y+2
+ 607 02d6 8031      		cpi r24,16
+ 608 02d8 9105      		cpc r25,__zero_reg__
+ 609 02da 04F0      		brlt .L29
+ 610               	.L28:
+ 132:os.c          ****    }
+ 133:os.c          **** 
+ 134:os.c          ****    ++tasks;
+ 611               		.loc 1 134 0 is_stmt 1
+ 612 02dc 8091 0000 		lds r24,tasks
+ 613 02e0 9091 0000 		lds r25,tasks+1
+ 614 02e4 0196      		adiw r24,1
+ 615 02e6 9093 0000 		sts tasks+1,r25
+ 616 02ea 8093 0000 		sts tasks,r24
+ 135:os.c          ****    Kernel_Create_Task_At( &(Process[id]), f );
+ 617               		.loc 1 135 0
+ 618 02ee 4981      		ldd r20,Y+1
+ 619 02f0 5A81      		ldd r21,Y+2
+ 620 02f2 29E0      		ldi r18,lo8(9)
+ 621 02f4 31E0      		ldi r19,lo8(1)
+ 622 02f6 429F      		mul r20,r18
+ 623 02f8 C001      		movw r24,r0
+ 624 02fa 439F      		mul r20,r19
+ 625 02fc 900D      		add r25,r0
+ 626 02fe 529F      		mul r21,r18
+ 627 0300 900D      		add r25,r0
+ 628 0302 1124      		clr r1
+ 629 0304 8050      		subi r24,lo8(-(Process))
+ 630 0306 9040      		sbci r25,hi8(-(Process))
+ 631 0308 2B81      		ldd r18,Y+3
+ 632 030a 3C81      		ldd r19,Y+4
+ 633 030c B901      		movw r22,r18
+ 634 030e 0E94 0000 		call Kernel_Create_Task_At
+ 136:os.c          ****    return id;
+ 635               		.loc 1 136 0
+ 636 0312 8981      		ldd r24,Y+1
+ 637 0314 9A81      		ldd r25,Y+2
+ 638               	.L25:
+ 639               	/* epilogue start */
+ 137:os.c          **** }
+ 640               		.loc 1 137 0
+ 641 0316 0F90      		pop __tmp_reg__
+ 642 0318 0F90      		pop __tmp_reg__
+ 643 031a 0F90      		pop __tmp_reg__
+ 644 031c 0F90      		pop __tmp_reg__
+ 645 031e DF91      		pop r29
+ 646 0320 CF91      		pop r28
+ 647 0322 0895      		ret
+ 648               		.cfi_endproc
+ 649               	.LFE5:
+ 652               	Dispatch:
+ 653               	.LFB6:
+ 138:os.c          **** 
+ 139:os.c          **** static void Dispatch() {
+ 654               		.loc 1 139 0
+ 655               		.cfi_startproc
+ 656 0324 CF93      		push r28
+ 657               	.LCFI24:
+ 658               		.cfi_def_cfa_offset 4
+ 659               		.cfi_offset 28, -3
+ 660 0326 DF93      		push r29
+ 661               	.LCFI25:
+ 662               		.cfi_def_cfa_offset 5
+ 663               		.cfi_offset 29, -4
+ 664 0328 CDB7      		in r28,__SP_L__
+ 665 032a DEB7      		in r29,__SP_H__
+ 666               	.LCFI26:
+ 667               		.cfi_def_cfa_register 28
+ 668               	/* prologue: function */
+ 669               	/* frame size = 0 */
+ 670               	/* stack size = 2 */
+ 671               	.L__stack_usage = 2
+ 140:os.c          ****   while(Process[next_process].state != READY) {
+ 672               		.loc 1 140 0
+ 673 032c 00C0      		rjmp .L31
+ 674               	.L32:
+ 141:os.c          ****     next_process = (next_process + 1) % MAXTHREAD;
+ 675               		.loc 1 141 0
+ 676 032e 8091 0000 		lds r24,next_process
+ 677 0332 9091 0000 		lds r25,next_process+1
+ 678 0336 0196      		adiw r24,1
+ 679 0338 8F70      		andi r24,15
+ 680 033a 9927      		clr r25
+ 681 033c 9093 0000 		sts next_process+1,r25
+ 682 0340 8093 0000 		sts next_process,r24
+ 683               	.L31:
+ 140:os.c          ****   while(Process[next_process].state != READY) {
+ 684               		.loc 1 140 0 discriminator 1
+ 685 0344 4091 0000 		lds r20,next_process
+ 686 0348 5091 0000 		lds r21,next_process+1
+ 687 034c 29E0      		ldi r18,lo8(9)
+ 688 034e 31E0      		ldi r19,lo8(1)
+ 689 0350 429F      		mul r20,r18
+ 690 0352 C001      		movw r24,r0
+ 691 0354 439F      		mul r20,r19
+ 692 0356 900D      		add r25,r0
+ 693 0358 529F      		mul r21,r18
+ 694 035a 900D      		add r25,r0
+ 695 035c 1124      		clr r1
+ 696 035e 8050      		subi r24,lo8(-(Process+258))
+ 697 0360 9040      		sbci r25,hi8(-(Process+258))
+ 698 0362 FC01      		movw r30,r24
+ 699 0364 8081      		ld r24,Z
+ 700 0366 8130      		cpi r24,lo8(1)
+ 701 0368 01F4      		brne .L32
+ 142:os.c          ****   }
+ 143:os.c          ****   signal_start_task(next_process, true);
+ 702               		.loc 1 143 0
+ 703 036a 8091 0000 		lds r24,next_process
+ 704 036e 9091 0000 		lds r25,next_process+1
+ 705 0372 61E0      		ldi r22,lo8(1)
+ 706 0374 0E94 0000 		call signal_start_task
+ 144:os.c          ****   current_process = &(Process[next_process]);
+ 707               		.loc 1 144 0
+ 708 0378 4091 0000 		lds r20,next_process
+ 709 037c 5091 0000 		lds r21,next_process+1
+ 710 0380 29E0      		ldi r18,lo8(9)
+ 711 0382 31E0      		ldi r19,lo8(1)
+ 712 0384 429F      		mul r20,r18
+ 713 0386 C001      		movw r24,r0
+ 714 0388 439F      		mul r20,r19
+ 715 038a 900D      		add r25,r0
+ 716 038c 529F      		mul r21,r18
+ 717 038e 900D      		add r25,r0
+ 718 0390 1124      		clr r1
+ 719 0392 8050      		subi r24,lo8(-(Process))
+ 720 0394 9040      		sbci r25,hi8(-(Process))
+ 721 0396 9093 0000 		sts current_process+1,r25
+ 722 039a 8093 0000 		sts current_process,r24
+ 145:os.c          ****   current_stack_pointer = current_process->stack_pointer;
+ 723               		.loc 1 145 0
+ 724 039e 8091 0000 		lds r24,current_process
+ 725 03a2 9091 0000 		lds r25,current_process+1
+ 726 03a6 FC01      		movw r30,r24
+ 727 03a8 8081      		ld r24,Z
+ 728 03aa 9181      		ldd r25,Z+1
+ 729 03ac 9093 0000 		sts current_stack_pointer+1,r25
+ 730 03b0 8093 0000 		sts current_stack_pointer,r24
+ 146:os.c          ****   current_process->state = RUNNING;
+ 731               		.loc 1 146 0
+ 732 03b4 8091 0000 		lds r24,current_process
+ 733 03b8 9091 0000 		lds r25,current_process+1
+ 734 03bc 8E5F      		subi r24,-2
+ 735 03be 9E4F      		sbci r25,-2
+ 736 03c0 22E0      		ldi r18,lo8(2)
+ 737 03c2 FC01      		movw r30,r24
+ 738 03c4 2083      		st Z,r18
+ 147:os.c          ****   next_process = (next_process + 1) % MAXTHREAD;
+ 739               		.loc 1 147 0
+ 740 03c6 8091 0000 		lds r24,next_process
+ 741 03ca 9091 0000 		lds r25,next_process+1
+ 742 03ce 0196      		adiw r24,1
+ 743 03d0 8F70      		andi r24,15
+ 744 03d2 9927      		clr r25
+ 745 03d4 9093 0000 		sts next_process+1,r25
+ 746 03d8 8093 0000 		sts next_process,r24
+ 747               	/* epilogue start */
+ 148:os.c          **** }
+ 748               		.loc 1 148 0
+ 749 03dc DF91      		pop r29
+ 750 03de CF91      		pop r28
+ 751 03e0 0895      		ret
+ 752               		.cfi_endproc
+ 753               	.LFE6:
+ 756               	Next_Kernel_Request:
+ 757               	.LFB7:
+ 149:os.c          **** 
+ 150:os.c          **** static void Next_Kernel_Request() {
+ 758               		.loc 1 150 0
+ 759               		.cfi_startproc
+ 760 03e2 CF93      		push r28
+ 761               	.LCFI27:
+ 762               		.cfi_def_cfa_offset 4
+ 763               		.cfi_offset 28, -3
+ 764 03e4 DF93      		push r29
+ 765               	.LCFI28:
+ 766               		.cfi_def_cfa_offset 5
+ 767               		.cfi_offset 29, -4
+ 768 03e6 CDB7      		in r28,__SP_L__
+ 769 03e8 DEB7      		in r29,__SP_H__
+ 770               	.LCFI29:
+ 771               		.cfi_def_cfa_register 28
+ 772               	/* prologue: function */
+ 773               	/* frame size = 0 */
+ 774               	/* stack size = 2 */
+ 775               	.L__stack_usage = 2
+ 151:os.c          ****   Dispatch();  /* select a new task to run */
+ 776               		.loc 1 151 0
+ 777 03ea 0E94 0000 		call Dispatch
+ 778               	.L40:
+ 152:os.c          **** 
+ 153:os.c          ****   for (;;) {
+ 154:os.c          ****     current_process->request = NONE; /* clear its request */
+ 779               		.loc 1 154 0
+ 780 03ee 8091 0000 		lds r24,current_process
+ 781 03f2 9091 0000 		lds r25,current_process+1
+ 782 03f6 8B5F      		subi r24,-5
+ 783 03f8 9E4F      		sbci r25,-2
+ 784 03fa FC01      		movw r30,r24
+ 785 03fc 1082      		st Z,__zero_reg__
+ 155:os.c          **** 
+ 156:os.c          ****     /* activate this newly selected task */
+ 157:os.c          ****     current_stack_pointer = current_process->stack_pointer;
+ 786               		.loc 1 157 0
+ 787 03fe 8091 0000 		lds r24,current_process
+ 788 0402 9091 0000 		lds r25,current_process+1
+ 789 0406 FC01      		movw r30,r24
+ 790 0408 8081      		ld r24,Z
+ 791 040a 9181      		ldd r25,Z+1
+ 792 040c 9093 0000 		sts current_stack_pointer+1,r25
+ 793 0410 8093 0000 		sts current_stack_pointer,r24
+ 158:os.c          ****     Exit_Kernel();    /* or CSwitch() */
+ 794               		.loc 1 158 0
+ 795 0414 0E94 0000 		call Exit_Kernel
+ 159:os.c          **** 
+ 160:os.c          ****     /* if this task makes a system call, it will return to here! */
+ 161:os.c          **** 
+ 162:os.c          ****     /* save the Cp's stack pointer */
+ 163:os.c          ****     current_process->stack_pointer = current_stack_pointer;
+ 796               		.loc 1 163 0
+ 797 0418 8091 0000 		lds r24,current_process
+ 798 041c 9091 0000 		lds r25,current_process+1
+ 799 0420 2091 0000 		lds r18,current_stack_pointer
+ 800 0424 3091 0000 		lds r19,current_stack_pointer+1
+ 801 0428 FC01      		movw r30,r24
+ 802 042a 3183      		std Z+1,r19
+ 803 042c 2083      		st Z,r18
+ 164:os.c          **** 
+ 165:os.c          ****     switch(current_process->request){
+ 804               		.loc 1 165 0
+ 805 042e 8091 0000 		lds r24,current_process
+ 806 0432 9091 0000 		lds r25,current_process+1
+ 807 0436 8B5F      		subi r24,-5
+ 808 0438 9E4F      		sbci r25,-2
+ 809 043a FC01      		movw r30,r24
+ 810 043c 8081      		ld r24,Z
+ 811 043e 882F      		mov r24,r24
+ 812 0440 90E0      		ldi r25,0
+ 813 0442 8130      		cpi r24,1
+ 814 0444 9105      		cpc r25,__zero_reg__
+ 815 0446 01F0      		breq .L35
+ 816 0448 8230      		cpi r24,2
+ 817 044a 9105      		cpc r25,__zero_reg__
+ 818 044c 04F4      		brge .L36
+ 819 044e 0097      		sbiw r24,0
+ 820 0450 01F0      		breq .L37
+ 166:os.c          ****       case CREATE:
+ 167:os.c          ****         Kernel_Create_Task (current_process->code);
+ 168:os.c          ****         break;
+ 169:os.c          ****       case NEXT:
+ 170:os.c          ****       case NONE:
+ 171:os.c          ****         /* NONE could be caused by a timer interrupt */
+ 172:os.c          ****         current_process->state = READY;
+ 173:os.c          ****         Dispatch();
+ 174:os.c          ****         break;
+ 175:os.c          ****       case TERMINATE:
+ 176:os.c          ****         /* deallocate all resources used by this task */
+ 177:os.c          ****         current_process->state = DEAD;
+ 178:os.c          ****         Dispatch();
+ 179:os.c          ****         break;
+ 180:os.c          ****       default: break;
+ 821               		.loc 1 180 0
+ 822 0452 00C0      		rjmp .L39
+ 823               	.L36:
+ 165:os.c          ****       case CREATE:
+ 824               		.loc 1 165 0
+ 825 0454 8230      		cpi r24,2
+ 826 0456 9105      		cpc r25,__zero_reg__
+ 827 0458 01F0      		breq .L37
+ 828 045a 8330      		cpi r24,3
+ 829 045c 9105      		cpc r25,__zero_reg__
+ 830 045e 01F0      		breq .L38
+ 831               		.loc 1 180 0
+ 832 0460 00C0      		rjmp .L39
+ 833               	.L35:
+ 167:os.c          ****         break;
+ 834               		.loc 1 167 0
+ 835 0462 8091 0000 		lds r24,current_process
+ 836 0466 9091 0000 		lds r25,current_process+1
+ 837 046a 8D5F      		subi r24,-3
+ 838 046c 9E4F      		sbci r25,-2
+ 839 046e FC01      		movw r30,r24
+ 840 0470 8081      		ld r24,Z
+ 841 0472 9181      		ldd r25,Z+1
+ 842 0474 0E94 0000 		call Kernel_Create_Task
+ 168:os.c          ****       case NEXT:
+ 843               		.loc 1 168 0
+ 844 0478 00C0      		rjmp .L39
+ 845               	.L37:
+ 172:os.c          ****         Dispatch();
+ 846               		.loc 1 172 0
+ 847 047a 8091 0000 		lds r24,current_process
+ 848 047e 9091 0000 		lds r25,current_process+1
+ 849 0482 8E5F      		subi r24,-2
+ 850 0484 9E4F      		sbci r25,-2
+ 851 0486 21E0      		ldi r18,lo8(1)
+ 852 0488 FC01      		movw r30,r24
+ 853 048a 2083      		st Z,r18
+ 173:os.c          ****         break;
+ 854               		.loc 1 173 0
+ 855 048c 0E94 0000 		call Dispatch
+ 174:os.c          ****       case TERMINATE:
+ 856               		.loc 1 174 0
+ 857 0490 00C0      		rjmp .L39
+ 858               	.L38:
+ 177:os.c          ****         Dispatch();
+ 859               		.loc 1 177 0
+ 860 0492 8091 0000 		lds r24,current_process
+ 861 0496 9091 0000 		lds r25,current_process+1
+ 862 049a 8E5F      		subi r24,-2
+ 863 049c 9E4F      		sbci r25,-2
+ 864 049e FC01      		movw r30,r24
+ 865 04a0 1082      		st Z,__zero_reg__
+ 178:os.c          ****         break;
+ 866               		.loc 1 178 0
+ 867 04a2 0E94 0000 		call Dispatch
+ 179:os.c          ****       default: break;
+ 868               		.loc 1 179 0
+ 869 04a6 0000      		nop
+ 870               	.L39:
+ 181:os.c          ****     }
+ 182:os.c          ****   }
+ 871               		.loc 1 182 0
+ 872 04a8 00C0      		rjmp .L40
+ 873               		.cfi_endproc
+ 874               	.LFE7:
+ 876               	.global	OS_Abort
+ 878               	OS_Abort:
+ 879               	.LFB8:
+ 183:os.c          **** }
+ 184:os.c          **** 
+ 185:os.c          **** /*******************************************************************************
+ 186:os.c          ****  * Function Definitions OS API
+ 187:os.c          ****  * see os.h
+ 188:os.c          ****  ******************************************************************************/
+ 189:os.c          **** 
+ 190:os.c          **** void OS_Abort(void) {
+ 880               		.loc 1 190 0
+ 881               		.cfi_startproc
+ 882 04aa CF93      		push r28
+ 883               	.LCFI30:
+ 884               		.cfi_def_cfa_offset 4
+ 885               		.cfi_offset 28, -3
+ 886 04ac DF93      		push r29
+ 887               	.LCFI31:
+ 888               		.cfi_def_cfa_offset 5
+ 889               		.cfi_offset 29, -4
+ 890 04ae 1F92      		push __zero_reg__
+ 891 04b0 1F92      		push __zero_reg__
+ 892               	.LCFI32:
+ 893               		.cfi_def_cfa_offset 7
+ 894 04b2 CDB7      		in r28,__SP_L__
+ 895 04b4 DEB7      		in r29,__SP_H__
+ 896               	.LCFI33:
+ 897               		.cfi_def_cfa_register 28
+ 898               	/* prologue: function */
+ 899               	/* frame size = 2 */
+ 900               	/* stack size = 4 */
+ 901               	.L__stack_usage = 4
+ 191:os.c          ****   disable_global_interrupts();
+ 902               		.loc 1 191 0
+ 903 04b6 0E94 0000 		call disable_global_interrupts
+ 904               	.LBB2:
+ 192:os.c          ****   for (int i = 0; i < 42; i++) {
+ 905               		.loc 1 192 0
+ 906 04ba 1A82      		std Y+2,__zero_reg__
+ 907 04bc 1982      		std Y+1,__zero_reg__
+ 908 04be 00C0      		rjmp .L42
+ 909               	.L43:
+ 910               		.loc 1 192 0 is_stmt 0 discriminator 2
+ 911 04c0 8981      		ldd r24,Y+1
+ 912 04c2 9A81      		ldd r25,Y+2
+ 913 04c4 0196      		adiw r24,1
+ 914 04c6 9A83      		std Y+2,r25
+ 915 04c8 8983      		std Y+1,r24
+ 916               	.L42:
+ 917               		.loc 1 192 0 discriminator 1
+ 918 04ca 8981      		ldd r24,Y+1
+ 919 04cc 9A81      		ldd r25,Y+2
+ 920 04ce 8A32      		cpi r24,42
+ 921 04d0 9105      		cpc r25,__zero_reg__
+ 922 04d2 04F0      		brlt .L43
+ 923               	.LBE2:
+ 193:os.c          ****     // BLINK LED 13
+ 194:os.c          ****   }
+ 195:os.c          ****   soft_reset();
+ 924               		.loc 1 195 0 is_stmt 1
+ 925 04d4 88E1      		ldi r24,lo8(24)
+ 926 04d6 90E0      		ldi r25,0
+ 927 04d8 28E0      		ldi r18,lo8(8)
+ 928               	/* #APP */
+ 929               	 ;  195 "os.c" 1
+ 930 04da 0FB6      		in __tmp_reg__,__SREG__
+ 931 04dc F894      		cli
+ 932 04de A895      		wdr
+ 933 04e0 8093 6000 		sts 96,r24
+ 934 04e4 0FBE      		out __SREG__,__tmp_reg__
+ 935 04e6 2093 6000 		sts 96,r18
+ 936               		
+ 937               	 ;  0 "" 2
+ 938               	/* #NOAPP */
+ 939               	.L44:
+ 940               		.loc 1 195 0 is_stmt 0 discriminator 1
+ 941 04ea 00C0      		rjmp .L44
+ 942               		.cfi_endproc
+ 943               	.LFE8:
+ 945               	.global	Task_Create
+ 947               	Task_Create:
+ 948               	.LFB9:
+ 196:os.c          **** }
+ 197:os.c          **** 
+ 198:os.c          **** PID Task_Create( void (*f)(void), PRIORITY py, int arg) {
+ 949               		.loc 1 198 0 is_stmt 1
+ 950               		.cfi_startproc
+ 951 04ec CF93      		push r28
+ 952               	.LCFI34:
+ 953               		.cfi_def_cfa_offset 4
+ 954               		.cfi_offset 28, -3
+ 955 04ee DF93      		push r29
+ 956               	.LCFI35:
+ 957               		.cfi_def_cfa_offset 5
+ 958               		.cfi_offset 29, -4
+ 959 04f0 CDB7      		in r28,__SP_L__
+ 960 04f2 DEB7      		in r29,__SP_H__
+ 961               	.LCFI36:
+ 962               		.cfi_def_cfa_register 28
+ 963 04f4 2897      		sbiw r28,8
+ 964               	.LCFI37:
+ 965               		.cfi_def_cfa_offset 13
+ 966 04f6 0FB6      		in __tmp_reg__,__SREG__
+ 967 04f8 F894      		cli
+ 968 04fa DEBF      		out __SP_H__,r29
+ 969 04fc 0FBE      		out __SREG__,__tmp_reg__
+ 970 04fe CDBF      		out __SP_L__,r28
+ 971               	/* prologue: function */
+ 972               	/* frame size = 8 */
+ 973               	/* stack size = 10 */
+ 974               	.L__stack_usage = 10
+ 975 0500 9D83      		std Y+5,r25
+ 976 0502 8C83      		std Y+4,r24
+ 977 0504 6E83      		std Y+6,r22
+ 978 0506 5887      		std Y+8,r21
+ 979 0508 4F83      		std Y+7,r20
+ 199:os.c          ****   PID pid;
+ 200:os.c          ****   if (KernelActive) {
+ 980               		.loc 1 200 0
+ 981 050a 8091 0000 		lds r24,KernelActive
+ 982 050e 9091 0000 		lds r25,KernelActive+1
+ 983 0512 0097      		sbiw r24,0
+ 984 0514 01F0      		breq .L46
+ 985               	.LBB3:
+ 201:os.c          ****     uint8_t inturupt_flag = disable_global_interrupts();
+ 986               		.loc 1 201 0
+ 987 0516 0E94 0000 		call disable_global_interrupts
+ 988 051a 8B83      		std Y+3,r24
+ 202:os.c          ****     current_process->request = CREATE;
+ 989               		.loc 1 202 0
+ 990 051c 8091 0000 		lds r24,current_process
+ 991 0520 9091 0000 		lds r25,current_process+1
+ 992 0524 8B5F      		subi r24,-5
+ 993 0526 9E4F      		sbci r25,-2
+ 994 0528 21E0      		ldi r18,lo8(1)
+ 995 052a FC01      		movw r30,r24
+ 996 052c 2083      		st Z,r18
+ 203:os.c          ****     current_process->code = f;
+ 997               		.loc 1 203 0
+ 998 052e 8091 0000 		lds r24,current_process
+ 999 0532 9091 0000 		lds r25,current_process+1
+ 1000 0536 8D5F      		subi r24,-3
+ 1001 0538 9E4F      		sbci r25,-2
+ 1002 053a 2C81      		ldd r18,Y+4
+ 1003 053c 3D81      		ldd r19,Y+5
+ 1004 053e FC01      		movw r30,r24
+ 1005 0540 3183      		std Z+1,r19
+ 1006 0542 2083      		st Z,r18
+ 204:os.c          ****     Enter_Kernel();
+ 1007               		.loc 1 204 0
+ 1008 0544 0E94 0000 		call Enter_Kernel
+ 205:os.c          ****     restore_global_interrupts(inturupt_flag);
+ 1009               		.loc 1 205 0
+ 1010 0548 8B81      		ldd r24,Y+3
+ 1011 054a 0E94 0000 		call restore_global_interrupts
+ 1012               	.LBE3:
+ 1013 054e 00C0      		rjmp .L47
+ 1014               	.L46:
+ 206:os.c          **** 
+ 207:os.c          ****   } else {
+ 208:os.c          ****      /* call the RTOS function directly */
+ 209:os.c          ****      pid = Kernel_Create_Task(f);
+ 1015               		.loc 1 209 0
+ 1016 0550 8C81      		ldd r24,Y+4
+ 1017 0552 9D81      		ldd r25,Y+5
+ 1018 0554 0E94 0000 		call Kernel_Create_Task
+ 1019 0558 9A83      		std Y+2,r25
+ 1020 055a 8983      		std Y+1,r24
+ 1021               	.L47:
+ 210:os.c          ****   }
+ 211:os.c          ****   Process[pid].priority = py;
+ 1022               		.loc 1 211 0
+ 1023 055c 4981      		ldd r20,Y+1
+ 1024 055e 5A81      		ldd r21,Y+2
+ 1025 0560 29E0      		ldi r18,lo8(9)
+ 1026 0562 31E0      		ldi r19,lo8(1)
+ 1027 0564 429F      		mul r20,r18
+ 1028 0566 C001      		movw r24,r0
+ 1029 0568 439F      		mul r20,r19
+ 1030 056a 900D      		add r25,r0
+ 1031 056c 529F      		mul r21,r18
+ 1032 056e 900D      		add r25,r0
+ 1033 0570 1124      		clr r1
+ 1034 0572 8050      		subi r24,lo8(-(Process+262))
+ 1035 0574 9040      		sbci r25,hi8(-(Process+262))
+ 1036 0576 2E81      		ldd r18,Y+6
+ 1037 0578 FC01      		movw r30,r24
+ 1038 057a 2083      		st Z,r18
+ 212:os.c          ****   return pid;
+ 1039               		.loc 1 212 0
+ 1040 057c 8981      		ldd r24,Y+1
+ 1041 057e 9A81      		ldd r25,Y+2
+ 1042               	/* epilogue start */
+ 213:os.c          **** }
+ 1043               		.loc 1 213 0
+ 1044 0580 2896      		adiw r28,8
+ 1045 0582 0FB6      		in __tmp_reg__,__SREG__
+ 1046 0584 F894      		cli
+ 1047 0586 DEBF      		out __SP_H__,r29
+ 1048 0588 0FBE      		out __SREG__,__tmp_reg__
+ 1049 058a CDBF      		out __SP_L__,r28
+ 1050 058c DF91      		pop r29
+ 1051 058e CF91      		pop r28
+ 1052 0590 0895      		ret
+ 1053               		.cfi_endproc
+ 1054               	.LFE9:
+ 1056               	.global	Task_Terminate
+ 1058               	Task_Terminate:
+ 1059               	.LFB10:
+ 214:os.c          **** 
+ 215:os.c          **** void Task_Terminate(void) {
+ 1060               		.loc 1 215 0
+ 1061               		.cfi_startproc
+ 1062 0592 CF93      		push r28
+ 1063               	.LCFI38:
+ 1064               		.cfi_def_cfa_offset 4
+ 1065               		.cfi_offset 28, -3
+ 1066 0594 DF93      		push r29
+ 1067               	.LCFI39:
+ 1068               		.cfi_def_cfa_offset 5
+ 1069               		.cfi_offset 29, -4
+ 1070 0596 CDB7      		in r28,__SP_L__
+ 1071 0598 DEB7      		in r29,__SP_H__
+ 1072               	.LCFI40:
+ 1073               		.cfi_def_cfa_register 28
+ 1074               	/* prologue: function */
+ 1075               	/* frame size = 0 */
+ 1076               	/* stack size = 2 */
+ 1077               	.L__stack_usage = 2
+ 216:os.c          ****   if (KernelActive) {
+ 1078               		.loc 1 216 0
+ 1079 059a 8091 0000 		lds r24,KernelActive
+ 1080 059e 9091 0000 		lds r25,KernelActive+1
+ 1081 05a2 0097      		sbiw r24,0
+ 1082 05a4 01F0      		breq .L49
+ 217:os.c          ****     disable_global_interrupts();
+ 1083               		.loc 1 217 0
+ 1084 05a6 0E94 0000 		call disable_global_interrupts
+ 218:os.c          ****     current_process->request = TERMINATE;
+ 1085               		.loc 1 218 0
+ 1086 05aa 8091 0000 		lds r24,current_process
+ 1087 05ae 9091 0000 		lds r25,current_process+1
+ 1088 05b2 8B5F      		subi r24,-5
+ 1089 05b4 9E4F      		sbci r25,-2
+ 1090 05b6 23E0      		ldi r18,lo8(3)
+ 1091 05b8 FC01      		movw r30,r24
+ 1092 05ba 2083      		st Z,r18
+ 219:os.c          ****     Enter_Kernel();
+ 1093               		.loc 1 219 0
+ 1094 05bc 0E94 0000 		call Enter_Kernel
+ 1095               	.L49:
+ 1096               	/* epilogue start */
+ 220:os.c          ****   }
+ 221:os.c          **** }
+ 1097               		.loc 1 221 0
+ 1098 05c0 DF91      		pop r29
+ 1099 05c2 CF91      		pop r28
+ 1100 05c4 0895      		ret
+ 1101               		.cfi_endproc
+ 1102               	.LFE10:
+ 1104               	.global	Task_Yield
+ 1106               	Task_Yield:
+ 1107               	.LFB11:
+ 222:os.c          **** 
+ 223:os.c          **** void Task_Yield(void) {
+ 1108               		.loc 1 223 0
+ 1109               		.cfi_startproc
+ 1110 05c6 CF93      		push r28
+ 1111               	.LCFI41:
+ 1112               		.cfi_def_cfa_offset 4
+ 1113               		.cfi_offset 28, -3
+ 1114 05c8 DF93      		push r29
+ 1115               	.LCFI42:
+ 1116               		.cfi_def_cfa_offset 5
+ 1117               		.cfi_offset 29, -4
+ 1118 05ca CDB7      		in r28,__SP_L__
+ 1119 05cc DEB7      		in r29,__SP_H__
+ 1120               	.LCFI43:
+ 1121               		.cfi_def_cfa_register 28
+ 1122               	/* prologue: function */
+ 1123               	/* frame size = 0 */
+ 1124               	/* stack size = 2 */
+ 1125               	.L__stack_usage = 2
+ 224:os.c          ****   if (KernelActive) {
+ 1126               		.loc 1 224 0
+ 1127 05ce 8091 0000 		lds r24,KernelActive
+ 1128 05d2 9091 0000 		lds r25,KernelActive+1
+ 1129 05d6 0097      		sbiw r24,0
+ 1130 05d8 01F0      		breq .L51
+ 225:os.c          ****     disable_global_interrupts();
+ 1131               		.loc 1 225 0
+ 1132 05da 0E94 0000 		call disable_global_interrupts
+ 226:os.c          ****     current_process->request = NEXT;
+ 1133               		.loc 1 226 0
+ 1134 05de 8091 0000 		lds r24,current_process
+ 1135 05e2 9091 0000 		lds r25,current_process+1
+ 1136 05e6 8B5F      		subi r24,-5
+ 1137 05e8 9E4F      		sbci r25,-2
+ 1138 05ea 22E0      		ldi r18,lo8(2)
+ 1139 05ec FC01      		movw r30,r24
+ 1140 05ee 2083      		st Z,r18
+ 227:os.c          ****     Enter_Kernel();
+ 1141               		.loc 1 227 0
+ 1142 05f0 0E94 0000 		call Enter_Kernel
+ 1143               	.L51:
+ 1144               	/* epilogue start */
+ 228:os.c          ****   }
+ 229:os.c          **** }
+ 1145               		.loc 1 229 0
+ 1146 05f4 DF91      		pop r29
+ 1147 05f6 CF91      		pop r28
+ 1148 05f8 0895      		ret
+ 1149               		.cfi_endproc
+ 1150               	.LFE11:
+ 1152               	.global	Task_GetArg
+ 1154               	Task_GetArg:
+ 1155               	.LFB12:
+ 230:os.c          **** 
+ 231:os.c          **** /**
+ 232:os.c          ****  * @brief Retrieve the assigned parameter.
+ 233:os.c          ****  */
+ 234:os.c          **** int Task_GetArg(void) {
+ 1156               		.loc 1 234 0
+ 1157               		.cfi_startproc
+ 1158 05fa CF93      		push r28
+ 1159               	.LCFI44:
+ 1160               		.cfi_def_cfa_offset 4
+ 1161               		.cfi_offset 28, -3
+ 1162 05fc DF93      		push r29
+ 1163               	.LCFI45:
+ 1164               		.cfi_def_cfa_offset 5
+ 1165               		.cfi_offset 29, -4
+ 1166 05fe 00D0      		rcall .
+ 1167               	.LCFI46:
+ 1168               		.cfi_def_cfa_offset 8
+ 1169 0600 CDB7      		in r28,__SP_L__
+ 1170 0602 DEB7      		in r29,__SP_H__
+ 1171               	.LCFI47:
+ 1172               		.cfi_def_cfa_register 28
+ 1173               	/* prologue: function */
+ 1174               	/* frame size = 3 */
+ 1175               	/* stack size = 5 */
+ 1176               	.L__stack_usage = 5
+ 235:os.c          ****   int arg;
+ 236:os.c          ****   uint8_t sreg;
+ 237:os.c          **** 
+ 238:os.c          ****   // Save interupt flag
+ 239:os.c          ****   sreg = SREG;
+ 1177               		.loc 1 239 0
+ 1178 0604 8FE5      		ldi r24,lo8(95)
+ 1179 0606 90E0      		ldi r25,0
+ 1180 0608 FC01      		movw r30,r24
+ 1181 060a 8081      		ld r24,Z
+ 1182 060c 8983      		std Y+1,r24
+ 240:os.c          ****   disable_global_interrupts();
+ 1183               		.loc 1 240 0
+ 1184 060e 0E94 0000 		call disable_global_interrupts
+ 241:os.c          **** 
+ 242:os.c          ****   arg = current_process->argument;
+ 1185               		.loc 1 242 0
+ 1186 0612 8091 0000 		lds r24,current_process
+ 1187 0616 9091 0000 		lds r25,current_process+1
+ 1188 061a 895F      		subi r24,-7
+ 1189 061c 9E4F      		sbci r25,-2
+ 1190 061e FC01      		movw r30,r24
+ 1191 0620 8081      		ld r24,Z
+ 1192 0622 9181      		ldd r25,Z+1
+ 1193 0624 9B83      		std Y+3,r25
+ 1194 0626 8A83      		std Y+2,r24
+ 243:os.c          **** 
+ 244:os.c          ****   // Restore interupt flag
+ 245:os.c          ****   SREG = sreg;
+ 1195               		.loc 1 245 0
+ 1196 0628 8FE5      		ldi r24,lo8(95)
+ 1197 062a 90E0      		ldi r25,0
+ 1198 062c 2981      		ldd r18,Y+1
+ 1199 062e FC01      		movw r30,r24
+ 1200 0630 2083      		st Z,r18
+ 246:os.c          ****   return arg;
+ 1201               		.loc 1 246 0
+ 1202 0632 8A81      		ldd r24,Y+2
+ 1203 0634 9B81      		ldd r25,Y+3
+ 1204               	/* epilogue start */
+ 247:os.c          **** }
+ 1205               		.loc 1 247 0
+ 1206 0636 0F90      		pop __tmp_reg__
+ 1207 0638 0F90      		pop __tmp_reg__
+ 1208 063a 0F90      		pop __tmp_reg__
+ 1209 063c DF91      		pop r29
+ 1210 063e CF91      		pop r28
+ 1211 0640 0895      		ret
+ 1212               		.cfi_endproc
+ 1213               	.LFE12:
+ 1215               	.global	Task_Suspend
+ 1217               	Task_Suspend:
+ 1218               	.LFB13:
+ 248:os.c          **** 
+ 249:os.c          **** void Task_Suspend(PID p) {
+ 1219               		.loc 1 249 0
+ 1220               		.cfi_startproc
+ 1221 0642 CF93      		push r28
+ 1222               	.LCFI48:
+ 1223               		.cfi_def_cfa_offset 4
+ 1224               		.cfi_offset 28, -3
+ 1225 0644 DF93      		push r29
+ 1226               	.LCFI49:
+ 1227               		.cfi_def_cfa_offset 5
+ 1228               		.cfi_offset 29, -4
+ 1229 0646 1F92      		push __zero_reg__
+ 1230 0648 1F92      		push __zero_reg__
+ 1231               	.LCFI50:
+ 1232               		.cfi_def_cfa_offset 7
+ 1233 064a CDB7      		in r28,__SP_L__
+ 1234 064c DEB7      		in r29,__SP_H__
+ 1235               	.LCFI51:
+ 1236               		.cfi_def_cfa_register 28
+ 1237               	/* prologue: function */
+ 1238               	/* frame size = 2 */
+ 1239               	/* stack size = 4 */
+ 1240               	.L__stack_usage = 4
+ 1241 064e 9A83      		std Y+2,r25
+ 1242 0650 8983      		std Y+1,r24
+ 1243               	/* epilogue start */
+ 250:os.c          **** 
+ 251:os.c          **** }
+ 1244               		.loc 1 251 0
+ 1245 0652 0F90      		pop __tmp_reg__
+ 1246 0654 0F90      		pop __tmp_reg__
+ 1247 0656 DF91      		pop r29
+ 1248 0658 CF91      		pop r28
+ 1249 065a 0895      		ret
+ 1250               		.cfi_endproc
+ 1251               	.LFE13:
+ 1253               	.global	Task_Resume
+ 1255               	Task_Resume:
+ 1256               	.LFB14:
+ 252:os.c          **** 
+ 253:os.c          **** void Task_Resume(PID p) {
+ 1257               		.loc 1 253 0
+ 1258               		.cfi_startproc
+ 1259 065c CF93      		push r28
+ 1260               	.LCFI52:
+ 1261               		.cfi_def_cfa_offset 4
+ 1262               		.cfi_offset 28, -3
+ 1263 065e DF93      		push r29
+ 1264               	.LCFI53:
+ 1265               		.cfi_def_cfa_offset 5
+ 1266               		.cfi_offset 29, -4
+ 1267 0660 1F92      		push __zero_reg__
+ 1268 0662 1F92      		push __zero_reg__
+ 1269               	.LCFI54:
+ 1270               		.cfi_def_cfa_offset 7
+ 1271 0664 CDB7      		in r28,__SP_L__
+ 1272 0666 DEB7      		in r29,__SP_H__
+ 1273               	.LCFI55:
+ 1274               		.cfi_def_cfa_register 28
+ 1275               	/* prologue: function */
+ 1276               	/* frame size = 2 */
+ 1277               	/* stack size = 4 */
+ 1278               	.L__stack_usage = 4
+ 1279 0668 9A83      		std Y+2,r25
+ 1280 066a 8983      		std Y+1,r24
+ 1281               	/* epilogue start */
+ 254:os.c          **** 
+ 255:os.c          **** }
+ 1282               		.loc 1 255 0
+ 1283 066c 0F90      		pop __tmp_reg__
+ 1284 066e 0F90      		pop __tmp_reg__
+ 1285 0670 DF91      		pop r29
+ 1286 0672 CF91      		pop r28
+ 1287 0674 0895      		ret
+ 1288               		.cfi_endproc
+ 1289               	.LFE14:
+ 1291               	.global	Task_Sleep
+ 1293               	Task_Sleep:
+ 1294               	.LFB15:
+ 256:os.c          **** 
+ 257:os.c          **** void Task_Sleep(TICK t) {
+ 1295               		.loc 1 257 0
+ 1296               		.cfi_startproc
+ 1297 0676 CF93      		push r28
+ 1298               	.LCFI56:
+ 1299               		.cfi_def_cfa_offset 4
+ 1300               		.cfi_offset 28, -3
+ 1301 0678 DF93      		push r29
+ 1302               	.LCFI57:
+ 1303               		.cfi_def_cfa_offset 5
+ 1304               		.cfi_offset 29, -4
+ 1305 067a 1F92      		push __zero_reg__
+ 1306 067c 1F92      		push __zero_reg__
+ 1307               	.LCFI58:
+ 1308               		.cfi_def_cfa_offset 7
+ 1309 067e CDB7      		in r28,__SP_L__
+ 1310 0680 DEB7      		in r29,__SP_H__
+ 1311               	.LCFI59:
+ 1312               		.cfi_def_cfa_register 28
+ 1313               	/* prologue: function */
+ 1314               	/* frame size = 2 */
+ 1315               	/* stack size = 4 */
+ 1316               	.L__stack_usage = 4
+ 1317 0682 9A83      		std Y+2,r25
+ 1318 0684 8983      		std Y+1,r24
+ 1319               	/* epilogue start */
+ 258:os.c          **** 
+ 259:os.c          **** }
+ 1320               		.loc 1 259 0
+ 1321 0686 0F90      		pop __tmp_reg__
+ 1322 0688 0F90      		pop __tmp_reg__
+ 1323 068a DF91      		pop r29
+ 1324 068c CF91      		pop r28
+ 1325 068e 0895      		ret
+ 1326               		.cfi_endproc
+ 1327               	.LFE15:
+ 1329               	.global	Mutex_Init
+ 1331               	Mutex_Init:
+ 1332               	.LFB16:
+ 260:os.c          **** 
+ 261:os.c          **** MUTEX Mutex_Init(void) {
+ 1333               		.loc 1 261 0
+ 1334               		.cfi_startproc
+ 1335 0690 CF93      		push r28
+ 1336               	.LCFI60:
+ 1337               		.cfi_def_cfa_offset 4
+ 1338               		.cfi_offset 28, -3
+ 1339 0692 DF93      		push r29
+ 1340               	.LCFI61:
+ 1341               		.cfi_def_cfa_offset 5
+ 1342               		.cfi_offset 29, -4
+ 1343 0694 CDB7      		in r28,__SP_L__
+ 1344 0696 DEB7      		in r29,__SP_H__
+ 1345               	.LCFI62:
+ 1346               		.cfi_def_cfa_register 28
+ 1347               	/* prologue: function */
+ 1348               	/* frame size = 0 */
+ 1349               	/* stack size = 2 */
+ 1350               	.L__stack_usage = 2
+ 262:os.c          ****   // TODO
+ 263:os.c          ****   return 0;
+ 1351               		.loc 1 263 0
+ 1352 0698 80E0      		ldi r24,0
+ 1353 069a 90E0      		ldi r25,0
+ 1354               	/* epilogue start */
+ 264:os.c          **** }
+ 1355               		.loc 1 264 0
+ 1356 069c DF91      		pop r29
+ 1357 069e CF91      		pop r28
+ 1358 06a0 0895      		ret
+ 1359               		.cfi_endproc
+ 1360               	.LFE16:
+ 1362               	.global	Mutex_Lock
+ 1364               	Mutex_Lock:
+ 1365               	.LFB17:
+ 265:os.c          **** 
+ 266:os.c          **** void Mutex_Lock(MUTEX m) {
+ 1366               		.loc 1 266 0
+ 1367               		.cfi_startproc
+ 1368 06a2 CF93      		push r28
+ 1369               	.LCFI63:
+ 1370               		.cfi_def_cfa_offset 4
+ 1371               		.cfi_offset 28, -3
+ 1372 06a4 DF93      		push r29
+ 1373               	.LCFI64:
+ 1374               		.cfi_def_cfa_offset 5
+ 1375               		.cfi_offset 29, -4
+ 1376 06a6 1F92      		push __zero_reg__
+ 1377 06a8 1F92      		push __zero_reg__
+ 1378               	.LCFI65:
+ 1379               		.cfi_def_cfa_offset 7
+ 1380 06aa CDB7      		in r28,__SP_L__
+ 1381 06ac DEB7      		in r29,__SP_H__
+ 1382               	.LCFI66:
+ 1383               		.cfi_def_cfa_register 28
+ 1384               	/* prologue: function */
+ 1385               	/* frame size = 2 */
+ 1386               	/* stack size = 4 */
+ 1387               	.L__stack_usage = 4
+ 1388 06ae 9A83      		std Y+2,r25
+ 1389 06b0 8983      		std Y+1,r24
+ 1390               	/* epilogue start */
+ 267:os.c          **** 
+ 268:os.c          **** }
+ 1391               		.loc 1 268 0
+ 1392 06b2 0F90      		pop __tmp_reg__
+ 1393 06b4 0F90      		pop __tmp_reg__
+ 1394 06b6 DF91      		pop r29
+ 1395 06b8 CF91      		pop r28
+ 1396 06ba 0895      		ret
+ 1397               		.cfi_endproc
+ 1398               	.LFE17:
+ 1400               	.global	Mutex_Unlock
+ 1402               	Mutex_Unlock:
+ 1403               	.LFB18:
+ 269:os.c          **** 
+ 270:os.c          **** void Mutex_Unlock(MUTEX m) {
+ 1404               		.loc 1 270 0
+ 1405               		.cfi_startproc
+ 1406 06bc CF93      		push r28
+ 1407               	.LCFI67:
+ 1408               		.cfi_def_cfa_offset 4
+ 1409               		.cfi_offset 28, -3
+ 1410 06be DF93      		push r29
+ 1411               	.LCFI68:
+ 1412               		.cfi_def_cfa_offset 5
+ 1413               		.cfi_offset 29, -4
+ 1414 06c0 1F92      		push __zero_reg__
+ 1415 06c2 1F92      		push __zero_reg__
+ 1416               	.LCFI69:
+ 1417               		.cfi_def_cfa_offset 7
+ 1418 06c4 CDB7      		in r28,__SP_L__
+ 1419 06c6 DEB7      		in r29,__SP_H__
+ 1420               	.LCFI70:
+ 1421               		.cfi_def_cfa_register 28
+ 1422               	/* prologue: function */
+ 1423               	/* frame size = 2 */
+ 1424               	/* stack size = 4 */
+ 1425               	.L__stack_usage = 4
+ 1426 06c8 9A83      		std Y+2,r25
+ 1427 06ca 8983      		std Y+1,r24
+ 1428               	/* epilogue start */
+ 271:os.c          **** 
+ 272:os.c          **** }
+ 1429               		.loc 1 272 0
+ 1430 06cc 0F90      		pop __tmp_reg__
+ 1431 06ce 0F90      		pop __tmp_reg__
+ 1432 06d0 DF91      		pop r29
+ 1433 06d2 CF91      		pop r28
+ 1434 06d4 0895      		ret
+ 1435               		.cfi_endproc
+ 1436               	.LFE18:
+ 1438               	.global	Event_Init
+ 1440               	Event_Init:
+ 1441               	.LFB19:
+ 273:os.c          **** 
+ 274:os.c          **** EVENT Event_Init(void) {
+ 1442               		.loc 1 274 0
+ 1443               		.cfi_startproc
+ 1444 06d6 CF93      		push r28
+ 1445               	.LCFI71:
+ 1446               		.cfi_def_cfa_offset 4
+ 1447               		.cfi_offset 28, -3
+ 1448 06d8 DF93      		push r29
+ 1449               	.LCFI72:
+ 1450               		.cfi_def_cfa_offset 5
+ 1451               		.cfi_offset 29, -4
+ 1452 06da CDB7      		in r28,__SP_L__
+ 1453 06dc DEB7      		in r29,__SP_H__
+ 1454               	.LCFI73:
+ 1455               		.cfi_def_cfa_register 28
+ 1456               	/* prologue: function */
+ 1457               	/* frame size = 0 */
+ 1458               	/* stack size = 2 */
+ 1459               	.L__stack_usage = 2
+ 275:os.c          ****   // TODO
+ 276:os.c          ****   return 0;
+ 1460               		.loc 1 276 0
+ 1461 06de 80E0      		ldi r24,0
+ 1462 06e0 90E0      		ldi r25,0
+ 1463               	/* epilogue start */
+ 277:os.c          **** }
+ 1464               		.loc 1 277 0
+ 1465 06e2 DF91      		pop r29
+ 1466 06e4 CF91      		pop r28
+ 1467 06e6 0895      		ret
+ 1468               		.cfi_endproc
+ 1469               	.LFE19:
+ 1471               	.global	Event_Wait
+ 1473               	Event_Wait:
+ 1474               	.LFB20:
+ 278:os.c          **** 
+ 279:os.c          **** void Event_Wait(EVENT e) {
+ 1475               		.loc 1 279 0
+ 1476               		.cfi_startproc
+ 1477 06e8 CF93      		push r28
+ 1478               	.LCFI74:
+ 1479               		.cfi_def_cfa_offset 4
+ 1480               		.cfi_offset 28, -3
+ 1481 06ea DF93      		push r29
+ 1482               	.LCFI75:
+ 1483               		.cfi_def_cfa_offset 5
+ 1484               		.cfi_offset 29, -4
+ 1485 06ec 1F92      		push __zero_reg__
+ 1486 06ee 1F92      		push __zero_reg__
+ 1487               	.LCFI76:
+ 1488               		.cfi_def_cfa_offset 7
+ 1489 06f0 CDB7      		in r28,__SP_L__
+ 1490 06f2 DEB7      		in r29,__SP_H__
+ 1491               	.LCFI77:
+ 1492               		.cfi_def_cfa_register 28
+ 1493               	/* prologue: function */
+ 1494               	/* frame size = 2 */
+ 1495               	/* stack size = 4 */
+ 1496               	.L__stack_usage = 4
+ 1497 06f4 9A83      		std Y+2,r25
+ 1498 06f6 8983      		std Y+1,r24
+ 1499               	/* epilogue start */
+ 280:os.c          **** 
+ 281:os.c          **** }
+ 1500               		.loc 1 281 0
+ 1501 06f8 0F90      		pop __tmp_reg__
+ 1502 06fa 0F90      		pop __tmp_reg__
+ 1503 06fc DF91      		pop r29
+ 1504 06fe CF91      		pop r28
+ 1505 0700 0895      		ret
+ 1506               		.cfi_endproc
+ 1507               	.LFE20:
+ 1509               	.global	Event_Signal
+ 1511               	Event_Signal:
+ 1512               	.LFB21:
+ 282:os.c          **** 
+ 283:os.c          **** void Event_Signal(EVENT e) {
+ 1513               		.loc 1 283 0
+ 1514               		.cfi_startproc
+ 1515 0702 CF93      		push r28
+ 1516               	.LCFI78:
+ 1517               		.cfi_def_cfa_offset 4
+ 1518               		.cfi_offset 28, -3
+ 1519 0704 DF93      		push r29
+ 1520               	.LCFI79:
+ 1521               		.cfi_def_cfa_offset 5
+ 1522               		.cfi_offset 29, -4
+ 1523 0706 1F92      		push __zero_reg__
+ 1524 0708 1F92      		push __zero_reg__
+ 1525               	.LCFI80:
+ 1526               		.cfi_def_cfa_offset 7
+ 1527 070a CDB7      		in r28,__SP_L__
+ 1528 070c DEB7      		in r29,__SP_H__
+ 1529               	.LCFI81:
+ 1530               		.cfi_def_cfa_register 28
+ 1531               	/* prologue: function */
+ 1532               	/* frame size = 2 */
+ 1533               	/* stack size = 4 */
+ 1534               	.L__stack_usage = 4
+ 1535 070e 9A83      		std Y+2,r25
+ 1536 0710 8983      		std Y+1,r24
+ 1537               	/* epilogue start */
+ 284:os.c          **** 
+ 285:os.c          **** }
+ 1538               		.loc 1 285 0
+ 1539 0712 0F90      		pop __tmp_reg__
+ 1540 0714 0F90      		pop __tmp_reg__
+ 1541 0716 DF91      		pop r29
+ 1542 0718 CF91      		pop r28
+ 1543 071a 0895      		ret
+ 1544               		.cfi_endproc
+ 1545               	.LFE21:
+ 1547               	.global	OS_Init
+ 1549               	OS_Init:
+ 1550               	.LFB22:
+ 286:os.c          **** 
+ 287:os.c          **** 
+ 288:os.c          **** 
+ 289:os.c          **** 
+ 290:os.c          **** /*******************************************************************************
+ 291:os.c          ****  * OS API END
+ 292:os.c          ****  ******************************************************************************/
+ 293:os.c          **** 
+ 294:os.c          **** /**
+ 295:os.c          ****  * This function initializes the RTOS and must be called before any other
+ 296:os.c          ****  * system calls.
+ 297:os.c          ****  */
+ 298:os.c          **** void OS_Init() {
+ 1551               		.loc 1 298 0
+ 1552               		.cfi_startproc
+ 1553 071c CF93      		push r28
+ 1554               	.LCFI82:
+ 1555               		.cfi_def_cfa_offset 4
+ 1556               		.cfi_offset 28, -3
+ 1557 071e DF93      		push r29
+ 1558               	.LCFI83:
+ 1559               		.cfi_def_cfa_offset 5
+ 1560               		.cfi_offset 29, -4
+ 1561 0720 1F92      		push __zero_reg__
+ 1562 0722 1F92      		push __zero_reg__
+ 1563               	.LCFI84:
+ 1564               		.cfi_def_cfa_offset 7
+ 1565 0724 CDB7      		in r28,__SP_L__
+ 1566 0726 DEB7      		in r29,__SP_H__
+ 1567               	.LCFI85:
+ 1568               		.cfi_def_cfa_register 28
+ 1569               	/* prologue: function */
+ 1570               	/* frame size = 2 */
+ 1571               	/* stack size = 4 */
+ 1572               	.L__stack_usage = 4
+ 299:os.c          ****   int id;
+ 300:os.c          ****   tasks = 0;
+ 1573               		.loc 1 300 0
+ 1574 0728 1092 0000 		sts tasks+1,__zero_reg__
+ 1575 072c 1092 0000 		sts tasks,__zero_reg__
+ 301:os.c          ****   KernelActive = 0;
+ 1576               		.loc 1 301 0
+ 1577 0730 1092 0000 		sts KernelActive+1,__zero_reg__
+ 1578 0734 1092 0000 		sts KernelActive,__zero_reg__
+ 302:os.c          ****   next_process = 0;
+ 1579               		.loc 1 302 0
+ 1580 0738 1092 0000 		sts next_process+1,__zero_reg__
+ 1581 073c 1092 0000 		sts next_process,__zero_reg__
+ 303:os.c          ****   //Reminder: Clear the memory for the task on creation.
+ 304:os.c          ****   for (id = 0; id < MAXTHREAD; id++) {
+ 1582               		.loc 1 304 0
+ 1583 0740 1A82      		std Y+2,__zero_reg__
+ 1584 0742 1982      		std Y+1,__zero_reg__
+ 1585 0744 00C0      		rjmp .L67
+ 1586               	.L68:
+ 305:os.c          ****     memset(&(Process[id]),0,sizeof(ProcessDescriptor));
+ 1587               		.loc 1 305 0 discriminator 2
+ 1588 0746 4981      		ldd r20,Y+1
+ 1589 0748 5A81      		ldd r21,Y+2
+ 1590 074a 29E0      		ldi r18,lo8(9)
+ 1591 074c 31E0      		ldi r19,lo8(1)
+ 1592 074e 429F      		mul r20,r18
+ 1593 0750 C001      		movw r24,r0
+ 1594 0752 439F      		mul r20,r19
+ 1595 0754 900D      		add r25,r0
+ 1596 0756 529F      		mul r21,r18
+ 1597 0758 900D      		add r25,r0
+ 1598 075a 1124      		clr r1
+ 1599 075c 8050      		subi r24,lo8(-(Process))
+ 1600 075e 9040      		sbci r25,hi8(-(Process))
+ 1601 0760 49E0      		ldi r20,lo8(9)
+ 1602 0762 51E0      		ldi r21,lo8(1)
+ 1603 0764 60E0      		ldi r22,0
+ 1604 0766 70E0      		ldi r23,0
+ 1605 0768 0E94 0000 		call memset
+ 306:os.c          ****     Process[id].state = DEAD;
+ 1606               		.loc 1 306 0 discriminator 2
+ 1607 076c 4981      		ldd r20,Y+1
+ 1608 076e 5A81      		ldd r21,Y+2
+ 1609 0770 29E0      		ldi r18,lo8(9)
+ 1610 0772 31E0      		ldi r19,lo8(1)
+ 1611 0774 429F      		mul r20,r18
+ 1612 0776 C001      		movw r24,r0
+ 1613 0778 439F      		mul r20,r19
+ 1614 077a 900D      		add r25,r0
+ 1615 077c 529F      		mul r21,r18
+ 1616 077e 900D      		add r25,r0
+ 1617 0780 1124      		clr r1
+ 1618 0782 8050      		subi r24,lo8(-(Process+258))
+ 1619 0784 9040      		sbci r25,hi8(-(Process+258))
+ 1620 0786 FC01      		movw r30,r24
+ 1621 0788 1082      		st Z,__zero_reg__
+ 304:os.c          ****     memset(&(Process[id]),0,sizeof(ProcessDescriptor));
+ 1622               		.loc 1 304 0 discriminator 2
+ 1623 078a 8981      		ldd r24,Y+1
+ 1624 078c 9A81      		ldd r25,Y+2
+ 1625 078e 0196      		adiw r24,1
+ 1626 0790 9A83      		std Y+2,r25
+ 1627 0792 8983      		std Y+1,r24
+ 1628               	.L67:
+ 304:os.c          ****     memset(&(Process[id]),0,sizeof(ProcessDescriptor));
+ 1629               		.loc 1 304 0 is_stmt 0 discriminator 1
+ 1630 0794 8981      		ldd r24,Y+1
+ 1631 0796 9A81      		ldd r25,Y+2
+ 1632 0798 8031      		cpi r24,16
+ 1633 079a 9105      		cpc r25,__zero_reg__
+ 1634 079c 04F0      		brlt .L68
+ 307:os.c          ****   }
+ 308:os.c          **** 
+ 309:os.c          ****   signal_start_task(3, true);
+ 1635               		.loc 1 309 0 is_stmt 1
+ 1636 079e 61E0      		ldi r22,lo8(1)
+ 1637 07a0 83E0      		ldi r24,lo8(3)
+ 1638 07a2 0E94 0000 		call signal_start_task
+ 1639               	/* epilogue start */
+ 310:os.c          **** }
+ 1640               		.loc 1 310 0
+ 1641 07a6 0F90      		pop __tmp_reg__
+ 1642 07a8 0F90      		pop __tmp_reg__
+ 1643 07aa DF91      		pop r29
+ 1644 07ac CF91      		pop r28
+ 1645 07ae 0895      		ret
+ 1646               		.cfi_endproc
+ 1647               	.LFE22:
+ 1649               	.global	OS_Start
+ 1651               	OS_Start:
+ 1652               	.LFB23:
+ 311:os.c          **** 
+ 312:os.c          **** 
+ 313:os.c          **** /**
+ 314:os.c          ****  * This function starts the RTOS after creating a few tasks.
+ 315:os.c          ****  */
+ 316:os.c          **** void OS_Start() {
+ 1653               		.loc 1 316 0
+ 1654               		.cfi_startproc
+ 1655 07b0 CF93      		push r28
+ 1656               	.LCFI86:
+ 1657               		.cfi_def_cfa_offset 4
+ 1658               		.cfi_offset 28, -3
+ 1659 07b2 DF93      		push r29
+ 1660               	.LCFI87:
+ 1661               		.cfi_def_cfa_offset 5
+ 1662               		.cfi_offset 29, -4
+ 1663 07b4 CDB7      		in r28,__SP_L__
+ 1664 07b6 DEB7      		in r29,__SP_H__
+ 1665               	.LCFI88:
+ 1666               		.cfi_def_cfa_register 28
+ 1667               	/* prologue: function */
+ 1668               	/* frame size = 0 */
+ 1669               	/* stack size = 2 */
+ 1670               	.L__stack_usage = 2
+ 317:os.c          ****   if ((!KernelActive) && (tasks > 0)) {
+ 1671               		.loc 1 317 0
+ 1672 07b8 8091 0000 		lds r24,KernelActive
+ 1673 07bc 9091 0000 		lds r25,KernelActive+1
+ 1674 07c0 0097      		sbiw r24,0
+ 1675 07c2 01F4      		brne .L69
+ 1676               		.loc 1 317 0 is_stmt 0 discriminator 1
+ 1677 07c4 8091 0000 		lds r24,tasks
+ 1678 07c8 9091 0000 		lds r25,tasks+1
+ 1679 07cc 0097      		sbiw r24,0
+ 1680 07ce 01F0      		breq .L69
+ 318:os.c          ****     disable_global_interrupts();
+ 1681               		.loc 1 318 0 is_stmt 1
+ 1682 07d0 0E94 0000 		call disable_global_interrupts
+ 319:os.c          ****     KernelActive = 1;
+ 1683               		.loc 1 319 0
+ 1684 07d4 81E0      		ldi r24,lo8(1)
+ 1685 07d6 90E0      		ldi r25,0
+ 1686 07d8 9093 0000 		sts KernelActive+1,r25
+ 1687 07dc 8093 0000 		sts KernelActive,r24
+ 320:os.c          ****     signal_start_task(3, true);
+ 1688               		.loc 1 320 0
+ 1689 07e0 61E0      		ldi r22,lo8(1)
+ 1690 07e2 83E0      		ldi r24,lo8(3)
+ 1691 07e4 0E94 0000 		call signal_start_task
+ 321:os.c          ****     Next_Kernel_Request();
+ 1692               		.loc 1 321 0
+ 1693 07e8 0E94 0000 		call Next_Kernel_Request
+ 1694               	.L69:
+ 1695               	/* epilogue start */
+ 322:os.c          ****   }
+ 323:os.c          **** }
+ 1696               		.loc 1 323 0
+ 1697 07ec DF91      		pop r29
+ 1698 07ee CF91      		pop r28
+ 1699 07f0 0895      		ret
+ 1700               		.cfi_endproc
+ 1701               	.LFE23:
+ 1703               	.global	Ping
+ 1705               	Ping:
+ 1706               	.LFB24:
+ 324:os.c          **** 
+ 325:os.c          **** void Ping() {
+ 1707               		.loc 1 325 0
+ 1708               		.cfi_startproc
+ 1709 07f2 CF93      		push r28
+ 1710               	.LCFI89:
+ 1711               		.cfi_def_cfa_offset 4
+ 1712               		.cfi_offset 28, -3
+ 1713 07f4 DF93      		push r29
+ 1714               	.LCFI90:
+ 1715               		.cfi_def_cfa_offset 5
+ 1716               		.cfi_offset 29, -4
+ 1717 07f6 00D0      		rcall .
+ 1718 07f8 1F92      		push __zero_reg__
+ 1719               	.LCFI91:
+ 1720               		.cfi_def_cfa_offset 9
+ 1721 07fa CDB7      		in r28,__SP_L__
+ 1722 07fc DEB7      		in r29,__SP_H__
+ 1723               	.LCFI92:
+ 1724               		.cfi_def_cfa_register 28
+ 1725               	/* prologue: function */
+ 1726               	/* frame size = 4 */
+ 1727               	/* stack size = 6 */
+ 1728               	.L__stack_usage = 6
+ 326:os.c          ****   unsigned long x = 0;
+ 1729               		.loc 1 326 0
+ 1730 07fe 1982      		std Y+1,__zero_reg__
+ 1731 0800 1A82      		std Y+2,__zero_reg__
+ 1732 0802 1B82      		std Y+3,__zero_reg__
+ 1733 0804 1C82      		std Y+4,__zero_reg__
+ 1734               	.L74:
+ 327:os.c          ****   for(;;) {
+ 328:os.c          ****     PORTB |= (1<<PB7);    // ON
+ 1735               		.loc 1 328 0
+ 1736 0806 85E2      		ldi r24,lo8(37)
+ 1737 0808 90E0      		ldi r25,0
+ 1738 080a 25E2      		ldi r18,lo8(37)
+ 1739 080c 30E0      		ldi r19,0
+ 1740 080e F901      		movw r30,r18
+ 1741 0810 2081      		ld r18,Z
+ 1742 0812 2068      		ori r18,lo8(-128)
+ 1743 0814 FC01      		movw r30,r24
+ 1744 0816 2083      		st Z,r18
+ 329:os.c          ****     for(x=0; x < 1000000; x++) {}
+ 1745               		.loc 1 329 0
+ 1746 0818 1982      		std Y+1,__zero_reg__
+ 1747 081a 1A82      		std Y+2,__zero_reg__
+ 1748 081c 1B82      		std Y+3,__zero_reg__
+ 1749 081e 1C82      		std Y+4,__zero_reg__
+ 1750 0820 00C0      		rjmp .L72
+ 1751               	.L73:
+ 1752               		.loc 1 329 0 is_stmt 0 discriminator 2
+ 1753 0822 8981      		ldd r24,Y+1
+ 1754 0824 9A81      		ldd r25,Y+2
+ 1755 0826 AB81      		ldd r26,Y+3
+ 1756 0828 BC81      		ldd r27,Y+4
+ 1757 082a 0196      		adiw r24,1
+ 1758 082c A11D      		adc r26,__zero_reg__
+ 1759 082e B11D      		adc r27,__zero_reg__
+ 1760 0830 8983      		std Y+1,r24
+ 1761 0832 9A83      		std Y+2,r25
+ 1762 0834 AB83      		std Y+3,r26
+ 1763 0836 BC83      		std Y+4,r27
+ 1764               	.L72:
+ 1765               		.loc 1 329 0 discriminator 1
+ 1766 0838 8981      		ldd r24,Y+1
+ 1767 083a 9A81      		ldd r25,Y+2
+ 1768 083c AB81      		ldd r26,Y+3
+ 1769 083e BC81      		ldd r27,Y+4
+ 1770 0840 8034      		cpi r24,64
+ 1771 0842 F2E4      		ldi r31,66
+ 1772 0844 9F07      		cpc r25,r31
+ 1773 0846 FFE0      		ldi r31,15
+ 1774 0848 AF07      		cpc r26,r31
+ 1775 084a B105      		cpc r27,__zero_reg__
+ 1776 084c 00F0      		brlo .L73
+ 330:os.c          ****   }
+ 1777               		.loc 1 330 0 is_stmt 1
+ 1778 084e 00C0      		rjmp .L74
+ 1779               		.cfi_endproc
+ 1780               	.LFE24:
+ 1782               	.global	Pong
+ 1784               	Pong:
+ 1785               	.LFB25:
+ 331:os.c          **** }
+ 332:os.c          **** void Pong() {
+ 1786               		.loc 1 332 0
+ 1787               		.cfi_startproc
+ 1788 0850 CF93      		push r28
+ 1789               	.LCFI93:
+ 1790               		.cfi_def_cfa_offset 4
+ 1791               		.cfi_offset 28, -3
+ 1792 0852 DF93      		push r29
+ 1793               	.LCFI94:
+ 1794               		.cfi_def_cfa_offset 5
+ 1795               		.cfi_offset 29, -4
+ 1796 0854 00D0      		rcall .
+ 1797 0856 1F92      		push __zero_reg__
+ 1798               	.LCFI95:
+ 1799               		.cfi_def_cfa_offset 9
+ 1800 0858 CDB7      		in r28,__SP_L__
+ 1801 085a DEB7      		in r29,__SP_H__
+ 1802               	.LCFI96:
+ 1803               		.cfi_def_cfa_register 28
+ 1804               	/* prologue: function */
+ 1805               	/* frame size = 4 */
+ 1806               	/* stack size = 6 */
+ 1807               	.L__stack_usage = 6
+ 333:os.c          ****   unsigned long x = 0;
+ 1808               		.loc 1 333 0
+ 1809 085c 1982      		std Y+1,__zero_reg__
+ 1810 085e 1A82      		std Y+2,__zero_reg__
+ 1811 0860 1B82      		std Y+3,__zero_reg__
+ 1812 0862 1C82      		std Y+4,__zero_reg__
+ 1813               	.L78:
+ 334:os.c          ****   for(;;) {
+ 335:os.c          ****     PORTB &= ~(1<<PB7); // OFF
+ 1814               		.loc 1 335 0
+ 1815 0864 85E2      		ldi r24,lo8(37)
+ 1816 0866 90E0      		ldi r25,0
+ 1817 0868 25E2      		ldi r18,lo8(37)
+ 1818 086a 30E0      		ldi r19,0
+ 1819 086c F901      		movw r30,r18
+ 1820 086e 2081      		ld r18,Z
+ 1821 0870 2F77      		andi r18,lo8(127)
+ 1822 0872 FC01      		movw r30,r24
+ 1823 0874 2083      		st Z,r18
+ 336:os.c          ****     for(x=0; x < 1000000; x++) {}
+ 1824               		.loc 1 336 0
+ 1825 0876 1982      		std Y+1,__zero_reg__
+ 1826 0878 1A82      		std Y+2,__zero_reg__
+ 1827 087a 1B82      		std Y+3,__zero_reg__
+ 1828 087c 1C82      		std Y+4,__zero_reg__
+ 1829 087e 00C0      		rjmp .L76
+ 1830               	.L77:
+ 1831               		.loc 1 336 0 is_stmt 0 discriminator 2
+ 1832 0880 8981      		ldd r24,Y+1
+ 1833 0882 9A81      		ldd r25,Y+2
+ 1834 0884 AB81      		ldd r26,Y+3
+ 1835 0886 BC81      		ldd r27,Y+4
+ 1836 0888 0196      		adiw r24,1
+ 1837 088a A11D      		adc r26,__zero_reg__
+ 1838 088c B11D      		adc r27,__zero_reg__
+ 1839 088e 8983      		std Y+1,r24
+ 1840 0890 9A83      		std Y+2,r25
+ 1841 0892 AB83      		std Y+3,r26
+ 1842 0894 BC83      		std Y+4,r27
+ 1843               	.L76:
+ 1844               		.loc 1 336 0 discriminator 1
+ 1845 0896 8981      		ldd r24,Y+1
+ 1846 0898 9A81      		ldd r25,Y+2
+ 1847 089a AB81      		ldd r26,Y+3
+ 1848 089c BC81      		ldd r27,Y+4
+ 1849 089e 8034      		cpi r24,64
+ 1850 08a0 F2E4      		ldi r31,66
+ 1851 08a2 9F07      		cpc r25,r31
+ 1852 08a4 FFE0      		ldi r31,15
+ 1853 08a6 AF07      		cpc r26,r31
+ 1854 08a8 B105      		cpc r27,__zero_reg__
+ 1855 08aa 00F0      		brlo .L77
+ 337:os.c          ****   }
+ 1856               		.loc 1 337 0 is_stmt 1
+ 1857 08ac 00C0      		rjmp .L78
+ 1858               		.cfi_endproc
+ 1859               	.LFE25:
+ 1861               	.global	main_r
+ 1863               	main_r:
+ 1864               	.LFB26:
+ 338:os.c          **** }
+ 339:os.c          **** 
+ 340:os.c          **** void main_r () {
+ 1865               		.loc 1 340 0
+ 1866               		.cfi_startproc
+ 1867 08ae CF93      		push r28
+ 1868               	.LCFI97:
+ 1869               		.cfi_def_cfa_offset 4
+ 1870               		.cfi_offset 28, -3
+ 1871 08b0 DF93      		push r29
+ 1872               	.LCFI98:
+ 1873               		.cfi_def_cfa_offset 5
+ 1874               		.cfi_offset 29, -4
+ 1875 08b2 CDB7      		in r28,__SP_L__
+ 1876 08b4 DEB7      		in r29,__SP_H__
+ 1877               	.LCFI99:
+ 1878               		.cfi_def_cfa_register 28
+ 1879               	/* prologue: function */
+ 1880               	/* frame size = 0 */
+ 1881               	/* stack size = 2 */
+ 1882               	.L__stack_usage = 2
+ 1883               	.L80:
+ 341:os.c          ****   for(;;){
+ 342:os.c          **** 
+ 343:os.c          ****   }
+ 1884               		.loc 1 343 0 discriminator 1
+ 1885 08b6 00C0      		rjmp .L80
+ 1886               		.cfi_endproc
+ 1887               	.LFE26:
+ 1889               	.global	__vector_17
+ 1891               	__vector_17:
+ 1892               	.LFB27:
+ 344:os.c          **** }
+ 345:os.c          **** 
+ 346:os.c          **** ISR(TIMER1_COMPA_vect) {
+ 1893               		.loc 1 346 0
+ 1894               		.cfi_startproc
+ 1895 08b8 1F92      		push r1
+ 1896               	.LCFI100:
+ 1897               		.cfi_def_cfa_offset 4
+ 1898               		.cfi_offset 1, -3
+ 1899 08ba 0F92      		push r0
+ 1900               	.LCFI101:
+ 1901               		.cfi_def_cfa_offset 5
+ 1902               		.cfi_offset 0, -4
+ 1903 08bc 0090 5F00 		lds r0,95
+ 1904 08c0 0F92      		push r0
+ 1905 08c2 1124      		clr __zero_reg__
+ 1906 08c4 0090 5B00 		lds r0,91
+ 1907 08c8 0F92      		push r0
+ 1908 08ca 2F93      		push r18
+ 1909               	.LCFI102:
+ 1910               		.cfi_def_cfa_offset 6
+ 1911               		.cfi_offset 18, -5
+ 1912 08cc 3F93      		push r19
+ 1913               	.LCFI103:
+ 1914               		.cfi_def_cfa_offset 7
+ 1915               		.cfi_offset 19, -6
+ 1916 08ce 4F93      		push r20
+ 1917               	.LCFI104:
+ 1918               		.cfi_def_cfa_offset 8
+ 1919               		.cfi_offset 20, -7
+ 1920 08d0 5F93      		push r21
+ 1921               	.LCFI105:
+ 1922               		.cfi_def_cfa_offset 9
+ 1923               		.cfi_offset 21, -8
+ 1924 08d2 6F93      		push r22
+ 1925               	.LCFI106:
+ 1926               		.cfi_def_cfa_offset 10
+ 1927               		.cfi_offset 22, -9
+ 1928 08d4 7F93      		push r23
+ 1929               	.LCFI107:
+ 1930               		.cfi_def_cfa_offset 11
+ 1931               		.cfi_offset 23, -10
+ 1932 08d6 8F93      		push r24
+ 1933               	.LCFI108:
+ 1934               		.cfi_def_cfa_offset 12
+ 1935               		.cfi_offset 24, -11
+ 1936 08d8 9F93      		push r25
+ 1937               	.LCFI109:
+ 1938               		.cfi_def_cfa_offset 13
+ 1939               		.cfi_offset 25, -12
+ 1940 08da AF93      		push r26
+ 1941               	.LCFI110:
+ 1942               		.cfi_def_cfa_offset 14
+ 1943               		.cfi_offset 26, -13
+ 1944 08dc BF93      		push r27
+ 1945               	.LCFI111:
+ 1946               		.cfi_def_cfa_offset 15
+ 1947               		.cfi_offset 27, -14
+ 1948 08de EF93      		push r30
+ 1949               	.LCFI112:
+ 1950               		.cfi_def_cfa_offset 16
+ 1951               		.cfi_offset 30, -15
+ 1952 08e0 FF93      		push r31
+ 1953               	.LCFI113:
+ 1954               		.cfi_def_cfa_offset 17
+ 1955               		.cfi_offset 31, -16
+ 1956 08e2 CF93      		push r28
+ 1957               	.LCFI114:
+ 1958               		.cfi_def_cfa_offset 18
+ 1959               		.cfi_offset 28, -17
+ 1960 08e4 DF93      		push r29
+ 1961               	.LCFI115:
+ 1962               		.cfi_def_cfa_offset 19
+ 1963               		.cfi_offset 29, -18
+ 1964 08e6 CDB7      		in r28,__SP_L__
+ 1965 08e8 DEB7      		in r29,__SP_H__
+ 1966               	.LCFI116:
+ 1967               		.cfi_def_cfa_register 28
+ 1968               	/* prologue: Signal */
+ 1969               	/* frame size = 0 */
+ 1970               	/* stack size = 18 */
+ 1971               	.L__stack_usage = 18
+ 347:os.c          ****   Task_Yield();
+ 1972               		.loc 1 347 0
+ 1973 08ea 0E94 0000 		call Task_Yield
+ 1974               	/* epilogue start */
+ 348:os.c          **** }
+ 1975               		.loc 1 348 0
+ 1976 08ee DF91      		pop r29
+ 1977 08f0 CF91      		pop r28
+ 1978 08f2 FF91      		pop r31
+ 1979 08f4 EF91      		pop r30
+ 1980 08f6 BF91      		pop r27
+ 1981 08f8 AF91      		pop r26
+ 1982 08fa 9F91      		pop r25
+ 1983 08fc 8F91      		pop r24
+ 1984 08fe 7F91      		pop r23
+ 1985 0900 6F91      		pop r22
+ 1986 0902 5F91      		pop r21
+ 1987 0904 4F91      		pop r20
+ 1988 0906 3F91      		pop r19
+ 1989 0908 2F91      		pop r18
+ 1990 090a 0F90      		pop r0
+ 1991 090c 0092 5B00 		sts 91,r0
+ 1992 0910 0F90      		pop r0
+ 1993 0912 0092 5F00 		sts 95,r0
+ 1994 0916 0F90      		pop r0
+ 1995 0918 1F90      		pop r1
+ 1996 091a 1895      		reti
+ 1997               		.cfi_endproc
+ 1998               	.LFE27:
+ 2000               	.global	init_timer
+ 2002               	init_timer:
+ 2003               	.LFB28:
+ 349:os.c          **** 
+ 350:os.c          **** void init_timer () {
+ 2004               		.loc 1 350 0
+ 2005               		.cfi_startproc
+ 2006 091c CF93      		push r28
+ 2007               	.LCFI117:
+ 2008               		.cfi_def_cfa_offset 4
+ 2009               		.cfi_offset 28, -3
+ 2010 091e DF93      		push r29
+ 2011               	.LCFI118:
+ 2012               		.cfi_def_cfa_offset 5
+ 2013               		.cfi_offset 29, -4
+ 2014 0920 1F92      		push __zero_reg__
+ 2015               	.LCFI119:
+ 2016               		.cfi_def_cfa_offset 6
+ 2017 0922 CDB7      		in r28,__SP_L__
+ 2018 0924 DEB7      		in r29,__SP_H__
+ 2019               	.LCFI120:
+ 2020               		.cfi_def_cfa_register 28
+ 2021               	/* prologue: function */
+ 2022               	/* frame size = 1 */
+ 2023               	/* stack size = 3 */
+ 2024               	.L__stack_usage = 3
+ 351:os.c          ****   // initialize Timer1
+ 352:os.c          ****   uint8_t interrupt_flag = disable_global_interrupts();          // disable global interrupts
+ 2025               		.loc 1 352 0
+ 2026 0926 0E94 0000 		call disable_global_interrupts
+ 2027 092a 8983      		std Y+1,r24
+ 353:os.c          ****   TCCR1A = 0;     // set entire TCCR1A register to 0
+ 2028               		.loc 1 353 0
+ 2029 092c 80E8      		ldi r24,lo8(-128)
+ 2030 092e 90E0      		ldi r25,0
+ 2031 0930 FC01      		movw r30,r24
+ 2032 0932 1082      		st Z,__zero_reg__
+ 354:os.c          ****   TCCR1B = 0;     // same for TCCR1B
+ 2033               		.loc 1 354 0
+ 2034 0934 81E8      		ldi r24,lo8(-127)
+ 2035 0936 90E0      		ldi r25,0
+ 2036 0938 FC01      		movw r30,r24
+ 2037 093a 1082      		st Z,__zero_reg__
+ 355:os.c          **** 
+ 356:os.c          ****   // set compare match register to desired timer count:
+ 357:os.c          ****   OCR1A = 625;
+ 2038               		.loc 1 357 0
+ 2039 093c 88E8      		ldi r24,lo8(-120)
+ 2040 093e 90E0      		ldi r25,0
+ 2041 0940 21E7      		ldi r18,lo8(113)
+ 2042 0942 32E0      		ldi r19,lo8(2)
+ 2043 0944 FC01      		movw r30,r24
+ 2044 0946 3183      		std Z+1,r19
+ 2045 0948 2083      		st Z,r18
+ 358:os.c          **** 
+ 359:os.c          ****   // turn on CTC mode:
+ 360:os.c          ****   TCCR1B |= (1 << WGM12);
+ 2046               		.loc 1 360 0
+ 2047 094a 81E8      		ldi r24,lo8(-127)
+ 2048 094c 90E0      		ldi r25,0
+ 2049 094e 21E8      		ldi r18,lo8(-127)
+ 2050 0950 30E0      		ldi r19,0
+ 2051 0952 F901      		movw r30,r18
+ 2052 0954 2081      		ld r18,Z
+ 2053 0956 2860      		ori r18,lo8(8)
+ 2054 0958 FC01      		movw r30,r24
+ 2055 095a 2083      		st Z,r18
+ 361:os.c          **** 
+ 362:os.c          ****   // Set CS12 bits for 256 prescaler:
+ 363:os.c          ****   //TCCR1B |= (1 << CS10);
+ 364:os.c          ****   TCCR1B |= (1 << CS12);
+ 2056               		.loc 1 364 0
+ 2057 095c 81E8      		ldi r24,lo8(-127)
+ 2058 095e 90E0      		ldi r25,0
+ 2059 0960 21E8      		ldi r18,lo8(-127)
+ 2060 0962 30E0      		ldi r19,0
+ 2061 0964 F901      		movw r30,r18
+ 2062 0966 2081      		ld r18,Z
+ 2063 0968 2460      		ori r18,lo8(4)
+ 2064 096a FC01      		movw r30,r24
+ 2065 096c 2083      		st Z,r18
+ 365:os.c          **** 
+ 366:os.c          ****   // enable timer compare interrupt:
+ 367:os.c          ****   TIMSK1 |= (1 << OCIE1A);
+ 2066               		.loc 1 367 0
+ 2067 096e 8FE6      		ldi r24,lo8(111)
+ 2068 0970 90E0      		ldi r25,0
+ 2069 0972 2FE6      		ldi r18,lo8(111)
+ 2070 0974 30E0      		ldi r19,0
+ 2071 0976 F901      		movw r30,r18
+ 2072 0978 2081      		ld r18,Z
+ 2073 097a 2260      		ori r18,lo8(2)
+ 2074 097c FC01      		movw r30,r24
+ 2075 097e 2083      		st Z,r18
+ 368:os.c          **** 
+ 369:os.c          ****   // enable global interrupts:
+ 370:os.c          ****   restore_global_interrupts(interrupt_flag);
+ 2076               		.loc 1 370 0
+ 2077 0980 8981      		ldd r24,Y+1
+ 2078 0982 0E94 0000 		call restore_global_interrupts
+ 2079               	/* epilogue start */
+ 371:os.c          **** }
+ 2080               		.loc 1 371 0
+ 2081 0986 0F90      		pop __tmp_reg__
+ 2082 0988 DF91      		pop r29
+ 2083 098a CF91      		pop r28
+ 2084 098c 0895      		ret
+ 2085               		.cfi_endproc
+ 2086               	.LFE28:
+ 2088               	.global	main
+ 2090               	main:
+ 2091               	.LFB29:
+ 372:os.c          **** 
+ 373:os.c          **** // OS_Init function
+ 374:os.c          **** int main(void) {
+ 2092               		.loc 1 374 0
+ 2093               		.cfi_startproc
+ 2094 098e CF93      		push r28
+ 2095               	.LCFI121:
+ 2096               		.cfi_def_cfa_offset 4
+ 2097               		.cfi_offset 28, -3
+ 2098 0990 DF93      		push r29
+ 2099               	.LCFI122:
+ 2100               		.cfi_def_cfa_offset 5
+ 2101               		.cfi_offset 29, -4
+ 2102 0992 CDB7      		in r28,__SP_L__
+ 2103 0994 DEB7      		in r29,__SP_H__
+ 2104               	.LCFI123:
+ 2105               		.cfi_def_cfa_register 28
+ 2106               	/* prologue: function */
+ 2107               	/* frame size = 0 */
+ 2108               	/* stack size = 2 */
+ 2109               	.L__stack_usage = 2
+ 375:os.c          ****   DDRB = 0xFF;
+ 2110               		.loc 1 375 0
+ 2111 0996 84E2      		ldi r24,lo8(36)
+ 2112 0998 90E0      		ldi r25,0
+ 2113 099a 2FEF      		ldi r18,lo8(-1)
+ 2114 099c FC01      		movw r30,r24
+ 2115 099e 2083      		st Z,r18
+ 376:os.c          ****   DDRL = 0xFF;
+ 2116               		.loc 1 376 0
+ 2117 09a0 8AE0      		ldi r24,lo8(10)
+ 2118 09a2 91E0      		ldi r25,lo8(1)
+ 2119 09a4 2FEF      		ldi r18,lo8(-1)
+ 2120 09a6 FC01      		movw r30,r24
+ 2121 09a8 2083      		st Z,r18
+ 377:os.c          **** 
+ 378:os.c          ****   OS_Init();
+ 2122               		.loc 1 378 0
+ 2123 09aa 0E94 0000 		call OS_Init
+ 379:os.c          ****   Task_Create(Pong, 0, 0);
+ 2124               		.loc 1 379 0
+ 2125 09ae 40E0      		ldi r20,0
+ 2126 09b0 50E0      		ldi r21,0
+ 2127 09b2 60E0      		ldi r22,0
+ 2128 09b4 80E0      		ldi r24,lo8(gs(Pong))
+ 2129 09b6 90E0      		ldi r25,hi8(gs(Pong))
+ 2130 09b8 0E94 0000 		call Task_Create
+ 380:os.c          ****   Task_Create(Ping, 0, 0);
+ 2131               		.loc 1 380 0
+ 2132 09bc 40E0      		ldi r20,0
+ 2133 09be 50E0      		ldi r21,0
+ 2134 09c0 60E0      		ldi r22,0
+ 2135 09c2 80E0      		ldi r24,lo8(gs(Ping))
+ 2136 09c4 90E0      		ldi r25,hi8(gs(Ping))
+ 2137 09c6 0E94 0000 		call Task_Create
+ 381:os.c          ****   init_timer();
+ 2138               		.loc 1 381 0
+ 2139 09ca 0E94 0000 		call init_timer
+ 382:os.c          ****   OS_Start();
+ 2140               		.loc 1 382 0
+ 2141 09ce 0E94 0000 		call OS_Start
+ 383:os.c          ****   return 0;
+ 2142               		.loc 1 383 0
+ 2143 09d2 80E0      		ldi r24,0
+ 2144 09d4 90E0      		ldi r25,0
+ 2145               	/* epilogue start */
+ 384:os.c          **** }
+ 2146               		.loc 1 384 0
+ 2147 09d6 DF91      		pop r29
+ 2148 09d8 CF91      		pop r28
+ 2149 09da 0895      		ret
+ 2150               		.cfi_endproc
+ 2151               	.LFE29:
+ 2153               	.Letext0:
+ 2154               		.file 2 "/usr/lib/avr/include/stdint.h"
+ 2155               		.file 3 "os.h"
+ 2156               		.file 4 "kernal.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 os.c
+     /tmp/cc8IQBJ1.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/cc8IQBJ1.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/cc8IQBJ1.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/cc8IQBJ1.s:5      *ABS*:000000000000003b __RAMPZ__
+     /tmp/cc8IQBJ1.s:6      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cc8IQBJ1.s:7      *ABS*:0000000000000001 __zero_reg__
+                            *COM*:0000000000000002 kernel_stack_pointer
+                            *COM*:0000000000000002 current_stack_pointer
+                             .bss:0000000000000000 next_process
+     /tmp/cc8IQBJ1.s:14     .bss:0000000000000002 KernelActive
+     /tmp/cc8IQBJ1.s:16     .bss:0000000000000004 tasks
+     /tmp/cc8IQBJ1.s:18     .bss:0000000000000006 Process
+     /tmp/cc8IQBJ1.s:20     .bss:0000000000001096 current_process
+     /tmp/cc8IQBJ1.s:25     .text:0000000000000000 signal_start_task
+     /tmp/cc8IQBJ1.s:225    .text:0000000000000110 enable_global_interrupts
+     /tmp/cc8IQBJ1.s:273    .text:0000000000000130 disable_global_interrupts
+     /tmp/cc8IQBJ1.s:325    .text:0000000000000158 restore_global_interrupts
+     /tmp/cc8IQBJ1.s:371    .text:000000000000017c Kernel_Create_Task_At
+     /tmp/cc8IQBJ1.s:1058   .text:0000000000000592 Task_Terminate
+     /tmp/cc8IQBJ1.s:531    .text:0000000000000276 Kernel_Create_Task
+     /tmp/cc8IQBJ1.s:652    .text:0000000000000324 Dispatch
+     /tmp/cc8IQBJ1.s:756    .text:00000000000003e2 Next_Kernel_Request
+     /tmp/cc8IQBJ1.s:878    .text:00000000000004aa OS_Abort
+     /tmp/cc8IQBJ1.s:947    .text:00000000000004ec Task_Create
+     /tmp/cc8IQBJ1.s:1106   .text:00000000000005c6 Task_Yield
+     /tmp/cc8IQBJ1.s:1154   .text:00000000000005fa Task_GetArg
+     /tmp/cc8IQBJ1.s:1217   .text:0000000000000642 Task_Suspend
+     /tmp/cc8IQBJ1.s:1255   .text:000000000000065c Task_Resume
+     /tmp/cc8IQBJ1.s:1293   .text:0000000000000676 Task_Sleep
+     /tmp/cc8IQBJ1.s:1331   .text:0000000000000690 Mutex_Init
+     /tmp/cc8IQBJ1.s:1364   .text:00000000000006a2 Mutex_Lock
+     /tmp/cc8IQBJ1.s:1402   .text:00000000000006bc Mutex_Unlock
+     /tmp/cc8IQBJ1.s:1440   .text:00000000000006d6 Event_Init
+     /tmp/cc8IQBJ1.s:1473   .text:00000000000006e8 Event_Wait
+     /tmp/cc8IQBJ1.s:1511   .text:0000000000000702 Event_Signal
+     /tmp/cc8IQBJ1.s:1549   .text:000000000000071c OS_Init
+     /tmp/cc8IQBJ1.s:1651   .text:00000000000007b0 OS_Start
+     /tmp/cc8IQBJ1.s:1705   .text:00000000000007f2 Ping
+     /tmp/cc8IQBJ1.s:1784   .text:0000000000000850 Pong
+     /tmp/cc8IQBJ1.s:1863   .text:00000000000008ae main_r
+     /tmp/cc8IQBJ1.s:1891   .text:00000000000008b8 __vector_17
+     /tmp/cc8IQBJ1.s:2002   .text:000000000000091c init_timer
+     /tmp/cc8IQBJ1.s:2090   .text:000000000000098e main
+
+UNDEFINED SYMBOLS
+__tablejump2__
+memset
+Exit_Kernel
+Enter_Kernel
+__do_clear_bss
