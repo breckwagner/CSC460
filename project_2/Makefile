@@ -41,7 +41,7 @@ ASRC = cswitch.S
 # Optimization level, can be [0, 1, 2, 3, s].
 #     0 = turn off optimization. s = optimize for size.
 #     (Note: 3 is not always the best optimization level. See avr-libc FAQ.)
-OPT = 2
+OPT = 0
 
 
 # Debugging format.
@@ -90,7 +90,7 @@ CFLAGS += -fpack-struct
 CFLAGS += -fshort-enums
 #CFLAGS += -fno-strict-aliasing
 CFLAGS += -Wall
-CFLAGS += -Wstrict-prototypes
+#CFLAGS += -Wstrict-prototypes
 #CFLAGS += -mshort-calls
 #CFLAGS += -fno-unit-at-a-time
 #CFLAGS += -Wundef

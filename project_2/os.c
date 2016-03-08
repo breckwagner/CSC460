@@ -6,50 +6,21 @@
 #include <avr/wdt.h>
 
 #include "os.h"
+#include "kernal.h"
 
+/*******************************************************************************
+ * Global Variables
+ ******************************************************************************/
 
+volatile unsigned char * kernel_stack_pointer;
 
-typedef void (*voidfuncptr) (void);      /* pointer to void f(void) */
+volatile unsigned char * current_stack_pointer;
 
-volatile unsigned char *KernelSp;
-
-volatile unsigned char *CurrentSp;
-
-volatile static unsigned int NextP;
+volatile static unsigned int next_process;
 
 volatile static unsigned int KernelActive;
 
-volatile static unsigned int Tasks;
-
-extern void CSwitch();
-
-extern void Exit_Kernel();
-
-extern void Enter_Kernel();
-
-int main();
-
-typedef enum process_states {
-  DEAD = 0,
-  READY,
-  RUNNING
-} PROCESS_STATES;
-
-typedef enum kernel_request_type {
-  NONE = 0,
-  CREATE,
-  NEXT,
-  TERMINATE
-} KERNEL_REQUEST_TYPE;
-
-typedef struct process_descriptor {
-  unsigned char *stack_pointer;
-  unsigned char workSpace[WORKSPACE];
-  PROCESS_STATES state;
-  voidfuncptr code;
-  KERNEL_REQUEST_TYPE request;
-  PRIORITY priority;
-} ProcessDescriptor;
+volatile static unsigned int tasks;
 
 static ProcessDescriptor Process[MAXTHREAD];
 
@@ -66,7 +37,7 @@ volatile static ProcessDescriptor* current_process;
  * @param (void)
  * @return the previous state of the interrupt flag
  */
-uint8_t Enable_Interrupts() {
+uint8_t enable_global_interrupts() {
   uint8_t sreg = SREG;
   asm volatile ("sei"::);
   return sreg;
@@ -77,7 +48,7 @@ uint8_t Enable_Interrupts() {
  * @param (void)
  * @return the previous state of the interrupt flag
  */
-uint8_t Disable_Interrupts() {
+uint8_t disable_global_interrupts() {
   uint8_t sreg = SREG;
   asm volatile ("cli"::);
   return sreg;
@@ -88,11 +59,11 @@ uint8_t Disable_Interrupts() {
  * @param (void)
  * @return the previous state of the interrupt flag
  */
-uint8_t Restore_Interrupts(uint8_t saved_sreg) {
+uint8_t restore_global_interrupts(uint8_t saved_sreg) {
   if (saved_sreg & 0x80) {
-    return Enable_Interrupts();
+    return enable_global_interrupts();
   } else {
-    return Disable_Interrupts();
+    return disable_global_interrupts();
   }
 }
 
@@ -107,19 +78,13 @@ void Kernel_Create_Task_At(ProcessDescriptor *process, voidfuncptr function){
   stack_pointer = (unsigned char *) &(process->workSpace[WORKSPACE-1]);
   memset(&(process->workSpace), 0, WORKSPACE);
 
-  //Notice that we are placing the address (16-bit) of the functions
-  //onto the stack in reverse byte order (least significant first, followed
-  //by most significant).  This is because the "return" assembly instructions
-  //(rtn and rti) pop addresses off in BIG ENDIAN (most sig. first, least sig.
-  //second), even though the AT90 is LITTLE ENDIAN machine.
-
   *(unsigned char *)stack_pointer-- = ((unsigned int)Task_Terminate) & 0xff;
   *(unsigned char *)stack_pointer-- = (((unsigned int)Task_Terminate) >> 8) & 0xff;
 
   //Place return address of function at bottom of stack
-  *(unsigned char *)stack_pointer-- = ((unsigned int)f) & 0xff;
+  *(unsigned char *)stack_pointer-- = ((unsigned int)function) & 0xff;
   //Store terminate at the bottom of stack to protect against stack underrun.
-  *(unsigned char *)stack_pointer-- = (((unsigned int)f) >> 8) & 0xff;
+  *(unsigned char *)stack_pointer-- = (((unsigned int)function) >> 8) & 0xff;
   *(unsigned char *)stack_pointer-- = 0;
 
   // Decrement stack pointer for the 32 registers and the EIND
@@ -133,28 +98,74 @@ void Kernel_Create_Task_At(ProcessDescriptor *process, voidfuncptr function){
 
 
 /**
-  *  Create a new task
-  */
+ * Create a new task
+ */
 static PID Kernel_Create_Task(voidfuncptr f) {
    int id = NULL;
-   if (Tasks == MAXTHREAD) return id;
+   if (tasks == MAXTHREAD) return id;
 
    /* find a DEAD ProcessDescriptor that we can use  */
    for (id = 0; id < MAXTHREAD; id++) {
        if (Process[id].state == DEAD) break;
    }
 
-   ++Tasks;
+   ++tasks;
    Kernel_Create_Task_At( &(Process[id]), f );
    return id;
 }
 
+static void Dispatch() {
+  while(Process[next_process].state != READY) {
+    next_process = (next_process + 1) % MAXTHREAD;
+  }
+  current_process = &(Process[next_process]);
+  current_stack_pointer = current_process->stack_pointer;
+  current_process->state = RUNNING;
+  next_process = (next_process + 1) % MAXTHREAD;
+}
+
+static void Next_Kernel_Request() {
+  Dispatch();  /* select a new task to run */
+
+  for (;;) {
+    current_process->request = NONE; /* clear its request */
+
+    /* activate this newly selected task */
+    current_stack_pointer = current_process->stack_pointer;
+    Exit_Kernel();    /* or CSwitch() */
+
+    /* if this task makes a system call, it will return to here! */
+
+    /* save the Cp's stack pointer */
+    current_process->stack_pointer = current_stack_pointer;
+
+    switch(current_process->request){
+      case CREATE:
+        Kernel_Create_Task (current_process->code);
+        break;
+      case NEXT:
+      case NONE:
+        /* NONE could be caused by a timer interrupt */
+        current_process->state = READY;
+        Dispatch();
+        break;
+      case TERMINATE:
+        /* deallocate all resources used by this task */
+        current_process->state = DEAD;
+        Dispatch();
+        break;
+      default: break;
+    }
+  }
+}
+
 /*******************************************************************************
- * Function Definitions (os.h)
+ * Function Definitions OS API
+ * see os.h
  ******************************************************************************/
 
 void OS_Abort(void) {
-  Disable_Interrupts();
+  disable_global_interrupts();
   for (int i = 0; i < 42; i++) {
     // BLINK LED 13
   }
@@ -164,11 +175,11 @@ void OS_Abort(void) {
 PID Task_Create( void (*f)(void), PRIORITY py, int arg) {
   PID pid;
   if (KernelActive) {
-    uint8_t inturupt_flag = Disable_Interrupt();
+    uint8_t inturupt_flag = disable_global_interrupts();
     current_process->request = CREATE;
     current_process->code = f;
     Enter_Kernel();
-    Restore_Interrupts(inturupt_flag)
+    restore_global_interrupts(inturupt_flag);
 
   } else {
      /* call the RTOS function directly */
@@ -180,7 +191,7 @@ PID Task_Create( void (*f)(void), PRIORITY py, int arg) {
 
 void Task_Terminate(void) {
   if (KernelActive) {
-    Disable_Interrupts();
+    disable_global_interrupts();
     current_process->request = TERMINATE;
     Enter_Kernel();
   }
@@ -188,7 +199,7 @@ void Task_Terminate(void) {
 
 void Task_Yield(void) {
   if (KernelActive) {
-    Disable_Interrupts();
+    disable_global_interrupts();
     current_process->request = NEXT;
     Enter_Kernel();
   }
@@ -203,20 +214,20 @@ int Task_GetArg(void) {
 
   // Save interupt flag
   sreg = SREG;
-  Disable_Interrupt();
+  disable_global_interrupts();
 
-  arg = cur_task->arg;
+  arg = current_process->argument;
 
   // Restore interupt flag
   SREG = sreg;
   return arg;
 }
 
-void Task_Suspend( PID p ) {
+void Task_Suspend(PID p) {
 
 }
 
-void Task_Resume( PID p ) {
+void Task_Resume(PID p) {
 
 }
 
@@ -250,28 +261,32 @@ void Event_Signal(EVENT e) {
 
 }
 
-void main_r () {return;}
+void main_r () {
+  for(;;){
+
+  }
+}
 
 // OS_Init function
-int main() {
-  /*
-  int x;
-  Tasks = 0;
+int main(void) {
+
+  int id;
+  tasks = 0;
   KernelActive = 0;
-  NextP = 0;
+  next_process = 0;
  //Reminder: Clear the memory for the task on creation.
-  for (x = 0; x < MAXPROCESS; x++) {
-     memset(&(Process[x]),0,sizeof(ProcessDescriptor));
-     Process[x].state = DEAD;
+  for (id = 0; id < MAXTHREAD; id++) {
+     memset(&(Process[id]),0,sizeof(ProcessDescriptor));
+     Process[id].state = DEAD;
   }
 
   // OS START
-  if ((!KernelActive) && (Tasks > 0)) {
-    Disable_Interrupt();
+  if ((!KernelActive) && (tasks > 0)) {
+    disable_global_interrupts();
     KernelActive = 1;
-    Task_Create(main_r, 0, NULL);
-    Next_Kernel_Request();
+    Task_Create(main_r, 0, 0);
+    //Next_Kernel_Request();
     // NEVER RETURNS!!!
-  }*/
+  }
   return 0;
 }

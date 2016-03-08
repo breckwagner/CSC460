@@ -49,9 +49,9 @@ EIND   = 0X3C
 	push	r31
 
   in r16, EIND
-  push    r16
+  push    r31
   in r16, SREG
-  push    r16
+  push    r31
 .endm
 ;
 ; Pop all registers and the status registers
@@ -100,8 +100,8 @@ EIND   = 0X3C
         .global CSwitch
         .global Exit_Kernel
         .global Enter_Kernel
-        .extern  KernelSp
-        .extern  CurrentSp
+        .extern  kernel_stack_pointer
+        .extern  current_stack_pointer
 /*
   * The actual CSwitch() code begins here.
   *
@@ -126,18 +126,18 @@ Exit_Kernel:
         SAVECTX
         /*
           * Now, we have saved the kernel's context.
-          * Save the current H/W stack pointer into KernelSp.
+          * Save the current H/W stack pointer into kernel_stack_pointer.
           */
         in   r30, SPL
         in   r31, SPH
-        sts  KernelSp, r30
-        sts  KernelSp+1, r31
+        sts  kernel_stack_pointer, r30
+        sts  kernel_stack_pointer+1, r31
         /*
           * We are now ready to restore Cp's context, i.e.,
-          * switching the H/W stack pointer to CurrentSp.
+          * switching the H/W stack pointer to current_stack_pointer.
           */
-        lds  r30, CurrentSp
-        lds  r31, CurrentSp+1
+        lds  r30, current_stack_pointer
+        lds  r31, current_stack_pointer+1
         out  SPL, r30
         out  SPH, r31
         /*
@@ -169,18 +169,18 @@ Enter_Kernel:
         SAVECTX
         /*
           * Now, we have saved the Cp's context.
-          * Save the current H/W stack pointer into CurrentSp.
+          * Save the current H/W stack pointer into current_stack_pointer.
           */
         in   r30, SPL
         in   r31, SPH
-        sts  CurrentSp, r30
-        sts  CurrentSp+1, r31
+        sts  current_stack_pointer, r30
+        sts  current_stack_pointer+1, r31
         /*
           * We are now ready to restore kernel's context, i.e.,
-          * switching the H/W stack pointer back to KernelSp.
+          * switching the H/W stack pointer back to kernel_stack_pointer.
           */
-        lds  r30, KernelSp
-        lds  r31, KernelSp+1
+        lds  r30, kernel_stack_pointer
+        lds  r31, kernel_stack_pointer+1
         out  SPL, r30
         out  SPH, r31
         /*
