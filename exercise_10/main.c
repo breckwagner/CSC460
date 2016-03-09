@@ -194,23 +194,9 @@ volatile static unsigned int Tasks;
  * can just restore its execution context on its stack.
  * (See file "cswitch.S" for details.)
  */
-void Kernel_Create_Task_At( PD *p, voidfuncptr f )
-{
+void Kernel_Create_Task_At( PD *p, voidfuncptr f ){
    unsigned char *sp;
-
-#ifdef DEBUG
-   int counter = 0;
-#endif
-
-   //Changed -2 to -1 to fix off by one error.
    sp = (unsigned char *) &(p->workSpace[WORKSPACE-1]);
-
-
-
-   /*----BEGIN of NEW CODE----*/
-   //Initialize the workspace (i.e., stack) and PD here!
-
-   //Clear the contents of the workspace
    memset(&(p->workSpace),0,WORKSPACE);
 
    //Notice that we are placing the address (16-bit) of the functions
