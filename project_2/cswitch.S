@@ -175,6 +175,9 @@ Enter_Kernel:
         in   r31, SPH
         sts  current_stack_pointer, r30
         sts  current_stack_pointer+1, r31
+
+        in   r16, EIND
+        sts  current_stack_pointer+2, r16
         /*
           * We are now ready to restore kernel's context, i.e.,
           * switching the H/W stack pointer back to kernel_stack_pointer.
@@ -183,6 +186,9 @@ Enter_Kernel:
         lds  r31, kernel_stack_pointer+1
         out  SPL, r30
         out  SPH, r31
+
+        lds  r16, kernel_stack_pointer+2
+        out EIND, r16
         /*
           * We are now executing in kernel's stack.
           */

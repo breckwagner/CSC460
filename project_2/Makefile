@@ -14,6 +14,9 @@ FORMAT = ihex
 TARGET = shared
 
 
+# The first function to be called after the C runtime is run
+INIT = kernal_init
+
 # Object files directory
 #     To put object files in current directory, use a dot (.), do NOT make
 #     this an empty or blank macro!
@@ -21,7 +24,9 @@ OBJDIR = .
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = os.c main.c
+SRC = os.c
+#main.c
+#crt0.c
 
 
 # List C++ source files here. (C dependencies are automatically generated.)
@@ -88,7 +93,6 @@ CFLAGS += -funsigned-char
 CFLAGS += -funsigned-bitfields
 CFLAGS += -fpack-struct
 CFLAGS += -fshort-enums
-CFLAGS += -nostartfiles # new init script
 #CFLAGS += -fno-strict-aliasing
 CFLAGS += -Wall
 #CFLAGS += -Wstrict-prototypes
@@ -194,6 +198,9 @@ EXTMEMOPTS =
 #    -Map:      create map file
 #    --cref:    add cross reference to  map file
 LDFLAGS = -Wl,-Map=$(TARGET).map,--cref
+#LDFLAGS += -nostartfiles
+#LDFLAGS += -nodefaultlibs
+#LDFLAGS += -e $(INIT)
 LDFLAGS += $(EXTMEMOPTS)
 LDFLAGS += $(patsubst %,-L%,$(EXTRALIBDIRS))
 LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)

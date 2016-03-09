@@ -8,7 +8,8 @@ typedef void (*voidfuncptr) (void);      /* pointer to void f(void) */
 typedef enum process_states {
   DEAD = 0,
   READY,
-  RUNNING
+  RUNNING,
+  SUSPENDED
 } PROCESS_STATES;
 
 typedef enum kernel_request_type {
@@ -25,14 +26,17 @@ typedef struct process_descriptor {
   voidfuncptr code;
   KERNEL_REQUEST_TYPE request;
   PRIORITY priority;
+  PID id;
   int argument;
+  LIST_ENTRY(process_descriptor) pointers;
 } ProcessDescriptor;
 
 /*******************************************************************************
  *
  ******************************************************************************/
 
-extern void CSwitch();
+//extern void CSwitch();
+
 
 extern void Exit_Kernel();
 

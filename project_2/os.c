@@ -8,14 +8,19 @@
 #include "queue.h"
 #include "os.h"
 #include "kernal.h"
+#include "utility.h"
 
 /*******************************************************************************
  * Global Variables
  ******************************************************************************/
 
-volatile unsigned char * kernel_stack_pointer;
+volatile uint16_t ticks = 0;
 
-volatile unsigned char * current_stack_pointer;
+LIST_HEAD(process_descriptor_head, process_descriptor) processes_head;
+
+volatile uint8_t * kernel_stack_pointer;
+
+volatile uint8_t * current_stack_pointer;
 
 volatile static unsigned int next_process;
 
@@ -31,7 +36,12 @@ volatile static ProcessDescriptor* current_process;
  * Function Definitions (utility)
  ******************************************************************************/
 
-#define soft_reset() do{wdt_enable(WDTO_15MS);for(;;){}}while(0) // TODO update
+// To be called at boot to reset watchdog timer
+void wdt_init(void) {
+  MCUSR = 0;
+  wdt_disable();
+  return;
+}
 
 void signal_start_task (uint8_t value, bool pulse) {
 bool flag = true;
@@ -124,16 +134,16 @@ void Kernel_Create_Task_At(ProcessDescriptor *process, voidfuncptr function){
  * Create a new task
  */
 static PID Kernel_Create_Task(voidfuncptr f) {
-   int id = NULL;
-   if (tasks == MAXTHREAD) return id;
+   PID id = NULL;
+   if (tasks == MAXTHREAD) return 0;
 
    /* find a DEAD ProcessDescriptor that we can use  */
-   for (id = 0; id < MAXTHREAD; id++) {
-       if (Process[id].state == DEAD) break;
+   for (id = 1; id < MAXTHREAD; id++) {
+       if (Process[id-1].state == DEAD) break;
    }
 
    ++tasks;
-   Kernel_Create_Task_At( &(Process[id]), f );
+   Kernel_Create_Task_At( &(Process[id-1]), f );
    return id;
 }
 
@@ -208,7 +218,7 @@ PID Task_Create( void (*f)(void), PRIORITY py, int arg) {
      /* call the RTOS function directly */
      pid = Kernel_Create_Task(f);
   }
-  Process[pid].priority = py;
+  Process[pid-1].priority = py;
   return pid;
 }
 
@@ -246,15 +256,19 @@ int Task_GetArg(void) {
 }
 
 void Task_Suspend(PID p) {
+  Process[p-1].state = SUSPENDED;
 
+  //if (&current_process==&Process+p) {
+  //  Task_Yield();
+  //}
 }
 
 void Task_Resume(PID p) {
-
+  Process[p-1].state = READY;
 }
 
 void Task_Sleep(TICK t) {
-
+  //Task_Create(helper_function, 0, current_process-Process)
 }
 
 MUTEX Mutex_Init(void) {
@@ -300,10 +314,14 @@ void OS_Init() {
   KernelActive = 0;
   next_process = 0;
   //Reminder: Clear the memory for the task on creation.
-  for (id = 0; id < MAXTHREAD; id++) {
-    memset(&(Process[id]),0,sizeof(ProcessDescriptor));
-    Process[id].state = DEAD;
+  for (id = 1; id < MAXTHREAD; id++) {
+    memset(&(Process[id-1]), 0, sizeof(ProcessDescriptor));
+    Process[id-1].state = DEAD;
   }
+
+  LIST_INIT(&processes_head);
+
+
 }
 
 
@@ -312,7 +330,8 @@ void OS_Init() {
  */
 void OS_Start() {
   if ((!KernelActive) && (tasks > 0)) {
-    uint8_t flag = disable_global_interrupts();
+    //uint8_t flag =
+    disable_global_interrupts();
     KernelActive = 1;
     Next_Kernel_Request();
   }
@@ -332,13 +351,17 @@ void Pong() {
   }
 }
 
-void main_r () {
+void r_main () {
+  Task_Create(Pong, 1, 0);
+  Task_Create(Ping, 1, 0);
   for(;;){
-
+    Task_Suspend(1);
+    Task_Yield();
   }
 }
 
 ISR(TIMER1_COMPA_vect) {
+  ++ticks;
   Task_Yield();
 }
 
@@ -371,14 +394,12 @@ int kernal_init(void) {
   DDRL = 0xFF;
 
   OS_Init();
-  Task_Create(Pong, 0, 0);
-  Task_Create(Ping, 0, 0);
+  Task_Create(r_main, 0, 0);
   init_timer();
   OS_Start();
   return 0;
 }
-/*
+
 int main(void) {
-  kernal_init();
+  return kernal_init();
 }
-*/

@@ -1,0 +1,62 @@
+   1               		.file	"main.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__RAMPZ__ = 0x3b
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.Ltext0:
+  10               		.cfi_sections	.debug_frame
+  11               	.global	main
+  13               	main:
+  14               	.LFB0:
+  15               		.file 1 "main.c"
+   1:main.c        **** #include <string.h>
+   2:main.c        **** #include <stdbool.h>
+   3:main.c        **** 
+   4:main.c        **** #include <avr/io.h>
+   5:main.c        **** /*
+   6:main.c        **** #include <avr/interrupt.h>
+   7:main.c        **** #include <avr/delay.h>
+   8:main.c        **** */
+   9:main.c        **** #include "os.h"
+  10:main.c        **** 
+  11:main.c        **** 
+  12:main.c        **** int main (void) {
+  16               		.loc 1 12 0
+  17               		.cfi_startproc
+  18 0000 CF93      		push r28
+  19               	.LCFI0:
+  20               		.cfi_def_cfa_offset 4
+  21               		.cfi_offset 28, -3
+  22 0002 DF93      		push r29
+  23               	.LCFI1:
+  24               		.cfi_def_cfa_offset 5
+  25               		.cfi_offset 29, -4
+  26 0004 CDB7      		in r28,__SP_L__
+  27 0006 DEB7      		in r29,__SP_H__
+  28               	.LCFI2:
+  29               		.cfi_def_cfa_register 28
+  30               	/* prologue: function */
+  31               	/* frame size = 0 */
+  32               	/* stack size = 2 */
+  33               	.L__stack_usage = 2
+  34               	.L2:
+  13:main.c        ****   for (;;) {}
+  35               		.loc 1 13 0 discriminator 1
+  36 0008 00C0      		rjmp .L2
+  37               		.cfi_endproc
+  38               	.LFE0:
+  40               	.Letext0:
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 main.c
+     /tmp/cck4Bo98.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/cck4Bo98.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/cck4Bo98.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/cck4Bo98.s:5      *ABS*:000000000000003b __RAMPZ__
+     /tmp/cck4Bo98.s:6      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cck4Bo98.s:7      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cck4Bo98.s:13     .text:0000000000000000 main
+
+NO UNDEFINED SYMBOLS

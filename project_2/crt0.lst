@@ -1,0 +1,671 @@
+   1               		.file	"crt0.c"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__RAMPZ__ = 0x3b
+   6               	__tmp_reg__ = 0
+   7               	__zero_reg__ = 1
+   8               		.text
+   9               	.Ltext0:
+  10               		.cfi_sections	.debug_frame
+  11               		.section	.vectors,"ax",@progbits
+  12               	.global	__vectors
+  14               	__vectors:
+  15               	.LFB0:
+  16               		.file 1 "crt0.c"
+   1:crt0.c        **** /** @file crt0.c
+   2:crt0.c        ****  *
+   3:crt0.c        ****  * @brief A C runtime
+   4:crt0.c        ****  *
+   5:crt0.c        ****  * Use only one of crt0.S and crt0.c
+   6:crt0.c        ****  *
+   7:crt0.c        ****  * This file is adapted from grct1.S in the avr source.
+   8:crt0.c        ****  *
+   9:crt0.c        ****  * For use in Mantis Cheng's CSC 460 Fall 2007
+  10:crt0.c        ****  *
+  11:crt0.c        ****  * To use this as startup code in AVR Studio,
+  12:crt0.c        ****  * add "-nostartfiles" to [Linker Options]
+  13:crt0.c        ****  * in Project>Configuration options>Custom Options.
+  14:crt0.c        ****  *
+  15:crt0.c        ****  * The name of the function in the last call is where the program starts.
+  16:crt0.c        ****  * (For project 2 it should be "OS_Init".)
+  17:crt0.c        ****  *
+  18:crt0.c        ****  * @author Scott Craig
+  19:crt0.c        ****  * @author Justin Tanner
+  20:crt0.c        ****  */
+  21:crt0.c        **** 
+  22:crt0.c        **** #include <avr/io.h>
+  23:crt0.c        **** #include <avr/sfr_defs.h>
+  24:crt0.c        **** 
+  25:crt0.c        **** #include "os.h"
+  26:crt0.c        **** 
+  27:crt0.c        **** /** The "zero" register*/
+  28:crt0.c        **** #define zero_reg  "r1"
+  29:crt0.c        **** 
+  30:crt0.c        **** /**
+  31:crt0.c        ****  * @brief A macro to simplify the vector list.
+  32:crt0.c        ****  *
+  33:crt0.c        ****  * The symbol "__vector_i" is weakly bound to this spot in the
+  34:crt0.c        ****  * object file. Later, other object files can reference this
+  35:crt0.c        ****  * spot using this symbol.
+  36:crt0.c        ****  *
+  37:crt0.c        ****  * The value of the symbol is set to "__vector_not_set",
+  38:crt0.c        ****  * which is the label of a function below. Other files will
+  39:crt0.c        ****  * change this if an ISR is declared.
+  40:crt0.c        ****  *
+  41:crt0.c        ****  * The instruction at this spot is "jmp (addr)" (4 bytes).
+  42:crt0.c        ****  * These addresses are hardwired in the mcu.
+  43:crt0.c        ****  */
+  44:crt0.c        **** #define   vector(name)  asm(\
+  45:crt0.c        ****     ".weak "  name "\n\t"\
+  46:crt0.c        ****     ".set  "  name " , __vector_not_set\n\t"\
+  47:crt0.c        ****     "jmp   "  name "\n\t"::);
+  48:crt0.c        **** 
+  49:crt0.c        **** 
+  50:crt0.c        **** /**
+  51:crt0.c        ****  * @brief The vectors section.
+  52:crt0.c        ****  *
+  53:crt0.c        ****  * The numbers are off by 1 from the hardware manual,
+  54:crt0.c        ****  * but consistent with iousbxx6_7.h.
+  55:crt0.c        ****  * Vector "0" is the reset vector, which jumps to the
+  56:crt0.c        ****  * executable code.
+  57:crt0.c        ****  *
+  58:crt0.c        ****  * Any interrupt ISR definition in the C code will
+  59:crt0.c        ****  * overwrite these default definitions.
+  60:crt0.c        ****  */
+  61:crt0.c        **** void __vectors (void) __attribute__ ((naked)) __attribute__ ((section (".vectors")));
+  62:crt0.c        **** void __vectors (void)
+  63:crt0.c        **** {
+  17               		.loc 1 63 0
+  18               		.cfi_startproc
+  19               	/* prologue: naked */
+  20               	/* frame size = 0 */
+  21               	/* stack size = 0 */
+  22               	.L__stack_usage = 0
+  64:crt0.c        ****     asm("jmp        __init\n"::);
+  23               		.loc 1 64 0
+  24               	/* #APP */
+  25               	 ;  64 "crt0.c" 1
+  26 0000 0C94 0000 		jmp        __init
+  27               	
+  28               	 ;  0 "" 2
+  65:crt0.c        **** 
+  66:crt0.c        ****     vector("__vector_1");
+  29               		.loc 1 66 0
+  30               	 ;  66 "crt0.c" 1
+  31               		.weak __vector_1
+  32               		.set  __vector_1 , __vector_not_set
+  33 0004 0C94 0000 		jmp   __vector_1
+  34               		
+  35               	 ;  0 "" 2
+  67:crt0.c        ****     vector("__vector_2");
+  36               		.loc 1 67 0
+  37               	 ;  67 "crt0.c" 1
+  38               		.weak __vector_2
+  39               		.set  __vector_2 , __vector_not_set
+  40 0008 0C94 0000 		jmp   __vector_2
+  41               		
+  42               	 ;  0 "" 2
+  68:crt0.c        ****     vector("__vector_3");
+  43               		.loc 1 68 0
+  44               	 ;  68 "crt0.c" 1
+  45               		.weak __vector_3
+  46               		.set  __vector_3 , __vector_not_set
+  47 000c 0C94 0000 		jmp   __vector_3
+  48               		
+  49               	 ;  0 "" 2
+  69:crt0.c        ****     vector("__vector_4");
+  50               		.loc 1 69 0
+  51               	 ;  69 "crt0.c" 1
+  52               		.weak __vector_4
+  53               		.set  __vector_4 , __vector_not_set
+  54 0010 0C94 0000 		jmp   __vector_4
+  55               		
+  56               	 ;  0 "" 2
+  70:crt0.c        ****     vector("__vector_5");
+  57               		.loc 1 70 0
+  58               	 ;  70 "crt0.c" 1
+  59               		.weak __vector_5
+  60               		.set  __vector_5 , __vector_not_set
+  61 0014 0C94 0000 		jmp   __vector_5
+  62               		
+  63               	 ;  0 "" 2
+  71:crt0.c        ****     vector("__vector_6");
+  64               		.loc 1 71 0
+  65               	 ;  71 "crt0.c" 1
+  66               		.weak __vector_6
+  67               		.set  __vector_6 , __vector_not_set
+  68 0018 0C94 0000 		jmp   __vector_6
+  69               		
+  70               	 ;  0 "" 2
+  72:crt0.c        ****     vector("__vector_7");
+  71               		.loc 1 72 0
+  72               	 ;  72 "crt0.c" 1
+  73               		.weak __vector_7
+  74               		.set  __vector_7 , __vector_not_set
+  75 001c 0C94 0000 		jmp   __vector_7
+  76               		
+  77               	 ;  0 "" 2
+  73:crt0.c        ****     vector("__vector_8");
+  78               		.loc 1 73 0
+  79               	 ;  73 "crt0.c" 1
+  80               		.weak __vector_8
+  81               		.set  __vector_8 , __vector_not_set
+  82 0020 0C94 0000 		jmp   __vector_8
+  83               		
+  84               	 ;  0 "" 2
+  74:crt0.c        ****     vector("__vector_9");
+  85               		.loc 1 74 0
+  86               	 ;  74 "crt0.c" 1
+  87               		.weak __vector_9
+  88               		.set  __vector_9 , __vector_not_set
+  89 0024 0C94 0000 		jmp   __vector_9
+  90               		
+  91               	 ;  0 "" 2
+  75:crt0.c        ****     vector("__vector_10");
+  92               		.loc 1 75 0
+  93               	 ;  75 "crt0.c" 1
+  94               		.weak __vector_10
+  95               		.set  __vector_10 , __vector_not_set
+  96 0028 0C94 0000 		jmp   __vector_10
+  97               		
+  98               	 ;  0 "" 2
+  76:crt0.c        ****     vector("__vector_11");
+  99               		.loc 1 76 0
+ 100               	 ;  76 "crt0.c" 1
+ 101               		.weak __vector_11
+ 102               		.set  __vector_11 , __vector_not_set
+ 103 002c 0C94 0000 		jmp   __vector_11
+ 104               		
+ 105               	 ;  0 "" 2
+  77:crt0.c        ****     vector("__vector_12");
+ 106               		.loc 1 77 0
+ 107               	 ;  77 "crt0.c" 1
+ 108               		.weak __vector_12
+ 109               		.set  __vector_12 , __vector_not_set
+ 110 0030 0C94 0000 		jmp   __vector_12
+ 111               		
+ 112               	 ;  0 "" 2
+  78:crt0.c        ****     vector("__vector_13");
+ 113               		.loc 1 78 0
+ 114               	 ;  78 "crt0.c" 1
+ 115               		.weak __vector_13
+ 116               		.set  __vector_13 , __vector_not_set
+ 117 0034 0C94 0000 		jmp   __vector_13
+ 118               		
+ 119               	 ;  0 "" 2
+  79:crt0.c        ****     vector("__vector_14");
+ 120               		.loc 1 79 0
+ 121               	 ;  79 "crt0.c" 1
+ 122               		.weak __vector_14
+ 123               		.set  __vector_14 , __vector_not_set
+ 124 0038 0C94 0000 		jmp   __vector_14
+ 125               		
+ 126               	 ;  0 "" 2
+  80:crt0.c        ****     vector("__vector_15");
+ 127               		.loc 1 80 0
+ 128               	 ;  80 "crt0.c" 1
+ 129               		.weak __vector_15
+ 130               		.set  __vector_15 , __vector_not_set
+ 131 003c 0C94 0000 		jmp   __vector_15
+ 132               		
+ 133               	 ;  0 "" 2
+  81:crt0.c        ****     vector("__vector_16");
+ 134               		.loc 1 81 0
+ 135               	 ;  81 "crt0.c" 1
+ 136               		.weak __vector_16
+ 137               		.set  __vector_16 , __vector_not_set
+ 138 0040 0C94 0000 		jmp   __vector_16
+ 139               		
+ 140               	 ;  0 "" 2
+  82:crt0.c        ****     vector("__vector_17");
+ 141               		.loc 1 82 0
+ 142               	 ;  82 "crt0.c" 1
+ 143               		.weak __vector_17
+ 144               		.set  __vector_17 , __vector_not_set
+ 145 0044 0C94 0000 		jmp   __vector_17
+ 146               		
+ 147               	 ;  0 "" 2
+  83:crt0.c        ****     vector("__vector_18");
+ 148               		.loc 1 83 0
+ 149               	 ;  83 "crt0.c" 1
+ 150               		.weak __vector_18
+ 151               		.set  __vector_18 , __vector_not_set
+ 152 0048 0C94 0000 		jmp   __vector_18
+ 153               		
+ 154               	 ;  0 "" 2
+  84:crt0.c        ****     vector("__vector_19");
+ 155               		.loc 1 84 0
+ 156               	 ;  84 "crt0.c" 1
+ 157               		.weak __vector_19
+ 158               		.set  __vector_19 , __vector_not_set
+ 159 004c 0C94 0000 		jmp   __vector_19
+ 160               		
+ 161               	 ;  0 "" 2
+  85:crt0.c        ****     vector("__vector_20");
+ 162               		.loc 1 85 0
+ 163               	 ;  85 "crt0.c" 1
+ 164               		.weak __vector_20
+ 165               		.set  __vector_20 , __vector_not_set
+ 166 0050 0C94 0000 		jmp   __vector_20
+ 167               		
+ 168               	 ;  0 "" 2
+  86:crt0.c        ****     vector("__vector_21");
+ 169               		.loc 1 86 0
+ 170               	 ;  86 "crt0.c" 1
+ 171               		.weak __vector_21
+ 172               		.set  __vector_21 , __vector_not_set
+ 173 0054 0C94 0000 		jmp   __vector_21
+ 174               		
+ 175               	 ;  0 "" 2
+  87:crt0.c        ****     vector("__vector_22");
+ 176               		.loc 1 87 0
+ 177               	 ;  87 "crt0.c" 1
+ 178               		.weak __vector_22
+ 179               		.set  __vector_22 , __vector_not_set
+ 180 0058 0C94 0000 		jmp   __vector_22
+ 181               		
+ 182               	 ;  0 "" 2
+  88:crt0.c        ****     vector("__vector_23");
+ 183               		.loc 1 88 0
+ 184               	 ;  88 "crt0.c" 1
+ 185               		.weak __vector_23
+ 186               		.set  __vector_23 , __vector_not_set
+ 187 005c 0C94 0000 		jmp   __vector_23
+ 188               		
+ 189               	 ;  0 "" 2
+  89:crt0.c        ****     vector("__vector_24");
+ 190               		.loc 1 89 0
+ 191               	 ;  89 "crt0.c" 1
+ 192               		.weak __vector_24
+ 193               		.set  __vector_24 , __vector_not_set
+ 194 0060 0C94 0000 		jmp   __vector_24
+ 195               		
+ 196               	 ;  0 "" 2
+  90:crt0.c        ****     vector("__vector_25");
+ 197               		.loc 1 90 0
+ 198               	 ;  90 "crt0.c" 1
+ 199               		.weak __vector_25
+ 200               		.set  __vector_25 , __vector_not_set
+ 201 0064 0C94 0000 		jmp   __vector_25
+ 202               		
+ 203               	 ;  0 "" 2
+  91:crt0.c        ****     vector("__vector_26");
+ 204               		.loc 1 91 0
+ 205               	 ;  91 "crt0.c" 1
+ 206               		.weak __vector_26
+ 207               		.set  __vector_26 , __vector_not_set
+ 208 0068 0C94 0000 		jmp   __vector_26
+ 209               		
+ 210               	 ;  0 "" 2
+  92:crt0.c        ****     vector("__vector_27");
+ 211               		.loc 1 92 0
+ 212               	 ;  92 "crt0.c" 1
+ 213               		.weak __vector_27
+ 214               		.set  __vector_27 , __vector_not_set
+ 215 006c 0C94 0000 		jmp   __vector_27
+ 216               		
+ 217               	 ;  0 "" 2
+  93:crt0.c        ****     vector("__vector_28");
+ 218               		.loc 1 93 0
+ 219               	 ;  93 "crt0.c" 1
+ 220               		.weak __vector_28
+ 221               		.set  __vector_28 , __vector_not_set
+ 222 0070 0C94 0000 		jmp   __vector_28
+ 223               		
+ 224               	 ;  0 "" 2
+  94:crt0.c        ****     vector("__vector_29");
+ 225               		.loc 1 94 0
+ 226               	 ;  94 "crt0.c" 1
+ 227               		.weak __vector_29
+ 228               		.set  __vector_29 , __vector_not_set
+ 229 0074 0C94 0000 		jmp   __vector_29
+ 230               		
+ 231               	 ;  0 "" 2
+  95:crt0.c        ****     vector("__vector_30");
+ 232               		.loc 1 95 0
+ 233               	 ;  95 "crt0.c" 1
+ 234               		.weak __vector_30
+ 235               		.set  __vector_30 , __vector_not_set
+ 236 0078 0C94 0000 		jmp   __vector_30
+ 237               		
+ 238               	 ;  0 "" 2
+  96:crt0.c        ****     vector("__vector_31");
+ 239               		.loc 1 96 0
+ 240               	 ;  96 "crt0.c" 1
+ 241               		.weak __vector_31
+ 242               		.set  __vector_31 , __vector_not_set
+ 243 007c 0C94 0000 		jmp   __vector_31
+ 244               		
+ 245               	 ;  0 "" 2
+  97:crt0.c        ****     vector("__vector_32");
+ 246               		.loc 1 97 0
+ 247               	 ;  97 "crt0.c" 1
+ 248               		.weak __vector_32
+ 249               		.set  __vector_32 , __vector_not_set
+ 250 0080 0C94 0000 		jmp   __vector_32
+ 251               		
+ 252               	 ;  0 "" 2
+  98:crt0.c        ****     vector("__vector_33");
+ 253               		.loc 1 98 0
+ 254               	 ;  98 "crt0.c" 1
+ 255               		.weak __vector_33
+ 256               		.set  __vector_33 , __vector_not_set
+ 257 0084 0C94 0000 		jmp   __vector_33
+ 258               		
+ 259               	 ;  0 "" 2
+  99:crt0.c        ****     vector("__vector_34");
+ 260               		.loc 1 99 0
+ 261               	 ;  99 "crt0.c" 1
+ 262               		.weak __vector_34
+ 263               		.set  __vector_34 , __vector_not_set
+ 264 0088 0C94 0000 		jmp   __vector_34
+ 265               		
+ 266               	 ;  0 "" 2
+ 100:crt0.c        ****     vector("__vector_35");
+ 267               		.loc 1 100 0
+ 268               	 ;  100 "crt0.c" 1
+ 269               		.weak __vector_35
+ 270               		.set  __vector_35 , __vector_not_set
+ 271 008c 0C94 0000 		jmp   __vector_35
+ 272               		
+ 273               	 ;  0 "" 2
+ 101:crt0.c        ****     vector("__vector_36");
+ 274               		.loc 1 101 0
+ 275               	 ;  101 "crt0.c" 1
+ 276               		.weak __vector_36
+ 277               		.set  __vector_36 , __vector_not_set
+ 278 0090 0C94 0000 		jmp   __vector_36
+ 279               		
+ 280               	 ;  0 "" 2
+ 102:crt0.c        ****     vector("__vector_37");
+ 281               		.loc 1 102 0
+ 282               	 ;  102 "crt0.c" 1
+ 283               		.weak __vector_37
+ 284               		.set  __vector_37 , __vector_not_set
+ 285 0094 0C94 0000 		jmp   __vector_37
+ 286               		
+ 287               	 ;  0 "" 2
+ 288               	/* epilogue start */
+ 103:crt0.c        **** }
+ 289               		.loc 1 103 0
+ 290               	/* #NOAPP */
+ 291               		.cfi_endproc
+ 292               	.LFE0:
+ 294               		.section	.text,"ax",@progbits
+ 295               	.global	__vector_not_set
+ 297               	__vector_not_set:
+ 298               	.LFB1:
+ 104:crt0.c        **** 
+ 105:crt0.c        **** 
+ 106:crt0.c        **** /**
+ 107:crt0.c        ****  * @fn __vector_not_set
+ 108:crt0.c        ****  *
+ 109:crt0.c        ****  * @brief A default routine that is called when an interrupt occurs
+ 110:crt0.c        ****  * for which no ISR was assigned.
+ 111:crt0.c        ****  *
+ 112:crt0.c        ****  * The default action is to reset,
+ 113:crt0.c        ****  * but it could be changed to do something else.
+ 114:crt0.c        ****  */
+ 115:crt0.c        **** void __vector_not_set (void) __attribute__ ((naked)) __attribute__ ((section (".text")));
+ 116:crt0.c        **** void __vector_not_set (void)
+ 117:crt0.c        **** {
+ 299               		.loc 1 117 0
+ 300               		.cfi_startproc
+ 301               	/* prologue: naked */
+ 302               	/* frame size = 0 */
+ 303               	/* stack size = 0 */
+ 304               	.L__stack_usage = 0
+ 118:crt0.c        ****     asm("jmp    __vectors\n\t"::);
+ 305               		.loc 1 118 0
+ 306               	/* #APP */
+ 307               	 ;  118 "crt0.c" 1
+ 308 0000 0C94 0000 		jmp    __vectors
+ 309               		
+ 310               	 ;  0 "" 2
+ 311               	/* epilogue start */
+ 119:crt0.c        **** }
+ 312               		.loc 1 119 0
+ 313               	/* #NOAPP */
+ 314               		.cfi_endproc
+ 315               	.LFE1:
+ 317               		.section	.init2,"ax",@progbits
+ 318               	.global	init2
+ 320               	init2:
+ 321               	.LFB2:
+ 120:crt0.c        **** 
+ 121:crt0.c        **** 
+ 122:crt0.c        **** /**
+ 123:crt0.c        ****  * @brief The beginning of the executable code in this file.
+ 124:crt0.c        ****  *
+ 125:crt0.c        ****  * The section names tell the linker where to place the
+ 126:crt0.c        ****  * code as specified in the linker script. eg. avr5.x
+ 127:crt0.c        ****  */
+ 128:crt0.c        **** /*
+ 129:crt0.c        **** void __init (void) __attribute__ ((naked)) __attribute__ ((section (".init0")));
+ 130:crt0.c        **** void __init (void)
+ 131:crt0.c        **** {
+ 132:crt0.c        ****     asm(".weak    __init\n\t"
+ 133:crt0.c        ****         "__init:\n\t"
+ 134:crt0.c        ****         ".weak    __heap_end\n\t"
+ 135:crt0.c        ****         ".set    __heap_end, 0\n\t"::);
+ 136:crt0.c        **** }
+ 137:crt0.c        **** */
+ 138:crt0.c        **** 
+ 139:crt0.c        **** /**
+ 140:crt0.c        ****  * @brief init2
+ 141:crt0.c        ****  *
+ 142:crt0.c        ****  * Clear the "zero" register,
+ 143:crt0.c        ****  * clear the status register, and
+ 144:crt0.c        ****  * set the stack pointer.
+ 145:crt0.c        ****  */
+ 146:crt0.c        **** void init2 (void) __attribute__ ((naked)) __attribute__ ((section (".init2")));
+ 147:crt0.c        **** void init2 (void)
+ 148:crt0.c        **** {
+ 322               		.loc 1 148 0
+ 323               		.cfi_startproc
+ 324               	/* prologue: naked */
+ 325               	/* frame size = 0 */
+ 326               	/* stack size = 0 */
+ 327               	.L__stack_usage = 0
+ 149:crt0.c        ****     asm("clr   " zero_reg "\n\t"::);
+ 328               		.loc 1 149 0
+ 329               	/* #APP */
+ 330               	 ;  149 "crt0.c" 1
+ 331 0000 1124      		clr   r1
+ 332               		
+ 333               	 ;  0 "" 2
+ 150:crt0.c        **** 
+ 151:crt0.c        ****     SREG = 0;
+ 334               		.loc 1 151 0
+ 335               	/* #NOAPP */
+ 336 0002 8FE5      		ldi r24,lo8(95)
+ 337 0004 90E0      		ldi r25,0
+ 338 0006 FC01      		movw r30,r24
+ 339 0008 1082      		st Z,__zero_reg__
+ 152:crt0.c        ****     SP = RAMEND;
+ 340               		.loc 1 152 0
+ 341 000a 8DE5      		ldi r24,lo8(93)
+ 342 000c 90E0      		ldi r25,0
+ 343 000e 2FEF      		ldi r18,lo8(-1)
+ 344 0010 31E2      		ldi r19,lo8(33)
+ 345 0012 FC01      		movw r30,r24
+ 346 0014 3183      		std Z+1,r19
+ 347 0016 2083      		st Z,r18
+ 348               	/* epilogue start */
+ 153:crt0.c        **** }
+ 349               		.loc 1 153 0
+ 350               		.cfi_endproc
+ 351               	.LFE2:
+ 353               		.section	.init4,"ax",@progbits
+ 354               	.global	__do_copy_data
+ 356               	__do_copy_data:
+ 357               	.LFB3:
+ 154:crt0.c        **** 
+ 155:crt0.c        **** 
+ 156:crt0.c        **** /**
+ 157:crt0.c        ****  * @brief init4
+ 158:crt0.c        ****  *
+ 159:crt0.c        ****  * Copy data from __data_load_start in program memory
+ 160:crt0.c        ****  * to __data_start in SRAM, initializing data in the process.
+ 161:crt0.c        ****  * A similar routine with the same name is defined in libgcc.S.
+ 162:crt0.c        ****  * This routine overrides it.
+ 163:crt0.c        ****  */
+ 164:crt0.c        **** void __do_copy_data (void) __attribute__ ((naked)) __attribute__ ((section (".init4")));
+ 165:crt0.c        **** void __do_copy_data (void)
+ 166:crt0.c        **** {
+ 358               		.loc 1 166 0
+ 359               		.cfi_startproc
+ 360               	/* prologue: naked */
+ 361               	/* frame size = 0 */
+ 362               	/* stack size = 0 */
+ 363               	.L__stack_usage = 0
+ 167:crt0.c        ****     asm(
+ 364               		.loc 1 167 0
+ 365               	/* #APP */
+ 366               	 ;  167 "crt0.c" 1
+ 367 0000 10E0      		ldi    r17, hi8(__data_end) 
+ 368 0002 A0E0      	ldi    r26, lo8(__data_start) 
+ 369 0004 B0E0      	ldi    r27, hi8(__data_start) 
+ 370 0006 E0E0      	ldi    r30, lo8(__data_load_start) 
+ 371 0008 F0E0      	ldi    r31, hi8(__data_load_start) 
+ 372 000a 00E0      	ldi    r16, hh8(__data_load_start) 
+ 373 000c 0BBF      	out    59, r16 
+ 374 000e 00C0      	rjmp    .L__do_copy_data_start 
+ 375               	.L__do_copy_data_loop: 
+ 376 0010 0790      	elpm    r0, Z+ 
+ 377 0012 0D92      	st    X+, r0 
+ 378               	.L__do_copy_data_start: 
+ 379 0014 A030      	cpi    r26, lo8(__data_end) 
+ 380 0016 B107      	cpc    r27, r17 
+ 381 0018 01F4      	brne    .L__do_copy_data_loop 
+ 382               	
+ 383               	 ;  0 "" 2
+ 384               	/* epilogue start */
+ 168:crt0.c        ****     "ldi    r17, hi8(__data_end) \n"
+ 169:crt0.c        ****     "ldi    r26, lo8(__data_start) \n"
+ 170:crt0.c        ****     "ldi    r27, hi8(__data_start) \n"
+ 171:crt0.c        ****     "ldi    r30, lo8(__data_load_start) \n"
+ 172:crt0.c        ****     "ldi    r31, hi8(__data_load_start) \n"
+ 173:crt0.c        ****     "ldi    r16, hh8(__data_load_start) \n"
+ 174:crt0.c        ****     "out    %0, r16 \n"
+ 175:crt0.c        ****     "rjmp    .L__do_copy_data_start \n"
+ 176:crt0.c        **** ".L__do_copy_data_loop: \n"
+ 177:crt0.c        ****     "elpm    r0, Z+ \n"
+ 178:crt0.c        ****     "st    X+, r0 \n"
+ 179:crt0.c        **** ".L__do_copy_data_start: \n"
+ 180:crt0.c        ****     "cpi    r26, lo8(__data_end) \n"
+ 181:crt0.c        ****     "cpc    r27, r17 \n"
+ 182:crt0.c        ****     "brne    .L__do_copy_data_loop \n"::"I" (_SFR_IO_ADDR(RAMPZ)));
+ 183:crt0.c        **** 
+ 184:crt0.c        **** }
+ 385               		.loc 1 184 0
+ 386               	/* #NOAPP */
+ 387               		.cfi_endproc
+ 388               	.LFE3:
+ 390               		.section	.init9,"ax",@progbits
+ 391               	.global	init9
+ 393               	init9:
+ 394               	.LFB4:
+ 185:crt0.c        **** 
+ 186:crt0.c        ****     /* set all unitialized data in .bss to 0
+ 187:crt0.c        ****      * Already included in libgcc.S */
+ 188:crt0.c        **** /*
+ 189:crt0.c        ****     .global __do_clear_bss
+ 190:crt0.c        **** __do_clear_bss:
+ 191:crt0.c        ****     ldi    r17, hi8(__bss_end)
+ 192:crt0.c        ****     ldi    r26, lo8(__bss_start)
+ 193:crt0.c        ****     ldi    r27, hi8(__bss_start)
+ 194:crt0.c        ****     rjmp    .do_clear_bss_start
+ 195:crt0.c        **** .do_clear_bss_loop:
+ 196:crt0.c        ****     st    X+, __zero_reg__
+ 197:crt0.c        **** .do_clear_bss_start:
+ 198:crt0.c        ****     cpi    r26, lo8(__bss_end)
+ 199:crt0.c        ****     cpc    r27, r17
+ 200:crt0.c        ****     brne    .do_clear_bss_loop
+ 201:crt0.c        **** */
+ 202:crt0.c        **** 
+ 203:crt0.c        **** /** @brief init9
+ 204:crt0.c        ****  *
+ 205:crt0.c        ****  * The last of the init functions.
+ 206:crt0.c        ****  * Usually this would be the jump to "main()"
+ 207:crt0.c        ****  */
+ 208:crt0.c        **** void init9 (void) __attribute__ ((naked)) __attribute__ ((section (".init9")));
+ 209:crt0.c        **** void init9 (void)
+ 210:crt0.c        **** {
+ 395               		.loc 1 210 0
+ 396               		.cfi_startproc
+ 397               	/* prologue: naked */
+ 398               	/* frame size = 0 */
+ 399               	/* stack size = 0 */
+ 400               	.L__stack_usage = 0
+ 211:crt0.c        ****     kernal_init();
+ 401               		.loc 1 211 0
+ 402 0000 0E94 0000 		call kernal_init
+ 403               	.L6:
+ 212:crt0.c        **** 
+ 213:crt0.c        ****     for(;;);
+ 404               		.loc 1 213 0 discriminator 1
+ 405 0004 00C0      		rjmp .L6
+ 406               		.cfi_endproc
+ 407               	.LFE4:
+ 409               		.text
+ 410               	.Letext0:
+ 411               		.file 2 "/usr/lib/avr/include/stdint.h"
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 crt0.c
+     /tmp/cc2UDGlW.s:2      *ABS*:000000000000003e __SP_H__
+     /tmp/cc2UDGlW.s:3      *ABS*:000000000000003d __SP_L__
+     /tmp/cc2UDGlW.s:4      *ABS*:000000000000003f __SREG__
+     /tmp/cc2UDGlW.s:5      *ABS*:000000000000003b __RAMPZ__
+     /tmp/cc2UDGlW.s:6      *ABS*:0000000000000000 __tmp_reg__
+     /tmp/cc2UDGlW.s:7      *ABS*:0000000000000001 __zero_reg__
+     /tmp/cc2UDGlW.s:14     .vectors:0000000000000000 __vectors
+                            .text:0000000000000000 __vector_1
+     /tmp/cc2UDGlW.s:297    .text:0000000000000000 __vector_not_set
+                            .text:0000000000000000 __vector_2
+                            .text:0000000000000000 __vector_3
+                            .text:0000000000000000 __vector_4
+                            .text:0000000000000000 __vector_5
+                            .text:0000000000000000 __vector_6
+                            .text:0000000000000000 __vector_7
+                            .text:0000000000000000 __vector_8
+                            .text:0000000000000000 __vector_9
+                            .text:0000000000000000 __vector_10
+                            .text:0000000000000000 __vector_11
+                            .text:0000000000000000 __vector_12
+                            .text:0000000000000000 __vector_13
+                            .text:0000000000000000 __vector_14
+                            .text:0000000000000000 __vector_15
+                            .text:0000000000000000 __vector_16
+                            .text:0000000000000000 __vector_17
+                            .text:0000000000000000 __vector_18
+                            .text:0000000000000000 __vector_19
+                            .text:0000000000000000 __vector_20
+                            .text:0000000000000000 __vector_21
+                            .text:0000000000000000 __vector_22
+                            .text:0000000000000000 __vector_23
+                            .text:0000000000000000 __vector_24
+                            .text:0000000000000000 __vector_25
+                            .text:0000000000000000 __vector_26
+                            .text:0000000000000000 __vector_27
+                            .text:0000000000000000 __vector_28
+                            .text:0000000000000000 __vector_29
+                            .text:0000000000000000 __vector_30
+                            .text:0000000000000000 __vector_31
+                            .text:0000000000000000 __vector_32
+                            .text:0000000000000000 __vector_33
+                            .text:0000000000000000 __vector_34
+                            .text:0000000000000000 __vector_35
+                            .text:0000000000000000 __vector_36
+                            .text:0000000000000000 __vector_37
+     /tmp/cc2UDGlW.s:320    .init2:0000000000000000 init2
+     /tmp/cc2UDGlW.s:356    .init4:0000000000000000 __do_copy_data
+     /tmp/cc2UDGlW.s:393    .init9:0000000000000000 init9
+
+UNDEFINED SYMBOLS
+__init
+__data_end
+__data_start
+__data_load_start
+kernal_init
