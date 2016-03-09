@@ -1,0 +1,42 @@
+# Assembly
+*.S
+*.lst
+*.bin
+*.eep
+*.lss
+*.map
+*.sym
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.libbug files
+*.dSYM/
+
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# De
