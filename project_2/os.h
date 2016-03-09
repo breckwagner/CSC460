@@ -34,10 +34,10 @@ void OS_Abort(void);
  * @brief
  *
  *
- * @param
- * @return
+ * @param f a function to be scedualed as a process
+ * @return an unsinged integer id for the process and 0 on failure
  */
-PID  Task_Create( void (*f)(void), PRIORITY py, int arg);
+PID Task_Create( void (*f)(void), PRIORITY py, int arg);
 
 /**
  * @brief

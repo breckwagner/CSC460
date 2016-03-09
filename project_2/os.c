@@ -5,6 +5,7 @@
 #include <avr/interrupt.h>
 #include <avr/wdt.h>
 
+#include "queue.h"
 #include "os.h"
 #include "kernal.h"
 
@@ -140,7 +141,6 @@ static void Dispatch() {
   while(Process[next_process].state != READY) {
     next_process = (next_process + 1) % MAXTHREAD;
   }
-  signal_start_task(next_process, true);
   current_process = &(Process[next_process]);
   current_stack_pointer = current_process->stack_pointer;
   current_process->state = RUNNING;
@@ -214,17 +214,19 @@ PID Task_Create( void (*f)(void), PRIORITY py, int arg) {
 
 void Task_Terminate(void) {
   if (KernelActive) {
-    disable_global_interrupts();
+    uint8_t flag = disable_global_interrupts();
     current_process->request = TERMINATE;
     Enter_Kernel();
+    restore_global_interrupts(flag);
   }
 }
 
 void Task_Yield(void) {
   if (KernelActive) {
-    disable_global_interrupts();
+    uint8_t flag = disable_global_interrupts();
     current_process->request = NEXT;
     Enter_Kernel();
+    restore_global_interrupts(flag);
   }
 }
 
@@ -234,15 +236,12 @@ void Task_Yield(void) {
 int Task_GetArg(void) {
   int arg;
   uint8_t sreg;
-
   // Save interupt flag
-  sreg = SREG;
-  disable_global_interrupts();
+  sreg = disable_global_interrupts();
 
   arg = current_process->argument;
 
-  // Restore interupt flag
-  SREG = sreg;
+  restore_global_interrupts(sreg);
   return arg;
 }
 
@@ -305,8 +304,6 @@ void OS_Init() {
     memset(&(Process[id]),0,sizeof(ProcessDescriptor));
     Process[id].state = DEAD;
   }
-
-  signal_start_task(3, true);
 }
 
 
@@ -315,25 +312,23 @@ void OS_Init() {
  */
 void OS_Start() {
   if ((!KernelActive) && (tasks > 0)) {
-    disable_global_interrupts();
+    uint8_t flag = disable_global_interrupts();
     KernelActive = 1;
-    signal_start_task(3, true);
     Next_Kernel_Request();
   }
 }
 
 void Ping() {
-  unsigned long x = 0;
   for(;;) {
-    PORTB |= (1<<PB7);    // ON
-    for(x=0; x < 1000000; x++) {}
+    PORTB |= (1<<PB7); // OFF
+    signal_start_task(1, true);
   }
 }
 void Pong() {
-  unsigned long x = 0;
+
   for(;;) {
     PORTB &= ~(1<<PB7); // OFF
-    for(x=0; x < 1000000; x++) {}
+    signal_start_task(0, true);
   }
 }
 
@@ -371,7 +366,7 @@ void init_timer () {
 }
 
 // OS_Init function
-int main(void) {
+int kernal_init(void) {
   DDRB = 0xFF;
   DDRL = 0xFF;
 
@@ -382,3 +377,8 @@ int main(void) {
   OS_Start();
   return 0;
 }
+/*
+int main(void) {
+  kernal_init();
+}
+*/

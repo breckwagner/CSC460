@@ -48,19 +48,19 @@ EIND   = 0X3C
 	push	r30
 	push	r31
 
-  in r31, EIND
-  push    r31
-  in r31, SREG
-  push    r31
+  in r16, EIND
+  push    r16
+  in r16, SREG
+  push    r16
 .endm
 ;
 ; Pop all registers and the status registers
 ;
 .macro	RESTORECTX
-  pop r31
-  out SREG,r31
-  pop r31
-  out EIND,r31
+  pop r16
+  out SREG,r16
+  pop r16
+  out EIND,r16
 
 	pop	r31
 	pop	r30

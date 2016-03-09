@@ -1,6 +1,8 @@
 #ifndef _KERNAL_H_
 #define _KERNAL_H_
 
+extern int main();
+
 typedef void (*voidfuncptr) (void);      /* pointer to void f(void) */
 
 typedef enum process_states {

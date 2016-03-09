@@ -21,7 +21,7 @@ OBJDIR = .
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = os.c
+SRC = os.c main.c
 
 
 # List C++ source files here. (C dependencies are automatically generated.)
@@ -88,6 +88,7 @@ CFLAGS += -funsigned-char
 CFLAGS += -funsigned-bitfields
 CFLAGS += -fpack-struct
 CFLAGS += -fshort-enums
+CFLAGS += -nostartfiles # new init script
 #CFLAGS += -fno-strict-aliasing
 CFLAGS += -Wall
 #CFLAGS += -Wstrict-prototypes
