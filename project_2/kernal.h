@@ -30,8 +30,17 @@ typedef struct process_descriptor {
   PRIORITY priority;
   PID id;
   int argument;
-  LIST_ENTRY(process_descriptor) pointers;
+  uint32_t expires;
+  //LIST_ENTRY(process_descriptor) pointers;
 } ProcessDescriptor;
+
+// TODO: We MIGHT use this (sleeping_process) but unused for now
+typedef struct sleeping_process {
+  ProcessDescriptor * pd;
+
+  // Absolute time for the process to wake since system start (ticks)
+  uint32_t expires;
+} SleepingProcess;
 
 /*******************************************************************************
  *

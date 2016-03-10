@@ -6,6 +6,7 @@
 *.lss
 *.map
 *.sym
+*.o.d
 
 # Object files
 *.o
@@ -38,5 +39,3 @@
 *.i*86
 *.x86_64
 *.hex
-
-# De

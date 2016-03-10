@@ -1,11 +1,15 @@
 #include <string.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/wdt.h>
 
-#include "queue.h"
+// Not sure which one we will use so including them both here
+#include "queue.h"    // OpenBSD implementation of lists
+#include "adlist.h"   // doubly linked list by Salvatore Sanfilippo
+
 #include "os.h"
 #include "kernal.h"
 #include "common.h"
@@ -14,35 +18,47 @@
  * Global Variables
  ******************************************************************************/
 
-volatile uint16_t ticks = 0;
+volatile uint32_t ticks = 0;
 
-LIST_HEAD(process_descriptor_head, process_descriptor) processes_head;
+//LIST_HEAD(process_descriptor_head, process_descriptor) processes_head;
+
+// This is a queue of queues. Each queue here represents a level of priority
+list *running_queue;
+
+// A list of process_descriptor(s)
+list *sleep_queue;
 
 volatile uint8_t * kernel_stack_pointer;
 
 volatile uint8_t * current_stack_pointer;
 
-volatile static unsigned int next_process;
+volatile static uint16_t next_process;
 
-volatile static unsigned int KernelActive;
+volatile static uint16_t KernelActive;
 
-volatile static unsigned int tasks;
+volatile static uint16_t tasks;
 
 static ProcessDescriptor Process[MAXTHREAD];
 
 volatile static ProcessDescriptor* current_process;
 
 /*******************************************************************************
- * Function Definitions (utility)
+ * Function Declarations
  ******************************************************************************/
 
-/**
- * When creating a new task, it is important to initialize its stack just like
- * it has called "Enter_Kernel()"; so that when we switch to it later, we
- * can just restore its execution context on its stack.
- * (See file "cswitch.S" for details.)
- */
-void Kernel_Create_Task_At(ProcessDescriptor *process, voidfuncptr function){
+static PID Kernel_Create_Task(voidfuncptr f);
+
+void Kernel_Create_Task_At(ProcessDescriptor *process, voidfuncptr function);
+
+static void Dispatch();
+
+static void Next_Kernel_Request();
+
+/*******************************************************************************
+ * Function Definitions
+ ******************************************************************************/
+
+void Kernel_Create_Task_At(ProcessDescriptor *process, voidfuncptr function) {
   uint8_t * stack_pointer;
   stack_pointer = (uint8_t *) &(process->workSpace[WORKSPACE-1]);
   memset(&(process->workSpace), 0, WORKSPACE);
@@ -51,9 +67,7 @@ void Kernel_Create_Task_At(ProcessDescriptor *process, voidfuncptr function){
   *(uint8_t *)stack_pointer-- = (((uint16_t)Task_Terminate) >> 8) & 0xff;
   *(uint8_t *)stack_pointer-- = 0x00;
 
-  //Place return address of function at bottom of stack
   *(uint8_t *)stack_pointer-- = ((uint16_t)function) & 0xff;
-  //Store terminate at the bottom of stack to protect against stack underrun.
   *(uint8_t *)stack_pointer-- = (((uint16_t)function) >> 8) & 0xff;
   *(uint8_t *)stack_pointer-- = 0x00;
 
@@ -66,10 +80,6 @@ void Kernel_Create_Task_At(ProcessDescriptor *process, voidfuncptr function){
   process->state = READY;
 }
 
-
-/**
- * Create a new task
- */
 static PID Kernel_Create_Task(voidfuncptr f) {
    PID id = NULL;
    if (tasks == MAXTHREAD) return 0;
@@ -131,7 +141,7 @@ static void Next_Kernel_Request() {
 
 /*******************************************************************************
  * Function Definitions OS API
- * see os.h
+ * @see os.h
  ******************************************************************************/
 
 void OS_Abort(void) {
@@ -182,9 +192,7 @@ void Task_Yield(void) {
  */
 int Task_GetArg(void) {
   int arg;
-  uint8_t sreg;
-  // Save interupt flag
-  sreg = disable_global_interrupts();
+  uint8_t sreg = disable_global_interrupts();
 
   arg = current_process->argument;
 
@@ -205,7 +213,28 @@ void Task_Resume(PID p) {
 }
 
 void Task_Sleep(TICK t) {
-  //Task_Create(helper_function, 0, current_process-Process)
+  uint8_t flag = disable_global_interrupts();
+  listNode *node;
+  //ticks
+  Task_Suspend(current_process->id);
+  if (NULL != sleep_queue) {
+    listIter *it = listGetIterator(sleep_queue, AL_START_HEAD);
+    while ((node = listNext(it))) {
+      if (node == NULL) {
+        listAddNodeHead(sleep_queue, current_process);
+        break;
+      } else if(((ProcessDescriptor *)listNodeValue(node))->expires < current_process->expires) {
+        // TODO: for now this is fine but later we should detect overflow
+        // and when the time is greater then the size of ticks (uint32_t)
+        // we should add a helper task to the queue that will then add
+        // current_process to the queue after length max size of uint32_t has
+        // passed
+        listInsertNode(sleep_queue, node, current_process, true);
+      }
+    }
+    listReleaseIterator(it);
+  }
+  restore_global_interrupts(flag);
 }
 
 MUTEX Mutex_Init(void) {
@@ -255,8 +284,9 @@ void OS_Init() {
     memset(&(Process[id-1]), 0, sizeof(ProcessDescriptor));
     Process[id-1].state = DEAD;
   }
-
-  LIST_INIT(&processes_head);
+  running_queue = listCreate();
+  sleep_queue = listCreate();
+  //LIST_INIT(&processes_head);
 
 
 }
@@ -281,7 +311,7 @@ ISR(TIMER1_COMPA_vect) {
 
 void init_timer () {
   // initialize Timer1
-  uint8_t interrupt_flag = disable_global_interrupts();          // disable global interrupts
+  uint8_t interrupt_flag = disable_global_interrupts();
   TCCR1A = 0;     // set entire TCCR1A register to 0
   TCCR1B = 0;     // same for TCCR1B
 
