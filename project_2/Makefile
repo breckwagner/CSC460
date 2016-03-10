@@ -24,7 +24,7 @@ OBJDIR = .
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = os.c
+SRC = main.c os.c common.c
 #main.c
 #crt0.c
 

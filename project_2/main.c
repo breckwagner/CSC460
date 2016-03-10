@@ -7,10 +7,27 @@
 #include <avr/delay.h>
 */
 #include "os.h"
+#include "common.h"
 
-
-int main (void) {
-  for (;;) {}
-  return 0;
+void Ping() {
+  for(;;) {
+    PORTB |= (1<<PB7); // OFF
+    signal_debug(1, true);
+  }
 }
-//nostartfiles
+void Pong() {
+
+  for(;;) {
+    PORTB &= ~(1<<PB7); // OFF
+    signal_debug(0, true);
+  }
+}
+
+
+void main () {
+  Task_Create(Pong, 1, 0);
+  Task_Create(Ping, 1, 0);
+  for(;;){
+    Task_Yield();
+  }
+}

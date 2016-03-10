@@ -8,7 +8,7 @@
 #include "queue.h"
 #include "os.h"
 #include "kernal.h"
-#include "utility.h"
+#include "common.h"
 
 /*******************************************************************************
  * Global Variables
@@ -36,70 +36,6 @@ volatile static ProcessDescriptor* current_process;
  * Function Definitions (utility)
  ******************************************************************************/
 
-// To be called at boot to reset watchdog timer
-void wdt_init(void) {
-  MCUSR = 0;
-  wdt_disable();
-  return;
-}
-
-void signal_start_task (uint8_t value, bool pulse) {
-bool flag = true;
-  while (flag) {
-    switch (value) {
-      case 0: PORTL ^= (1<<PL3); break;
-      case 1: PORTL ^= (1<<PL2); break;
-      case 2: PORTL ^= (1<<PL1); break;
-      case 3: PORTL ^= (1<<PL0); break;
-      case 4: PORTB ^= (1<<PB3); break;
-      case 5: PORTB ^= (1<<PB2); break;
-      case 6: PORTB ^= (1<<PB1); break;
-      case 7: PORTB ^= (1<<PB0); break;
-    }
-    if (pulse) {
-      pulse = false;
-    } else {
-      flag = false;
-    }
-  }
-}
-
-/**
- * Enables inturupts by setting the global inturupt flag
- * @param (void)
- * @return the previous state of the interrupt flag
- */
-uint8_t enable_global_interrupts() {
-  uint8_t sreg = SREG;
-  asm volatile ("sei"::);
-  return sreg;
-}
-
-/**
- * Disables inturupts by setting the global inturupt flag
- * @param (void)
- * @return the previous state of the interrupt flag
- */
-uint8_t disable_global_interrupts() {
-  uint8_t sreg = SREG;
-  asm volatile ("cli"::);
-  signal_start_task(7, true);
-  return sreg;
-}
-
-/**
- * Restores inturupts by setting the global inturupt flag
- * @param (void)
- * @return the previous state of the interrupt flag
- */
-uint8_t restore_global_interrupts(uint8_t saved_sreg) {
-  if (saved_sreg & 0x80) {
-    return enable_global_interrupts();
-  } else {
-    return disable_global_interrupts();
-  }
-}
-
 /**
  * When creating a new task, it is important to initialize its stack just like
  * it has called "Enter_Kernel()"; so that when we switch to it later, we
@@ -108,17 +44,18 @@ uint8_t restore_global_interrupts(uint8_t saved_sreg) {
  */
 void Kernel_Create_Task_At(ProcessDescriptor *process, voidfuncptr function){
   uint8_t * stack_pointer;
-  stack_pointer = (unsigned char *) &(process->workSpace[WORKSPACE-1]);
+  stack_pointer = (uint8_t *) &(process->workSpace[WORKSPACE-1]);
   memset(&(process->workSpace), 0, WORKSPACE);
 
-  *(unsigned char *)stack_pointer-- = ((unsigned int)Task_Terminate) & 0xff;
-  *(unsigned char *)stack_pointer-- = (((unsigned int)Task_Terminate) >> 8) & 0xff;
+  *(uint8_t *)stack_pointer-- = ((uint16_t)Task_Terminate) & 0xff;
+  *(uint8_t *)stack_pointer-- = (((uint16_t)Task_Terminate) >> 8) & 0xff;
+  *(uint8_t *)stack_pointer-- = 0x00;
 
   //Place return address of function at bottom of stack
-  *(unsigned char *)stack_pointer-- = ((unsigned int)function) & 0xff;
+  *(uint8_t *)stack_pointer-- = ((uint16_t)function) & 0xff;
   //Store terminate at the bottom of stack to protect against stack underrun.
-  *(unsigned char *)stack_pointer-- = (((unsigned int)function) >> 8) & 0xff;
-  *(unsigned char *)stack_pointer-- = 0;
+  *(uint8_t *)stack_pointer-- = (((uint16_t)function) >> 8) & 0xff;
+  *(uint8_t *)stack_pointer-- = 0x00;
 
   // Decrement stack pointer for the 32 registers and the EIND
   stack_pointer -= 34;
@@ -172,7 +109,7 @@ static void Next_Kernel_Request() {
     /* save the Cp's stack pointer */
     current_process->stack_pointer = current_stack_pointer;
 
-    switch(current_process->request){
+    switch (current_process->request) {
       case CREATE:
         Kernel_Create_Task (current_process->code);
         break;
@@ -205,7 +142,7 @@ void OS_Abort(void) {
   soft_reset();
 }
 
-PID Task_Create( void (*f)(void), PRIORITY py, int arg) {
+PID Task_Create(void (*f)(void), PRIORITY py, int arg) {
   PID pid;
   if (KernelActive) {
     uint8_t inturupt_flag = disable_global_interrupts();
@@ -337,29 +274,6 @@ void OS_Start() {
   }
 }
 
-void Ping() {
-  for(;;) {
-    PORTB |= (1<<PB7); // OFF
-    signal_start_task(1, true);
-  }
-}
-void Pong() {
-
-  for(;;) {
-    PORTB &= ~(1<<PB7); // OFF
-    signal_start_task(0, true);
-  }
-}
-
-void r_main () {
-  Task_Create(Pong, 1, 0);
-  Task_Create(Ping, 1, 0);
-  for(;;){
-    Task_Suspend(1);
-    Task_Yield();
-  }
-}
-
 ISR(TIMER1_COMPA_vect) {
   ++ticks;
   Task_Yield();
@@ -389,17 +303,14 @@ void init_timer () {
 }
 
 // OS_Init function
-int kernal_init(void) {
+void kernal_init(void) {
   DDRB = 0xFF;
   DDRL = 0xFF;
 
   OS_Init();
-  Task_Create(r_main, 0, 0);
+
+  // Add main to task queue to be defined later
+  Task_Create(main, 0, 0);
   init_timer();
   OS_Start();
-  return 0;
-}
-
-int main(void) {
-  return kernal_init();
 }

@@ -6,6 +6,10 @@
  *
  */
 
+
+#ifndef _COMMON_H_
+#define _COMMON_H_
+
 #define DIGITAL 0x7F
 #define ANALOG 0xFF
 
@@ -25,9 +29,39 @@ do {                      \
  * Function Prototypes
  ******************************************************************************/
 
-// Function Pototype
-//void wdt_init(void) __attribute__((naked)) __attribute__((section(".init3")));
+void signal_debug (uint8_t value, bool pulse);
 
+/**
+ * Enables inturupts by setting the global inturupt flag
+ * @param (void)
+ * @return the previous state of the interrupt flag
+ */
+uint8_t enable_global_interrupts();
+/**
+ * Disables inturupts by setting the global inturupt flag
+ * @param (void)
+ * @return the previous state of the interrupt flag
+ */
+uint8_t disable_global_interrupts();
+
+/**
+ * Restores inturupts by setting the global inturupt flag
+ * @param (void)
+ * @return the previous state of the interrupt flag
+ */
+uint8_t restore_global_interrupts(uint8_t saved_sreg);
+
+
+
+
+
+
+
+// Function Pototype
+void wdt_init(void) __attribute__((naked)) __attribute__((section(".init3")));
+
+
+void kernal_init(void) __attribute__((naked)) __attribute__((section(".init8")));
 /*
 uint8_t set(uint8_t arduino_pin, uint16_t value) {
   switch (arduino_pin) {
@@ -50,3 +84,4 @@ void timer_init () {
 
 }
 */
+#endif /* _COMMON_H_ */

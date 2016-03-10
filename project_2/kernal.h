@@ -1,7 +1,9 @@
 #ifndef _KERNAL_H_
 #define _KERNAL_H_
 
-extern int main();
+// Needs to be here to promise void kernal_init(void) that main exists for
+// Task_Creates call
+extern void main();
 
 typedef void (*voidfuncptr) (void);      /* pointer to void f(void) */
 
