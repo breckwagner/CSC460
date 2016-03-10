@@ -80,6 +80,33 @@ void Kernel_Create_Task_At(ProcessDescriptor *process, voidfuncptr function) {
   process->state = READY;
 }
 
+static void schedule_task (ProcessDescriptor * pd) {
+  uint8_t flag = disable_global_interrupts();
+  listNode *node;
+  if (NULL != running_queue) {
+    listIter *it = listGetIterator(running_queue, AL_START_HEAD);
+    while ((node = listNext(it))) {
+      if (node == NULL) {
+        // Add priority level to queue
+        list * l;
+        listAddNodeTail(running_queue, l = listCreate());
+        listAddNodeTail(l, pd);
+        break;
+      } else {
+        if (((list *)listNodeValue(node)) != NULL) {
+          list * l = ((list *)listNodeValue(node));
+          ProcessDescriptor * tmp_pd = listFirst(l);
+          if (tmp_pd->priority < pd->priority) {
+            listAddNodeTail((list *)listNodeValue(node), pd);
+          }
+        }
+      }
+    }
+    listReleaseIterator(it);
+  }
+  restore_global_interrupts(flag);
+}
+
 static PID Kernel_Create_Task(voidfuncptr f) {
    PID id = NULL;
    if (tasks == MAXTHREAD) return 0;
@@ -91,10 +118,26 @@ static PID Kernel_Create_Task(voidfuncptr f) {
 
    ++tasks;
    Kernel_Create_Task_At( &(Process[id-1]), f );
+
+   schedule_task (&(Process[id-1]));
+
    return id;
 }
 
 static void Dispatch() {
+  /*
+  if(listFirst(running_queue) != NULL) {
+    list * l = listNodeValue(listFirst(running_queue));
+    if (listFirst(l) != NULL) {
+      current_process = listNodeValue(listFirst(running_queue));
+      current_stack_pointer = current_process->stack_pointer;
+      current_process->state = RUNNING;
+    }
+  }*/
+
+
+  // THE OLD code
+  ///*
   while(Process[next_process].state != READY) {
     next_process = (next_process + 1) % MAXTHREAD;
   }
@@ -102,6 +145,8 @@ static void Dispatch() {
   current_stack_pointer = current_process->stack_pointer;
   current_process->state = RUNNING;
   next_process = (next_process + 1) % MAXTHREAD;
+  //*/
+
 }
 
 static void Next_Kernel_Request() {
@@ -126,6 +171,7 @@ static void Next_Kernel_Request() {
       case NEXT:
       case NONE:
         /* NONE could be caused by a timer interrupt */
+        signal_debug(2, true);
         current_process->state = READY;
         Dispatch();
         break;
@@ -200,23 +246,26 @@ int Task_GetArg(void) {
   return arg;
 }
 
+void task_suspend(void) {Task_Suspend(current_process->id);}
+
 void Task_Suspend(PID p) {
   Process[p-1].state = SUSPENDED;
-
-  //if (&current_process==&Process+p) {
-  //  Task_Yield();
-  //}
+  if (current_process->id==p) Task_Yield();
 }
+
+void task_resume(void) {Task_Resume(current_process->id);}
 
 void Task_Resume(PID p) {
   Process[p-1].state = READY;
 }
 
+void task_sleep(PID p, TICK t) {
+  // TODO
+}
+
 void Task_Sleep(TICK t) {
   uint8_t flag = disable_global_interrupts();
   listNode *node;
-  //ticks
-  Task_Suspend(current_process->id);
   if (NULL != sleep_queue) {
     listIter *it = listGetIterator(sleep_queue, AL_START_HEAD);
     while ((node = listNext(it))) {
@@ -234,6 +283,7 @@ void Task_Sleep(TICK t) {
     }
     listReleaseIterator(it);
   }
+  Task_Suspend(current_process->id);
   restore_global_interrupts(flag);
 }
 
@@ -306,6 +356,7 @@ void OS_Start() {
 
 ISR(TIMER1_COMPA_vect) {
   ++ticks;
+  if (sleep_queue)
   Task_Yield();
 }
 
