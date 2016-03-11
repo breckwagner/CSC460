@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <stdint.h>
 
 
 /* adlist.h - A generic doubly linked list implementation
@@ -289,7 +290,7 @@ void listDelNode(list *list, listNode *node)
 listIter *listGetIterator(list *list, int direction)
 {
 	listIter *iter;
-	
+
 	if ((iter = zmalloc(sizeof(*iter))) == NULL) return NULL;
 	if (direction == AL_START_HEAD)
 		iter->next = list->head;
@@ -506,7 +507,7 @@ static void _schedule_task(ProcessDescriptor *pd, list * queue) {
 			printf("listCreate - Adding[%d]\n", pd->id);
 			break;
 		} else {
-			// 
+			//
 			listNode * sub_queue_node = listFirst((list *)listNodeValue(node));
 			if (sub_queue_node == NULL) {
 				// shouldn't happen but if it does remove it
@@ -555,6 +556,14 @@ static listNode * get_next_node(list * queue, listNode * sub_queue_node) {
 	return listNodeValue(sub_queue_node);
 }
 
+static listNode * round_robin (list * l, listNode * n) {
+  if (listNextNode(n) != NULL) {
+    return listNextNode(n);
+  } else {
+    return listFirst(l);
+  }
+}
+
 int main(int argc, char *argv[]) {
 	running_queue = listCreate();
 	for(int i = 0; i < MAXTHREAD; i++) {
@@ -565,7 +574,7 @@ int main(int argc, char *argv[]) {
 	}
 	/*
 	printf("\nlength[%d]\n", listLength(running_queue));
-	
+
 	{
 	listIter *it = listGetIterator(running_queue, AL_START_HEAD);
 	listNode *node;
@@ -573,23 +582,31 @@ int main(int argc, char *argv[]) {
 		//for (listNode *node_2 = listNext(it); node != NULL; node = listNext(it)) {
 			listNode * sub_queue_node = listFirst((list *)listNodeValue(listFirst(running_queue)));
 			ProcessDescriptor * sub_queue_head_element = ((ProcessDescriptor *)listNodeValue(sub_queue_node));
-			
+
 			printf("id[%d]\n", sub_queue_head_element->id );
 		//}
 	}
 	}*/
-	
+
 	list * x = get_sub_list(running_queue, 0);
+	listNode * current_process_node = listFirst(x);
+	for (int d = 0; d < 10; d++) {
+		current_process_node = round_robin(x, current_process_node);
+		ProcessDescriptor * f = listNodeValue(current_process_node);
+		printf("id---[%d]\n", f->id);
+	}
+
 	if (x != NULL) {
 		ProcessDescriptor * y = listNodeValue(listFirst(x));
 		printf("id[%d]\n", y->id);
 	}
 
-	
+
+
 	//printf("id[%d]\n", ((ProcessDescriptor *)get_sublist_head(running_queue))->id );
-	
-	
-	
+
+
+
 	list * l = listNodeValue(listFirst(running_queue));
 	listIter *it = listGetIterator(l, AL_START_HEAD);
 	listNode *node;
@@ -598,8 +615,8 @@ int main(int argc, char *argv[]) {
 			//printf("id[%d]\n", ((ProcessDescriptor *)listNodeValue(node))->id );
 		//}
 	}
-	
+
 	//printf("%d", r->id);
-	
-	
+
+
 }

@@ -1,6 +1,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -35,10 +36,10 @@ volatile uint32_t ticks = 0;
 // LIST_HEAD(process_descriptor_head, process_descriptor) processes_head;
 
 // This is a queue of queues. Each queue here represents a level of priority
-list *running_queue;
+volatile static list *running_queue;
 
 // A list of process_descriptor(s)
-list *sleep_queue;
+volatile static list *sleep_queue;
 
 volatile uint8_t *kernel_stack_pointer;
 
@@ -50,11 +51,14 @@ volatile static uint16_t KernelActive;
 
 volatile static uint16_t tasks;
 
-static ProcessDescriptor Process[MAXTHREAD];
+volatile static ProcessDescriptor Process[MAXTHREAD];
+
+// NOTE: FALLBACK PLAN
+//volatile static list running_array[MINPRIORITY];
 
 volatile static ProcessDescriptor *current_process;
 
-volatile static listNode *current_process_node;
+volatile static listNode *current_process_node = NULL;
 
 /*******************************************************************************
  * Function Declarations
@@ -140,12 +144,15 @@ static void _schedule_task(ProcessDescriptor *pd, list *queue) {
       list *l = listCreate();
       listAddNodeTail(queue, l);
       listAddNodeTail(l, pd);
+      //signal_debug(2, true);
       break;
     } else {
       //
       listNode *sub_queue_node = listFirst((list *)listNodeValue(node));
       if (sub_queue_node == NULL) {
         // shouldn't happen but if it does remove it
+
+        //signal_debug(5, true);
         break;
       }
       ProcessDescriptor *sub_queue_head_element =
@@ -155,7 +162,12 @@ static void _schedule_task(ProcessDescriptor *pd, list *queue) {
 
         // TODO ISSUE[QUEUE_FREEZE] this line causes the board to go into some
         // sort of panic after compile/upload... Need to investigate further
-        listAddNodeTail(sub_queue, pd);
+        //if(listInsertNode(sub_queue, sub_queue_node, pd, true) == NULL) {
+        //  signal_debug(2, true);
+        //}
+
+        if(listAddNodeTail(sub_queue, pd) == NULL) {}
+        //
 
         break;
       } else if (sub_queue_head_element->priority > pd->priority) {
@@ -193,29 +205,52 @@ static PID kernel_create_task(voidfuncptr f) {
   return id;
 }
 
+static listNode * round_robin (list * l, listNode * n) {
+  if (listNextNode(n) != NULL) {
+    return listNextNode(n);
+  } else {
+    return listFirst(l);
+  }
+}
+
 static void dispatch() {
+  signal_debug(7, true);
 
-  if (listFirst(running_queue) != NULL) {
-    list *l = get_sub_list(running_queue, 0);
-    if (listLength(l) > 10) {
-      signal_debug(3, true);
-    }
-    /*
-    if (listFirst(l) != NULL) {
-      signal_debug(5, true);
-      if (current_process_node == NULL) {
-        current_process_node =
-    listFirst(listNodeValue(listFirst(running_queue)));
-      } else {
-        current_process_node = listNextNode(current_process_node);
-      }
-
-      current_process = listNodeValue(listFirst(running_queue));
-      current_stack_pointer = current_process->stack_pointer;
-      current_process->state = RUNNING;
-    }*/
+  volatile list * x = get_sub_list(running_queue, 0);
+  volatile listNode * current_process_node_x = listFirst(x);
+  for (int d = 0; d < 10; d++) {
+    current_process_node_x = round_robin(x, current_process_node_x);
+    ProcessDescriptor * f = listNodeValue(current_process_node_x);
+    signal_debug(f->id+1, true);
   }
 
+/*
+  if (listFirst(running_queue) != NULL) {
+    if(current_process_node == NULL) {
+      current_process_node = listFirst(get_sub_list(running_queue, 0));
+      signal_debug(6, true);
+    } else {
+      // TODO
+      list *l = get_sub_list(running_queue, 0);
+      signal_debug(5, true);
+      current_process_node = round_robin(l, current_process_node);
+      if(current_process_node == NULL) {
+        //signal_debug(5, true);
+      }
+    }
+  }
+
+  */
+  //while (Process[next_process].state != READY) {
+  //  next_process = (next_process + 1) % MAXTHREAD;
+  //}
+  //current_process = &(Process[current_process_node->id]);
+  //current_process = listNodeValue(listFirst(running_queue));
+/*
+  current_process = listNodeValue(current_process_node);
+  current_stack_pointer = current_process->stack_pointer;
+  current_process->state = RUNNING;
+*/
   // THE OLD code
   ///*
   while (Process[next_process].state != READY) {
@@ -405,6 +440,7 @@ void OS_Init() {
   tasks = 0;
   KernelActive = 0;
   next_process = 0;
+  current_process_node == NULL;
   // Reminder: Clear the memory for the task on creation.
   for (id = 1; id < MAXTHREAD; id++) {
     memset(&(Process[id - 1]), 0, sizeof(ProcessDescriptor));

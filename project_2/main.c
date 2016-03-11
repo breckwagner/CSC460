@@ -31,8 +31,8 @@ void Pong() {
 
 
 void main () {
-  Task_Create(Ping, 1, 0);
-  Task_Create(Pong, 1, 0);
+  Task_Create(Ping, 0, 0);
+  Task_Create(Pong, 0, 0);
   for(;;){
     Task_Yield();
   }
