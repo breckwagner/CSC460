@@ -22,7 +22,7 @@ typedef enum kernel_request_type {
 } KERNEL_REQUEST_TYPE;
 
 typedef struct process_descriptor {
-  unsigned char *stack_pointer;
+  volatile unsigned char *stack_pointer;
   unsigned char workSpace[WORKSPACE];
   PROCESS_STATES state;
   voidfuncptr code;

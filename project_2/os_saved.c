@@ -5,7 +5,6 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <avr/wdt.h>
-#include <util/delay.h>
 
 // Not sure which one we will use so including them both here
 #include "queue.h"  // OpenBSD implementation of lists
@@ -23,8 +22,8 @@
 #define F_CPU 16000000UL // set the CPU clock
 #endif
 
-#define BAUD 9600                              // define baud
-#define BAUDRATE ((F_CPU) / (BAUD * 16UL) - 1) // set baud rate value for UBRR
+#define BAUD 9600                           // define baud
+#define BAUDRATE ((F_CPU)/(BAUD*16UL)-1)    // set baud rate value for UBRR
 
 /*******************************************************************************
  * Global Variables
@@ -68,37 +67,28 @@ static void dispatch();
 
 static void next_kernel_request();
 
-static void _schedule_task(ProcessDescriptor *pd, list *queue);
+static void _schedule_task(ProcessDescriptor *pd, list * running_queue);
 
 static void schedule_task(ProcessDescriptor *pd);
 
-PRIORITY _task_change_priority(PRIORITY priority);
+PRIORITY _task_change_priority (PRIORITY priority);
 
-PRIORITY task_change_priority(PID id, PRIORITY priority);
-
-static list *get_sub_list(list *l, uint16_t index);
+PRIORITY task_change_priority (PID id, PRIORITY priority);
 
 /*******************************************************************************
  * Function Definitions
  ******************************************************************************/
 
-static list *get_sub_list(list *l, uint16_t index) {
-  if (listLength(l) <= index)
-    return NULL;
-  else
-    return (list *)listNodeValue(listIndex(l, index));
+PRIORITY _task_change_priority (PRIORITY priority) {
+  return task_change_priority (current_process->id, priority);
 }
 
-PRIORITY _task_change_priority(PRIORITY priority) {
-  return task_change_priority(current_process->id, priority);
-}
-
-PRIORITY task_change_priority(PID id, PRIORITY priority) {
-  PRIORITY old_priority = Process[id - 1].priority;
+PRIORITY task_change_priority (PID id, PRIORITY priority) {
+  PRIORITY old_priority = Process[id-1].priority;
   // TODO: remove process from old_priority level in queue
 
   // Change process priority in ProcessDescriptor
-  Process[id - 1].priority = priority;
+  Process[id-1].priority = priority;
   // Add process back into queue
   schedule_task(&(Process[id - 1]));
   return old_priority;
@@ -129,44 +119,39 @@ void kernel_create_task_at(ProcessDescriptor *process, voidfuncptr function) {
   process->id = (Process - process + 1);
 }
 
-static void _schedule_task(ProcessDescriptor *pd, list *queue) {
+static void _schedule_task(ProcessDescriptor *pd, list * queue) {
   uint8_t flag = disable_global_interrupts();
   listNode *node;
-  listIter *it = listGetIterator(queue, AL_START_HEAD);
-  for (;;) {
-    node = listNext(it);
-    if (node == NULL) {
-      // Add priority level to queue
-      list *l = listCreate();
-      listAddNodeTail(queue, l);
-      listAddNodeTail(l, pd);
-      break;
-    } else {
-      //
-      listNode *sub_queue_node = listFirst((list *)listNodeValue(node));
-      if (sub_queue_node == NULL) {
-        // shouldn't happen but if it does remove it
-        break;
-      }
-      ProcessDescriptor *sub_queue_head_element =
-          ((ProcessDescriptor *)listNodeValue(sub_queue_node));
-      list *sub_queue = listNodeValue(node);
-      if (sub_queue_head_element->priority == pd->priority) {
-
-        // TODO ISSUE[QUEUE_FREEZE] this line causes the board to go into some
-        // sort of panic after compile/upload... Need to investigate further
-        listAddNodeTail(sub_queue, pd);
-
-        break;
-      } else if (sub_queue_head_element->priority > pd->priority) {
-        list *l = listCreate();
-        listInsertNode(queue, node, l, false);
-        listAddNodeTail(l, pd);
-        break;
-      }
-    }
-  }
-  listReleaseIterator(it);
+	listIter *it = listGetIterator(queue, AL_START_HEAD);
+	for (;;) {
+		node = listNext(it);
+		if (node == NULL) {
+			// Add priority level to queue
+			list *l = listCreate();
+			listAddNodeTail(queue, l);
+			listAddNodeTail(l, pd);
+			break;
+		} else {
+			//
+			listNode * sub_queue_node = listFirst((list *)listNodeValue(node));
+			if (sub_queue_node == NULL) {
+				// shouldn't happen but if it does remove it
+				break;
+			}
+			ProcessDescriptor * sub_queue_head_element = ((ProcessDescriptor *)listNodeValue(sub_queue_node));
+			list * sub_queue = listNodeValue(sub_queue_node);
+			if(sub_queue_head_element->priority == pd->priority) {
+				listAddNodeTail((list *)listNodeValue(node), pd);
+				break;
+			} else if (sub_queue_head_element->priority > pd->priority) {
+				list *l = listCreate();
+				listInsertNode(queue, node, l, false);
+				listAddNodeTail(l, pd);
+				break;
+			}
+		}
+	}
+	listReleaseIterator(it);
   restore_global_interrupts(flag);
 }
 
@@ -195,25 +180,16 @@ static PID kernel_create_task(voidfuncptr f) {
 
 static void dispatch() {
 
-  if (listFirst(running_queue) != NULL) {
-    list *l = get_sub_list(running_queue, 0);
-    if (listLength(l) > 10) {
-      signal_debug(3, true);
-    }
-    /*
-    if (listFirst(l) != NULL) {
-      signal_debug(5, true);
-      if (current_process_node == NULL) {
-        current_process_node =
-    listFirst(listNodeValue(listFirst(running_queue)));
-      } else {
-        current_process_node = listNextNode(current_process_node);
-      }
+  if(listFirst(running_queue) != NULL) {
+    list * l = listNodeValue(listFirst(running_queue));
 
-      current_process = listNodeValue(listFirst(running_queue));
+    if (listLength(l) != 0) {
+      //current_process = ((ProcessDescriptor *)listNodeValue(listFirst(l)))->id
+      signal_debug(5, true);
+      /*current_process = listNodeValue(listFirst(running_queue));
       current_stack_pointer = current_process->stack_pointer;
-      current_process->state = RUNNING;
-    }*/
+      current_process->state = RUNNING;*/
+    }
   }
 
   // THE OLD code
@@ -245,13 +221,13 @@ static void next_kernel_request() {
 
     case NEXT:
     case NONE: // NONE could be caused by a timer interrupt
+      signal_debug(2, true);
 
       //
       current_process->state = READY;
 
-    // begin process of switching context to next task in queue
-    ENTER:
-      dispatch();
+      // begin process of switching context to next task in queue
+      ENTER: dispatch();
       break;
 
     case TERMINATE:
@@ -351,7 +327,7 @@ void task_sleep(PID p, TICK t) {
 
 void Task_Sleep(TICK t) {
   uint8_t flag = disable_global_interrupts();
-  /*listNode *node;
+  listNode *node;
   if (NULL != sleep_queue) {
     listIter *it = listGetIterator(sleep_queue, AL_START_HEAD);
     while ((node = listNext(it))) {
@@ -370,7 +346,7 @@ void Task_Sleep(TICK t) {
     }
     listReleaseIterator(it);
   }
-  Task_Suspend(current_process->id);*/
+  Task_Suspend(current_process->id);
   restore_global_interrupts(flag);
 }
 
@@ -459,9 +435,6 @@ void init_timer() {
 void kernal_init(void) {
   DDRB = 0xFF;
   DDRL = 0xFF;
-
-  // TODO ISSUE[QUEUE_FREEZE]
-  _delay_ms(500);
 
   OS_Init();
 
