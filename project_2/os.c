@@ -56,9 +56,15 @@ volatile static ProcessDescriptor Process[MAXTHREAD];
 // NOTE: FALLBACK PLAN
 //volatile static list running_array[MINPRIORITY];
 
+// NOTE: FALLBACK PLAN 2
+//volatile static ProcessDescriptor* running_array[MINPRIORITY][MAXTHREAD];
+
+// Positions at each priority level where the queue starts
+//volatile static ProcessDescriptor* running_array_queue_start[MINPRIORITY];
+
 volatile static ProcessDescriptor *current_process;
 
-volatile static listNode *current_process_node = NULL;
+volatile static listNode *current_process_node;
 
 /*******************************************************************************
  * Function Declarations
@@ -130,7 +136,7 @@ void kernel_create_task_at(ProcessDescriptor *process, voidfuncptr function) {
   process->code = function;
   process->request = NONE;
   process->state = READY;
-  process->id = (Process - process + 1);
+  process->id = ((process-Process) + 1);
 }
 
 static void _schedule_task(ProcessDescriptor *pd, list *queue) {
@@ -214,33 +220,37 @@ static listNode * round_robin (list * l, listNode * n) {
 }
 
 static void dispatch() {
-  signal_debug(7, true);
+  //uint8_t flag = disable_global_interrupts();
+  //signal_debug(7, true);
 
-  volatile list * x = get_sub_list(running_queue, 0);
-  volatile listNode * current_process_node_x = listFirst(x);
-  for (int d = 0; d < 10; d++) {
+  //list * x = get_sub_list(running_queue, 0);
+  //listNode * current_process_node_x = listFirst(x);
+  //if (listLength(x) == 2) {
+  //  signal_debug(6, true);
+  //}
+  /*for (int d = 0; d < 3; d++) {
     current_process_node_x = round_robin(x, current_process_node_x);
     ProcessDescriptor * f = listNodeValue(current_process_node_x);
-    signal_debug(f->id+1, true);
-  }
+    signal_debug(f->id, true);
+  }*/
 
-/*
+  /*
   if (listFirst(running_queue) != NULL) {
     if(current_process_node == NULL) {
-      current_process_node = listFirst(get_sub_list(running_queue, 0));
-      signal_debug(6, true);
+      //current_process_node = listFirst(get_sub_list(running_queue, 0));
+      //signal_debug(6, true);
     } else {
       // TODO
-      list *l = get_sub_list(running_queue, 0);
-      signal_debug(5, true);
-      current_process_node = round_robin(l, current_process_node);
+      //list *l = get_sub_list(running_queue, 0);
+      //signal_debug(5, true);
+      //current_process_node = round_robin(l, current_process_node);
       if(current_process_node == NULL) {
         //signal_debug(5, true);
       }
     }
   }
-
   */
+
   //while (Process[next_process].state != READY) {
   //  next_process = (next_process + 1) % MAXTHREAD;
   //}
@@ -261,6 +271,8 @@ static void dispatch() {
   current_process->state = RUNNING;
   next_process = (next_process + 1) % MAXTHREAD;
   //*/
+
+  //restore_global_interrupts(flag);
 }
 
 static void next_kernel_request() {
@@ -326,6 +338,7 @@ PID Task_Create(void (*f)(void), PRIORITY py, int arg) {
     uint8_t inturupt_flag = disable_global_interrupts();
     current_process->request = CREATE;
     current_process->code = f;
+
     Enter_Kernel();
     restore_global_interrupts(inturupt_flag);
 
