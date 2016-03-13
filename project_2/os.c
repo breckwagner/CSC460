@@ -20,17 +20,24 @@
 
 volatile uint32_t ticks = 0;
 
-//LIST_HEAD(process_descriptor_head, process_descriptor) processes_head;
-
-// This is a queue of queues. Each queue here represents a level of priority
-list *running_queue;
+//
+volatile static ProcessDescriptor* running_queue[MINPRIORITY][MAXTHREAD];
 
 // A list of process_descriptor(s)
-list *sleep_queue;
+volatile static ProcessDescriptor* sleep_queue[MAXTHREAD];
 
+//
+volatile static uint8_t running_queue_pointer[MAXTHREAD];
+
+//
+volatile static uint8_t sleep_queue_pointer;
+
+//
 volatile uint8_t * kernel_stack_pointer;
 
+//
 volatile uint8_t * current_stack_pointer;
+
 
 volatile static uint16_t next_process;
 
@@ -82,28 +89,9 @@ void Kernel_Create_Task_At(ProcessDescriptor *process, voidfuncptr function) {
 
 static void schedule_task (ProcessDescriptor * pd) {
   uint8_t flag = disable_global_interrupts();
-  listNode *node;
-  if (NULL != running_queue) {
-    listIter *it = listGetIterator(running_queue, AL_START_HEAD);
-    while ((node = listNext(it))) {
-      if (node == NULL) {
-        // Add priority level to queue
-        list * l;
-        listAddNodeTail(running_queue, l = listCreate());
-        listAddNodeTail(l, pd);
-        break;
-      } else {
-        if (((list *)listNodeValue(node)) != NULL) {
-          list * l = ((list *)listNodeValue(node));
-          ProcessDescriptor * tmp_pd = listFirst(l);
-          if (tmp_pd->priority < pd->priority) {
-            listAddNodeTail((list *)listNodeValue(node), pd);
-          }
-        }
-      }
-    }
-    listReleaseIterator(it);
-  }
+  // LOOK FOR ROOM IN QUEUE
+  for (int i=running_queue_pointer[pd.priority]; running_queue[pd.priority][i] !=NULL;i++);
+  running_queue[pd.priority][i] = pd;
   restore_global_interrupts(flag);
 }
 
@@ -356,8 +344,7 @@ void OS_Start() {
 
 ISR(TIMER1_COMPA_vect) {
   ++ticks;
-  if (sleep_queue)
-  Task_Yield();
+  if (KernelActive) Task_Yield();
 }
 
 void init_timer () {
