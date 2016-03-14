@@ -15,7 +15,7 @@ TARGET = shared
 
 
 # The first function to be called after the C runtime is run
-INIT = kernal_init
+INIT = kernel_init
 
 # Object files directory
 #     To put object files in current directory, use a dot (.), do NOT make
@@ -24,7 +24,7 @@ OBJDIR = .
 
 
 # List C source files here. (C dependencies are automatically generated.)
-SRC = main.c os.c common.c adlist.c
+SRC = main.c os.c common.c
 #main.c
 #crt0.c
 
@@ -46,7 +46,7 @@ ASRC = cswitch.S
 # Optimization level, can be [0, 1, 2, 3, s].
 #     0 = turn off optimization. s = optimize for size.
 #     (Note: 3 is not always the best optimization level. See avr-libc FAQ.)
-OPT = 0
+OPT = 2
 
 
 # Debugging format.

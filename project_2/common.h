@@ -61,7 +61,7 @@ uint8_t restore_global_interrupts(uint8_t saved_sreg);
 void wdt_init(void) __attribute__((naked)) __attribute__((section(".init3")));
 
 
-void kernal_init(void) __attribute__((naked)) __attribute__((section(".init8")));
+void kernel_init(void) __attribute__((naked)) __attribute__((section(".init8")));
 /*
 uint8_t set(uint8_t arduino_pin, uint16_t value) {
   switch (arduino_pin) {
