@@ -49,6 +49,14 @@ volatile static ProcessDescriptor Process[MAXTHREAD];
 
 volatile static ProcessDescriptor *current_process;
 
+volatile static MutexLock Lock[MAXMUTEX];
+
+volatile static MutexLock *current_lock;
+
+volatile static MutexLock *next_lock;
+
+volatile static uint16_t num_mutexes;
+
 /*******************************************************************************
  * Function Declarations
  ******************************************************************************/
@@ -70,6 +78,13 @@ static void schedule_task(volatile ProcessDescriptor *pd);
 PRIORITY _task_change_priority(PRIORITY priority);
 
 PRIORITY task_change_priority(PID id, PRIORITY priority);
+
+MUTEX kernel_init_mutex();
+
+static void kernel_mutex_lock(volatile MutexLock *mid, volatile ProcessDescriptor *rp);
+
+static void kernel_mutex_unlock(volatile MutexLock *mid, volatile ProcessDescriptor *rp);
+
 
 /*******************************************************************************
  * Function Definitions
@@ -254,6 +269,98 @@ static void next_kernel_request() {
   }
 }
 
+MUTEX kernel_init_mutex(MUTEX mid){
+    if(num_mutexes == MAXMUTEX){ 
+      // return 0; error: can't create more mutexes
+    }
+
+    //if at last spot in array, loop through to find inactive mutex
+    //TODO: Keep this?
+   if((mid == 7) || (Lock[mid+1].m_state != INACTIVE)){
+      for(int i=0; i<MAXMUTEX; i++){
+         if(Lock[i].m_state == INACTIVE){
+            next_lock = &(Lock[i]);
+         }
+         break;
+      }
+    }else{
+       next_lock = &(Lock[mid+1]);
+    } 
+  
+
+    current_lock = &(Lock[mid]);
+    current_lock->mid = mid;
+    current_lock->m_state = UNLOCKED;
+    current_lock->lock_count = 0;
+    current_lock->requests = listCreate();
+
+    ++num_mutexes; 
+    return mid;
+}
+
+static void kernel_mutex_lock(volatile MutexLock *mid, volatile ProcessDescriptor *rp){
+     //TODO: Priority Inheritance
+    
+     if(current_lock->m_state == UNLOCKED){
+        //Case where mutex is free to be locked
+        current_lock->m_state = LOCKED;
+        current_lock->owner = rp;
+        ++current_lock->lock_count;  
+
+        //Save current priority for later
+        rp->old_priority = rp->priority;
+     }
+     else if((current_lock->m_state == LOCKED) && (current_lock->owner == rp)){
+        //Case where requesting process already owns mutex it is trying to lock
+        ++current_lock->lock_count;
+     }
+     else{
+       //Case where requesting process is trying to lock mutex owned by someone else
+       //TODO:BLOCK_ON_MUTEX:new case or keep this as suspended?
+       rp->state = SUSPENDED;
+       listAddNodeTail(current_lock->requests, rp);
+       //If the requesting task is of higher priority, switch priority of owner
+       if((rp->priority) > (current_lock->owner->priority)){
+          task_change_priority(current_lock->owner->id, rp->priority);
+       }
+       //resechedule and call the next process
+       //schedule_task();
+     }
+ 
+}
+
+static void kernel_mutex_unlock(volatile MutexLock *mid, volatile ProcessDescriptor *rp){
+     //TODO: Priority Inheritance: go  back to original priority
+     if(current_lock->owner != rp){
+       //error: not owner! Abort
+     }
+     else if((current_lock->m_state == LOCKED) && (current_lock->lock_count > 1)){
+       //Recursiveness: must unlock the mutex as many times as it has been locked by owner
+       --current_lock->lock_count;
+     }
+     else if(current_lock->requests != NULL){
+        //If owner releases mutex, give mutex to next task in Requests list
+        //FCFS as per project specs
+        
+           
+        current_lock->m_state = UNLOCKED;
+        current_lock->lock_count = 0;
+        current_lock->owner = current_process;
+        kernel_mutex_lock(current_lock, current_process); 
+        
+     }
+     else{
+       current_lock->m_state = UNLOCKED;
+       current_lock->lock_count = 0;
+       //Go back to old priority if it was changed
+      /* if(rp->old_priority != ){
+         task_change_priority(rp, rp->old priority);
+         //schedule_task();
+       }*/
+     }
+}
+
+
 /*******************************************************************************
  * Function Definitions OS API
  * @see os.h
@@ -368,16 +475,30 @@ void Task_Sleep(TICK t) {
 }
 
 MUTEX Mutex_Init(void) {
-  // TODO
-  return 0;
+  MUTEX m;
+  /*if(KernelActive){
+    uint8_t flag = disable_global_interrupts();
+    next_lock->m_state = INIT;
+    EnterKernel();
+    restore_global_interrupts(flag);
+  } */
+  //return 0;
+  next_lock->m_state = INIT;
+  m = kernel_init_mutex(next_lock->mid);
+  return m;
 }
 
 void Mutex_Lock(MUTEX m) {
-
+ 
+  //return if request successful or blocked
+  current_lock = &(Lock[m]);
+  kernel_mutex_lock(current_lock, current_process);    
+  
 }
 
 void Mutex_Unlock(MUTEX m) {
-
+  current_lock = &(Lock[m]);
+  kernel_mutex_unlock(current_lock, current_process);
 }
 
 EVENT Event_Init(void) {
@@ -403,6 +524,7 @@ void Event_Signal(EVENT e) {
  */
 void OS_Init() {
   uint8_t id;
+  uint8_t mid;
   tasks = 0;
   KernelActive = 0;
   sleep_queue = NULL;
@@ -414,6 +536,17 @@ void OS_Init() {
     memset(&(Process[id - 1]), 0, sizeof(ProcessDescriptor));
     Process[id - 1].state = DEAD;
   }
+
+  //Note: there's probably a better way to do this
+  for(mid = 0; mid < MAXMUTEX; mid++ ){
+    memset(&(Lock[mid]), 0, sizeof(MutexLock));
+    Lock[mid].m_state = INACTIVE;
+    Lock[mid].mid = mid; 
+  }
+
+  //start by pointing at first mutex in array
+  next_lock = &(Lock[0]);
+
 }
 
 /**

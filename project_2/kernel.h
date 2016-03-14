@@ -11,32 +11,29 @@ typedef enum process_states {
   DEAD = 0,
   READY,
   RUNNING,
-  SUSPENDED
+  SUSPENDED,
+  BLOCK_ON_MUTEX
 } PROCESS_STATES;
 
 typedef enum kernel_request_type {
   NONE = 0,
   CREATE,
   NEXT,
-  TERMINATE,
-  TIMER_EXPIRED,
-  EVENT_WAIT,
-  EVENT_SIGNAL,
-  EVENT_SIGNAL_AND_NEXT
+  TERMINATE
 } KERNEL_REQUEST_TYPE;
 
 typedef struct process_descriptor {
-  volatile unsigned char *stack_pointer;
+  unsigned char *stack_pointer;
   unsigned char workSpace[WORKSPACE];
   PROCESS_STATES state;
   voidfuncptr code;
   KERNEL_REQUEST_TYPE request;
   PRIORITY priority;
+  PRIORITY old_priority;
   PID id;
   int argument;
   uint32_t expires;
-  volatile struct process_descriptor * next;
-  volatile struct process_descriptor * prev;
+  //LIST_ENTRY(process_descriptor) pointers;
 } ProcessDescriptor;
 
 // TODO: We MIGHT use this (sleeping_process) but unused for now
@@ -46,6 +43,23 @@ typedef struct sleeping_process {
   // Absolute time for the process to wake since system start (ticks)
   uint32_t expires;
 } SleepingProcess;
+
+typedef enum mutex_states{
+  UNLOCKED = 0,
+  LOCKED = 1,
+  INIT,
+  INACTIVE
+} MUTEX_STATES;
+
+//Use ProcessDescriptor to track owner/requesting process
+typedef struct mutex_lock{
+  MUTEX mid;
+  MUTEX_STATES m_state;
+  int lock_count;
+  ProcessDescriptor *owner;
+  //requests will be cast to process descriptors
+  list *requests;
+} MutexLock;
 
 /*******************************************************************************
  *
