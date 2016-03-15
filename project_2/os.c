@@ -93,7 +93,7 @@ PRIORITY task_change_priority(PID id, PRIORITY priority) {
   // TODO: check if process is in queue before dequeue
   dequeue(&Process[id - 1]);
   PRIORITY old_priority = Process[id - 1].priority;
-  schedule_task(&Process[id - 1]);
+  enqueue(&Process[id - 1]);
   return old_priority;
 }
 
@@ -140,6 +140,7 @@ void static enqueue(volatile ProcessDescriptor * pd) {
 
 void static dequeue(volatile ProcessDescriptor * pd) {
   if(pd == pd->next) {
+    signal_debug(4,true);
     running_queue[pd->priority] = NULL;
   } else {
     pd->next->prev = pd->prev;
@@ -154,7 +155,7 @@ void static dequeue(volatile ProcessDescriptor * pd) {
 
 static void schedule_task(volatile ProcessDescriptor *pd) {
   uint8_t flag = disable_global_interrupts();
-  schedule_task(pd);
+  enqueue(pd);
   restore_global_interrupts(flag);
 }
 
@@ -229,7 +230,7 @@ static void next_kernel_request() {
         /* Round robin tasks get pre-empted on every tick. */
         //if(current_process->level == RR && current_process->state == RUNNING) {
             current_process->state = READY;
-            //schedule_task(&rr_queue, cur_task);
+            //enqueue(&rr_queue, cur_task);
         //}
   case EVENT_WAIT:
         /* idle_task does not wait. */
@@ -268,8 +269,12 @@ static void next_kernel_request() {
 
 void OS_Abort(void) {
   disable_global_interrupts();
-  for (int i = 0; i < 42; i++) {
-    // BLINK LED 13
+  for (int i = 0; i < 40; i++) {
+    PORTB ^= (1<<PB7);
+    uint16_t i;
+    /* 4 * 100000 CPU cycles = 25 ms */
+    for (int j = 0; i < 100; j++)
+      asm volatile ("1: sbiw %0,1" "\n\tbrne 1b" : "=w" (i) : "0" (100000));
   }
   soft_reset();
 }
@@ -280,8 +285,8 @@ PID Task_Create(void (*f)(void), PRIORITY py, int arg) {
     uint8_t inturupt_flag = disable_global_interrupts();
     current_process->request = CREATE;
     current_process->code = f;
-    current_process->priority = py;
-    current_process->argument = arg;
+    //current_process->priority = py;
+    //current_process->argument = arg;
     id = (current_process-Process) + 1;
     Enter_Kernel();
   } else {
@@ -353,7 +358,7 @@ void Task_Resume(PID id) {
   if (pd->suspended) {
     pd->suspended = false;
     //pd->state = READY;
-    schedule_task(pd);
+    enqueue(pd);
   }
   restore_global_interrupts(flag);
 }
