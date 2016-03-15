@@ -33,7 +33,7 @@
 
 volatile uint32_t ticks = 0;
 
-volatile static ProcessDescriptor* running_queue[MINPRIORITY];
+volatile static ProcessDescriptor* running_queue[MINPRIORITY+1];
 
 volatile static ProcessDescriptor * sleep_queue;
 
@@ -48,6 +48,14 @@ volatile static uint16_t tasks;
 volatile static ProcessDescriptor Process[MAXTHREAD];
 
 volatile static ProcessDescriptor *current_process;
+
+volatile static MutexLock Lock[MAXMUTEX];
+
+volatile static MutexLock *current_lock;
+
+volatile static MutexLock *next_lock;
+
+volatile static uint16_t num_mutexes;
 
 /*******************************************************************************
  * Function Declarations
@@ -82,13 +90,10 @@ PRIORITY _task_change_priority(PRIORITY priority) {
 }
 
 PRIORITY task_change_priority(PID id, PRIORITY priority) {
+  // TODO: check if process is in queue before dequeue
+  dequeue(&Process[id - 1]);
   PRIORITY old_priority = Process[id - 1].priority;
-  // TODO: remove process from old_priority level in queue
-
-  // Change process priority in ProcessDescriptor
-  Process[id - 1].priority = priority;
-  // Add process back into queue
-  schedule_task(&(Process[id - 1]));
+  schedule_task(&Process[id - 1]);
   return old_priority;
 }
 
@@ -115,13 +120,12 @@ void kernel_create_task_at(volatile ProcessDescriptor *process, voidfuncptr func
   process->request = NONE;
   process->state = READY;
   process->id = ((process-Process) + 1);
+  process->suspended = false;
 }
 
 
 
 void static enqueue(volatile ProcessDescriptor * pd) {
-  pd->next = NULL;
-  pd->prev = NULL;
   if(running_queue[pd->priority]==NULL) {
     running_queue[pd->priority] = pd;
     pd->next = pd;
@@ -141,13 +145,16 @@ void static dequeue(volatile ProcessDescriptor * pd) {
     pd->next->prev = pd->prev;
     pd->prev->next = pd->next;
   }
+  if(pd == running_queue[pd->priority]) {
+    running_queue[pd->priority] = pd->next;
+  }
   pd->next = NULL;
   pd->prev = NULL;
 }
 
 static void schedule_task(volatile ProcessDescriptor *pd) {
   uint8_t flag = disable_global_interrupts();
-  enqueue(pd);
+  schedule_task(pd);
   restore_global_interrupts(flag);
 }
 
@@ -172,7 +179,7 @@ static PID kernel_create_task(voidfuncptr f) {
 
 
 static void dispatch() {
-  for (int i = 0; i < MINPRIORITY; i++) {
+  for (int i = 0; true; i=(i+1)%(MINPRIORITY+1)) {
     if(running_queue[i]!=NULL) {
       current_process = running_queue[i] = running_queue[i]->next;
       break;
@@ -222,7 +229,7 @@ static void next_kernel_request() {
         /* Round robin tasks get pre-empted on every tick. */
         //if(current_process->level == RR && current_process->state == RUNNING) {
             current_process->state = READY;
-            //enqueue(&rr_queue, cur_task);
+            //schedule_task(&rr_queue, cur_task);
         //}
   case EVENT_WAIT:
         /* idle_task does not wait. */
@@ -273,13 +280,16 @@ PID Task_Create(void (*f)(void), PRIORITY py, int arg) {
     uint8_t inturupt_flag = disable_global_interrupts();
     current_process->request = CREATE;
     current_process->code = f;
-
+    current_process->priority = py;
+    current_process->argument = arg;
+    id = (current_process-Process) + 1;
     Enter_Kernel();
   } else {
     /* call the RTOS function directly */
     id = kernel_create_task(f);
+    Process[id].priority = py;
+    Process[id].argument = arg;
   }
-  Process[id - 1].priority = py;
   return id;
 }
 
@@ -313,33 +323,46 @@ int Task_GetArg(void) {
 }
 
 void task_suspend(void) {
+  uint8_t flag = disable_global_interrupts();
   Task_Suspend(current_process->id);
+  restore_global_interrupts(flag);
 }
 
 
 
 void Task_Suspend(PID id) {
+  uint8_t flag = disable_global_interrupts();
   volatile ProcessDescriptor * pd = &Process[id - 1];
-  pd->state = SUSPENDED;
-  dequeue(pd);
-  if (current_process->id == id)
-    Task_Yield();
+  if (!pd->suspended) {
+    pd->suspended = true;
+    dequeue(pd);
+    if (current_process->id == id) Task_Yield();
+  }
+  restore_global_interrupts(flag);
 }
 
 void task_resume(void) {
+  uint8_t flag = disable_global_interrupts();
   Task_Resume(current_process->id);
+  restore_global_interrupts(flag);
 }
 
 void Task_Resume(PID id) {
+  uint8_t flag = disable_global_interrupts();
   volatile ProcessDescriptor * pd = &Process[id - 1];
-  pd->state = READY;
-  enqueue(pd);
+  if (pd->suspended) {
+    pd->suspended = false;
+    //pd->state = READY;
+    schedule_task(pd);
+  }
+  restore_global_interrupts(flag);
 }
 
 void task_sleep(PID id, TICK t) {
-  //uint8_t flag = disable_global_interrupts();
+  uint8_t flag = disable_global_interrupts();
   volatile ProcessDescriptor * pd = &Process[id - 1];
   volatile ProcessDescriptor * ptr;
+  memset(ptr, 0, sizeof(ProcessDescriptor));
   pd->expires = ticks + t;
   if(sleep_queue==NULL) {
     dequeue(pd);
@@ -358,13 +381,105 @@ void task_sleep(PID id, TICK t) {
       }
     }
   }
-  //restore_global_interrupts(flag);
+  restore_global_interrupts(flag);
 }
 
 void Task_Sleep(TICK t) {
   uint8_t flag = disable_global_interrupts();
   task_sleep(current_process->id, t);
   restore_global_interrupts(flag);
+}
+
+
+MUTEX kernel_init_mutex(MUTEX mid){
+    if(num_mutexes == MAXMUTEX){
+      // return 0; error: can't create more mutexes
+    }
+
+    //if at last spot in array, loop through to find inactive mutex
+    //TODO: Keep this?
+   if((mid == 7) || (Lock[mid+1].m_state != INACTIVE)){
+      for(int i=0; i<MAXMUTEX; i++){
+         if(Lock[i].m_state == INACTIVE){
+            next_lock = &(Lock[i]);
+         }
+         break;
+      }
+    }else{
+       next_lock = &(Lock[mid+1]);
+    }
+
+
+    current_lock = &(Lock[mid]);
+    current_lock->mid = mid;
+    current_lock->m_state = UNLOCKED;
+    current_lock->lock_count = 0;
+    current_lock->requests = NULL;
+
+    ++num_mutexes;
+    return mid;
+}
+
+static void kernel_mutex_lock(volatile MutexLock *mid, volatile ProcessDescriptor *rp){
+     //TODO: Priority Inheritance
+
+     if(current_lock->m_state == UNLOCKED){
+        //Case where mutex is free to be locked
+        current_lock->m_state = LOCKED;
+        current_lock->owner = rp;
+        ++current_lock->lock_count;
+
+        //Save current priority for later
+        rp->old_priority = rp->priority;
+     }
+     else if((current_lock->m_state == LOCKED) && (current_lock->owner == rp)){
+        //Case where requesting process already owns mutex it is trying to lock
+        ++current_lock->lock_count;
+     }
+     else{
+       //Case where requesting process is trying to lock mutex owned by someone else
+       //TODO:BLOCK_ON_MUTEX:new case or keep this as suspended?
+       rp->suspended = true;
+       listAddNodeTail(current_lock->requests, rp);
+       //If the requesting task is of higher priority, switch priority of owner
+       if((rp->priority) > (current_lock->owner->priority)){
+          task_change_priority(current_lock->owner->id, rp->priority);
+       }
+       //resechedule and call the next process
+       //schedule_task();
+     }
+
+}
+
+static void kernel_mutex_unlock(volatile MutexLock *mid, volatile ProcessDescriptor *rp){
+     //TODO: Priority Inheritance: go  back to original priority
+     if(current_lock->owner != rp){
+       //error: not owner! Abort
+     }
+     else if((current_lock->m_state == LOCKED) && (current_lock->lock_count > 1)){
+       //Recursiveness: must unlock the mutex as many times as it has been locked by owner
+       --current_lock->lock_count;
+     }
+     else if(current_lock->requests != NULL){
+        //If owner releases mutex, give mutex to next task in Requests list
+        //FCFS as per project specs
+
+
+        current_lock->m_state = UNLOCKED;
+        current_lock->lock_count = 0;
+        current_lock->owner = current_process;
+        kernel_mutex_lock(current_lock, current_process);
+
+     }
+     else{
+       current_lock->m_state = UNLOCKED;
+       current_lock->lock_count = 0;
+       //Go back to old priority if it was changed
+      /* if(rp->old_priority != ){
+         task_change_priority(rp, rp->old priority);
+         //schedule_task();
+       }*/
+     }
 }
 
 MUTEX Mutex_Init(void) {
@@ -461,6 +576,11 @@ void init_timer() {
   // enable global interrupts:
   restore_global_interrupts(interrupt_flag);
 }
+void idle (void) {
+  for(;;) {
+
+  }
+}
 
 // OS_Init function
 void kernel_init(void) {
@@ -473,6 +593,7 @@ void kernel_init(void) {
   OS_Init();
 
   // Add main to task queue to be defined later
+  Task_Create(idle, 0, MINPRIORITY);
   Task_Create(main, 0, 0);
   init_timer();
   OS_Start();

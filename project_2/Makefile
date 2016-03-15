@@ -15,7 +15,7 @@ TARGET = shared
 
 
 # The first function to be called after the C runtime is run
-INIT = kernel_init
+#INIT = kernel_init
 
 # Object files directory
 #     To put object files in current directory, use a dot (.), do NOT make
@@ -23,8 +23,10 @@ INIT = kernel_init
 OBJDIR = .
 
 
+MAIN = main.c
+
 # List C source files here. (C dependencies are automatically generated.)
-SRC = main.c os.c common.c
+SRC = $(MAIN) os.c common.c
 #main.c
 #crt0.c
 
