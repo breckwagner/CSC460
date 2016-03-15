@@ -8,10 +8,6 @@
 #include <avr/wdt.h>
 #include <util/delay.h>
 
-// Not sure which one we will use so including them both here
-#include "queue.h"  // OpenBSD implementation of lists
-#include "adlist.h" // doubly linked list by Salvatore Sanfilippo
-
 #include "os.h"
 #include "kernel.h"
 #include "common.h"
@@ -318,11 +314,8 @@ void Task_Yield(void) {
  * @brief Retrieve the assigned parameter.
  */
 int Task_GetArg(void) {
-  int arg;
   uint8_t sreg = disable_global_interrupts();
-
-  arg = current_process->argument;
-
+  int arg = current_process->argument;
   restore_global_interrupts(sreg);
   return arg;
 }
