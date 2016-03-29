@@ -12,6 +12,9 @@
 #include <util/delay.h>
 #include <avr/interrupt.h>
 
+#define ROOMBA_RPC 0x01
+#define REMOTE_FIRE 0x02
+
 void adc_init(void){
 
 	//16MHz/128 = 125kHz the ADC reference clock
@@ -37,23 +40,41 @@ uint16_t read_adc(uint8_t channel){
 
 
 void blink() {
-	static uint8_t i = 0;
-	for(;;i++) {
+	for(uint8_t i = 0;;i++) {
 		uart1_putc(ROOMBA_LEDS);
 		uart1_putc(0x01);
 		if(i%2==0) uart1_putc(0xFF);
 		else uart1_putc(0x00);
 		uart1_putc(0xFF);
-		//Task_Sleep(100);
+		if(i==50) Task_Terminate();
+		else Task_Sleep(5);
 	}
 }
 
+void handle_radio() {
+	uart2_init(UART_BAUD_SELECT(19200, F_CPU));
+	uint16_t data = UART_NO_DATA;
+	for(;;) {
+		if((data = uart2_getc()) != UART_NO_DATA) {
+			if(data==ROOMBA_RPC) {
+
+			} else if (data==REMOTE_FIRE) {
+
+			}
+		}
+		Task_Sleep(5);
+	}
+}
+
+
 void pole_sensors(){
-	for(;;){
-		uint16_t tmp = read_adc(PF0);
-		char buffer[4];
-		char message[15];// = {ROOMBA_DIGIT_LEDS_ASCII,'F','U','L','A'};
-		itoa(tmp, message, 10);
+	uint8_t buffersize = 16;
+	uint16_t value[buffersize];
+	uint8_t flag = 0;
+	for(uint8_t i = read_adc(PF0);;i = ++i%buffersize){
+		value[i] = read_adc(PF0);
+		char message[15];
+		itoa(value[i], message, 10);
 		//buffer[0] = ROOMBA_DIGIT_LEDS_ASCII;
 		uart1_putc(ROOMBA_DIGIT_LEDS_ASCII);
 		//uart1_puts(buffer);
@@ -64,8 +85,12 @@ void pole_sensors(){
 		//sprintf(message, "0%.4d\0", tmp);
 		//for(uint8_t i = 0; i < 5; i++) uart1_putc(message[i]);
 		//blink();
-		Task_Next();
-		Task_Sleep(100);
+		if(!flag && (i)?(value[i]>(value[i-1]+10)):(value[i]>(value[buffersize]+10))){
+			Task_Create(blink, 8, 0);
+			flag = 10;
+		}
+		if(flag) flag--;
+		Task_Sleep(25);
 	}
 }
 
@@ -86,7 +111,6 @@ int a_main() {
 
 	roomba_init(); // initialize the roomba
 	Task_Create(idle, 9, 0);
-	//Task_Create(blink, 8, 0);
 	Task_Create(pole_sensors, 8, 0);
 	return 0;
 }
