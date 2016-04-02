@@ -120,9 +120,9 @@ void roomba_init() {
   uart1_putc(ROOMBA_SAFE);
   Task_Sleep(2); // sleep 20ms
 
-  //Task_Create(layer_1, 1, 0);
+  Task_Create(layer_1, 1, 0);
 
-  Task_Create(layer_2, 1, 0);
+  //Task_Create(layer_2, 1, 0);
 
   //Task_Create(pole_sensors, 1, 0);
 
@@ -237,12 +237,36 @@ void layer_1() {
   uint8_t j = 0;
   uint8_t ir_state[5][3];
 
-
   for(;;j++) {
+    // GET USER input
+    for(;uart2_available();){
+    if(((uint8_t)uart2_getc())==ROOMBA_RPC){
+      Task_Sleep(1);
+      uint8_t size = uart2_getc();
+      while(size-- > 0){
+        while(!uart2_available());
+        uart1_putc(uart2_getc());
+      }
+      uart2_flush();
+    }
 
+  }
+    /*if (uart2_getc()==0) {
+      uint8_t buffer_size = uart2_getc();
+      char buffer[buffer_size];
+      for (i = 0; i < buffer_size; i++) {
+        while(!uart2_available());
+        buffer[i] = uart2_getc();
+      }
+      for (i = 0; i < buffer_size; i++) {
+        uart1_putc(buffer[i]);
+      }
+    }*/
 
+    /*
     Mutex_Lock(uart_mutex);
     uart1_putc(ROOMBA_QUERY_LIST);
+    uart1_putc(3);
     uart1_putc(ROOMBA_IR_OPCODE);
     uart1_putc(ROOMBA_IR_OPCODE_LEFT);
     uart1_putc(ROOMBA_IR_OPCODE_RIGHT);
@@ -262,10 +286,12 @@ void layer_1() {
 
         }
         uart1_putc(ROOMBA_QUERY_LIST);
+        uart1_putc(1);
         uart1_putc(ROOMBA_ANGLE);
         while(!uart1_available());
         for (uint16_t angle = uart1_getc();abs(angle)-180 < 0;) {
           uart1_putc(ROOMBA_QUERY_LIST);
+          uart1_putc(1);
           uart1_putc(ROOMBA_ANGLE);
           while(!uart1_available());
           angle = uart1_getc();
@@ -279,7 +305,7 @@ void layer_1() {
     }
     Mutex_Unlock(uart_mutex);
 
-
+    */
     Task_Sleep(10);
   }
 }
