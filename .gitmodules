@@ -1,6 +1,6 @@
-[submodule "project_3/src/lib/avr-uart"]
-	path = project_3/src/lib/avr-uart
-	url = git@github.com:andygock/avr-uart.git
 [submodule "project_3/src/lib/roomba-lib"]
 	path = project_3/src/lib/roomba-lib
-	url = git@github.com:breckwagner/roomba-lib.git
+	url = https://github.com/breckwagner/roomba-lib.git
+[submodule "project_3/src/lib/avr-uart"]
+	path = project_3/src/lib/avr-uart
+	url = https://github.com/andygock/avr-uart.git
