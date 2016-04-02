@@ -1,30 +1,144 @@
-/*
- * control.c
- *
- *  Created on: 14-July-2010
- *      Author: lienh
- */
-//#include "radio/radio.h"
-#include "roomba/roomba.h"
-#include "uart/uart.h"
-#include "rtos/os.h"
-
+//#include "LED_Test.h"
+#include <avr/io.h>
+#include <stdlib.h>
 #include <util/delay.h>
-#include <avr/interrupt.h>
+#include <string.h>
+
+#include "../lib/roomba-lib/roomba.h"
+#include "../lib/avr-uart/uart.h"
+#include "../lib/rtos/os.h"
 
 #define ROOMBA_RPC 0x01
 #define REMOTE_FIRE 0x02
 
+#define LOW_BYTE(v)   ((unsigned char) (v))
+#define HIGH_BYTE(v)  ((unsigned char) (((unsigned int) (v)) >> 8))
+
+#define DD_DDR DDRE
+#define DD_PORT PORTE
+#define DD_PIN PE4
+
+
+/*******************************************************************************
+ * Global Variables
+ ******************************************************************************/
+
+int32_t current_x = 0;
+int32_t current_y = 0;
+
+
+MUTEX uart_mutex;
+
+
+
+void adc_init(void);
+
+uint16_t read_adc(uint8_t channel);
+
+void roomba_stop();
+
+/******************************************************************************/
+
+void idle();
+
+
+
+void layer_1();
+void layer_2();
+void layer_3();
+
+void roomba_init();
+
+void handle_radio();
+
+void update_roomba_state();
+
+void pole_sensors();
+
+void blink();
+
+void Task_P1();
+
+
+
+int a_main() {
+  DDRB = 0xFF;
+  PORTB &= ~(1 << PB6); // Go low
+  PORTB |= (1 << PB6); // Pin goes high
+	DDRL = 0xFF;
+	PORTL = 0xFF;
+	DD_DDR |= _BV(DD_PIN);
+	DD_PORT &= ~_BV(DD_PIN);
+
+  uart_mutex = Mutex_Init();
+
+	adc_init();
+
+  // Initialize debug interface with PC
+	uart_init(UART_BAUD_SELECT(38400, F_CPU));
+
+	// initialize Communication with Roomba
+	uart1_init(UART_BAUD_SELECT(19200, F_CPU));
+
+  // Init Bluetooth communication
+  uart2_init(UART_BAUD_SELECT(9600, F_CPU));
+
+  Task_Create(roomba_init, 1, 0);
+  Task_Create(idle, MINPRIORITY, 0);
+
+  Task_Terminate();
+  //return 0;
+}
+
+
+/*******************************************************************************
+
+*******************************************************************************/
+
+void roomba_init() {
+	DD_DDR |= _BV(DD_PIN);
+	DD_PORT &= ~_BV(DD_PIN);
+	Task_Sleep(50); // sleep 500ms
+	DD_PORT |= _BV(DD_PIN);
+  Task_Sleep(200); // sleep 2000ms
+	for (uint8_t i = 0; i < 6; i++) {
+		DD_PORT ^= _BV(DD_PIN);
+		Task_Sleep(5); // sleep 50ms
+	}
+	DD_PORT &= ~_BV(DD_PIN);
+	uart1_putc(ROOMBA_START);
+	Task_Sleep(2); // sleep 20ms
+
+
+  uart1_putc(ROOMBA_BAUD);
+  uart1_putc(ROOMBA_38400BPS);
+  Task_Sleep(10); // sleep 100ms
+
+
+  uart1_init(UART_BAUD_SELECT(38400, F_CPU));
+
+  uart1_putc(ROOMBA_SAFE);
+  Task_Sleep(2); // sleep 20ms
+
+  //Task_Create(layer_1, 1, 0);
+
+  Task_Create(layer_2, 1, 0);
+
+  //Task_Create(pole_sensors, 1, 0);
+
+  Task_Terminate();
+}
+
+
+void idle() {
+  for(;;);
+}
+
 void adc_init(void){
-
 	//16MHz/128 = 125kHz the ADC reference clock
-
 	ADCSRA |= ((1<<ADPS2)|(1<<ADPS1)|(1<<ADPS0));
-
-	ADMUX |= (1<<REFS0);       //Set Voltage reference to Avcc (5v)
-
+	ADMUX  |= (1<<REFS0);       //Set Voltage reference to Avcc (5v)
 	ADCSRA |= (1<<ADEN);       //Turn on ADC
-
 	ADCSRA |= (1<<ADSC);
 }     //Do an initial conversion
 
@@ -40,14 +154,16 @@ uint16_t read_adc(uint8_t channel){
 
 
 void blink() {
-	for(uint8_t i = 0;;i++) {
+	uint8_t i = 0;
+	for(;;i++) {
+		DD_PORT ^= _BV(DD_PIN);
 		uart1_putc(ROOMBA_LEDS);
 		uart1_putc(0x01);
 		if(i%2==0) uart1_putc(0xFF);
 		else uart1_putc(0x00);
 		uart1_putc(0xFF);
 		if(i==50) Task_Terminate();
-		else Task_Sleep(5);
+		else Task_Sleep(50);
 	}
 }
 
@@ -66,18 +182,30 @@ void handle_radio() {
 	}
 }
 
+void update_roomba_state() {
+	char x[] = {ROOMBA_QUERY_LIST,
+		ROOMBA_IR_OPCODE,
+		ROOMBA_IR_OPCODE_LEFT,
+		ROOMBA_IR_OPCODE_RIGHT, '\0'};
+
+	uart1_puts(x);
+
+	while(uart1_available()) {
+		uart0_puts(uart1_getc());
+	}
+	Task_Sleep(10);
+}
 
 void pole_sensors(){
+  uint8_t i = 0;
 	uint8_t buffersize = 16;
 	uint16_t value[buffersize];
 	uint8_t flag = 0;
-	for(uint8_t i = read_adc(PF0);;i = ++i%buffersize){
+	for(i = read_adc(PF0);;i = ((++i)%buffersize)){
 		value[i] = read_adc(PF0);
 		char message[15];
 		itoa(value[i], message, 10);
-		//buffer[0] = ROOMBA_DIGIT_LEDS_ASCII;
 		uart1_putc(ROOMBA_DIGIT_LEDS_ASCII);
-		//uart1_puts(buffer);
 		uart1_putc(message[0]);
 		uart1_putc(message[1]);
 		uart1_putc(message[2]);
@@ -94,23 +222,151 @@ void pole_sensors(){
 	}
 }
 
-void idle(){
-	for(;;) {
+void Task_P1()
+{
 
-		Task_Next();
-	}
+    for(;;){
+      PORTB ^= (1<<PB6);
+      Task_Sleep(5);
+    }
 }
 
-int a_main() {
-	DDRL = 0xFF;
-	PORTL = 0xFF;
-	adc_init();
-	//uart0_init(UART_BAUD_SELECT(19200, F_CPU));
-	uart1_init(UART_BAUD_SELECT(19200, F_CPU));
-	uart2_init(UART_BAUD_SELECT(19200, F_CPU));
 
-	roomba_init(); // initialize the roomba
-	Task_Create(idle, 9, 0);
-	Task_Create(pole_sensors, 8, 0);
-	return 0;
+void layer_1() {
+  uint8_t i = 0;
+  uint8_t j = 0;
+  uint8_t ir_state[5][3];
+
+
+  for(;;j++) {
+
+
+    Mutex_Lock(uart_mutex);
+    uart1_putc(ROOMBA_QUERY_LIST);
+    uart1_putc(ROOMBA_IR_OPCODE);
+    uart1_putc(ROOMBA_IR_OPCODE_LEFT);
+    uart1_putc(ROOMBA_IR_OPCODE_RIGHT);
+    Task_Sleep(1);
+    for (i=0; uart1_available() && i < 3; i++) {
+      ir_state[0][i] = uart1_getc();
+      if (ir_state[0][i]==ROOMBA_IR_CHARACTER_VIRTUAL_WALL) {
+
+        // ROOMBA_IR_OPCODE
+        if (i==0) {
+
+        // ROOMBA_IR_OPCODE_LEFT
+        } else if (i==1) {
+
+        // ROOMBA_IR_OPCODE_RIGHT
+        } else {
+
+        }
+        uart1_putc(ROOMBA_QUERY_LIST);
+        uart1_putc(ROOMBA_ANGLE);
+        while(!uart1_available());
+        for (uint16_t angle = uart1_getc();abs(angle)-180 < 0;) {
+          uart1_putc(ROOMBA_QUERY_LIST);
+          uart1_putc(ROOMBA_ANGLE);
+          while(!uart1_available());
+          angle = uart1_getc();
+        }
+        uart1_putc(ROOMBA_DRIVE);
+        uart1_putc(HIGH_BYTE(250));
+        uart1_putc(LOW_BYTE(250));
+        uart1_putc(HIGH_BYTE(0x7FFF));
+        uart1_putc(LOW_BYTE(0x7FFF));
+      }
+    }
+    Mutex_Unlock(uart_mutex);
+
+
+    Task_Sleep(10);
+  }
+}
+
+
+void roomba_turn(int16_t degrees) {
+  if(!degrees) return;
+
+  {
+    int16_t velocity = 100;
+    int16_t angle;
+    if(degrees>0) angle = ROOMBA_ANGLE_CLOCKWISE;
+    else angle = ROOMBA_ANGLE_COUNTER_CLOCKWISE;
+
+    uart1_putc(ROOMBA_DRIVE);
+    uart1_putc(HIGH_BYTE(velocity));
+    uart1_putc(LOW_BYTE(velocity));
+    uart1_putc(HIGH_BYTE(angle));
+    uart1_putc(LOW_BYTE(angle));
+  }
+
+
+  // Read it once to get rid of cummulative angle
+  uart1_flush();
+  uart1_putc(ROOMBA_QUERY_LIST);
+  uart1_putc(1);
+  uart1_putc(ROOMBA_ANGLE);
+  while(uart1_available()<2);
+  uart1_flush();
+  Task_Sleep(10);
+  for (int16_t angle = 0; angle < degrees;) {
+    uart1_putc(ROOMBA_QUERY_LIST);
+    uart1_putc(1);
+    uart1_putc(ROOMBA_ANGLE);
+    while(uart1_available()<2); // TODO: get rid of magic number
+    angle += (uart1_getc() << 8) | uart1_getc();
+    uart0_putc(HIGH_BYTE(angle));
+    uart0_putc(LOW_BYTE(angle));
+    Task_Sleep(10);
+  }
+
+  {
+    int16_t velocity = 0;
+    int16_t angle = 0x7FFF;
+    uart1_putc(ROOMBA_DRIVE);
+    uart1_putc(HIGH_BYTE(velocity));
+    uart1_putc(LOW_BYTE(velocity));
+    uart1_putc(HIGH_BYTE(angle));
+    uart1_putc(LOW_BYTE(angle));
+  }
+}
+
+void layer_2() {
+  roomba_turn(-180);
+  /*int16_t velocity = 250;
+  int16_t angle = -1;
+  char message[] = "TEST";
+  uart1_putc(ROOMBA_DIGIT_LEDS_ASCII);
+  uart1_putc(message[0]);
+  uart1_putc(message[1]);
+  uart1_putc(message[2]);
+  uart1_putc(message[3]);
+
+  //Mutex_Lock(uart_mutex);
+  uart1_putc(ROOMBA_DRIVE);
+  uart1_putc(HIGH_BYTE(velocity));
+  uart1_putc(LOW_BYTE(velocity));
+  uart1_putc(HIGH_BYTE(angle));
+  uart1_putc(LOW_BYTE(angle));*/
+  //Mutex_Unlock(uart_mutex);
+  for(;;) {
+
+  }
+}
+
+void layer_3() {
+
+}
+
+
+
+
+
+void roomba_stop() {
+  uart1_putc(ROOMBA_DRIVE);
+  uart1_putc(HIGH_BYTE(0x00));
+  uart1_putc(LOW_BYTE(0x00));
+  uart1_putc(HIGH_BYTE(0x7FFF));
+  uart1_putc(LOW_BYTE(0x7FFF));
 }
