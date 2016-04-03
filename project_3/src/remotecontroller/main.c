@@ -231,7 +231,6 @@ void Task_P1()
     }
 }
 
-
 void layer_1() {
   uint8_t i = 0;
   uint8_t j = 0;
@@ -240,12 +239,16 @@ void layer_1() {
   for(;;j++) {
     // GET USER input
     for(;uart2_available();){
-    if(((uint8_t)uart2_getc())==ROOMBA_RPC){
+    if(((uint8_t)uart2_getc())==ROOMBA_RPC && ((uint8_t)uart2_getc())==ROOMBA_RPC+1){
+      uint8_t command[16];
       Task_Sleep(1);
       uint8_t size = uart2_getc();
-      while(size-- > 0){
+      for(uint8_t n = 0; n < size; n++){
         while(!uart2_available());
-        uart1_putc(uart2_getc());
+        command[n] = uart2_getc();
+      }
+      for(uint8_t n = 0; n < size; n++) {
+        uart1_putc(command[n]);
       }
       uart2_flush();
     }
