@@ -8,6 +8,7 @@
 #include "../lib/roomba-lib/roomba.h"
 #include "../lib/avr-uart/uart.h"
 #include "../lib/rtos/os.h"
+#include "../lib/shared.h"
 
 #include <util/delay.h>
 #include <avr/interrupt.h>
@@ -15,9 +16,47 @@
 #include <stdlib.h>
 #include <stdint.h>
 
+#define btnRIGHT  0
+#define btnUP     1
+#define btnDOWN   2
+#define btnLEFT   3
+#define btnSELECT 4
+#define btnNONE   5
 
 #define LOW_BYTE(v)   ((unsigned char) (v))
 #define HIGH_BYTE(v)  ((unsigned char) (((unsigned int) (v)) >> 8))
+
+int lcd_key     = 0;
+int adc_key_in  = 0;
+
+void adc_init(void);
+
+uint16_t read_adc(uint8_t channel);
+
+
+int read_lcd_buttons() {
+ adc_key_in = read_adc(0);      // read the value from the sensor
+ // my buttons when read are centered at these valies: 0, 144, 329, 504, 741
+ // we add approx 50 to those values and check to see if we are close
+ if (adc_key_in > 1000) return btnNONE; // We make this the 1st option for speed reasons since it will be the most likely result
+ // For V1.1 us this threshold
+ /*
+ if (adc_key_in < 50)   return btnRIGHT;
+ if (adc_key_in < 250)  return btnUP;
+ if (adc_key_in < 450)  return btnDOWN;
+ if (adc_key_in < 650)  return btnLEFT;
+ if (adc_key_in < 850)  return btnSELECT;
+*/
+ // For V1.0 comment the other threshold and use the one below:
+
+ if (adc_key_in < 50)   return btnRIGHT;
+ if (adc_key_in < 195)  return btnUP;
+ if (adc_key_in < 380)  return btnDOWN;
+ if (adc_key_in < 555)  return btnLEFT;
+ if (adc_key_in < 790)  return btnSELECT;
+ return btnNONE;  // when all others fail, return this...
+}
+
 
 void adc_init(void){
 
@@ -34,7 +73,7 @@ void adc_init(void){
 
 
 //map input values to those appropriate for Roomba
-int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max){ 
+int32_t map(int32_t x, int32_t in_min, int32_t in_max, int32_t out_min, int32_t out_max){
 	return ((x - in_min) * (out_max - out_min)) / ((in_max - in_min) + out_min);
 }
 
@@ -48,13 +87,51 @@ uint16_t read_adc(uint8_t channel){
 }         //Returns the ADC value of the chosen channel
 
 
+void button_pole (){
+	lcd_key = read_lcd_buttons();  // read the buttons
+
+switch (lcd_key)               // depending on which button was pushed, we perform an action
+{
+	case btnRIGHT:
+		{
+		//lcd.print("RIGHT ");
+		break;
+		}
+	case btnLEFT:
+		{
+		//lcd.print("LEFT   ");
+		break;
+		}
+	case btnUP:
+		{
+		//lcd.print("UP    ");
+		break;
+		}
+	case btnDOWN:
+		{
+		//lcd.print("DOWN  ");
+		break;
+		}
+	case btnSELECT:
+		{
+		//lcd.print("SELECT");
+		break;
+		}
+		case btnNONE:
+		{
+		//lcd.print("NONE  ");
+		break;
+		}
+}
+}
+
 //TODO: Constrain values in mapped ranges?
 void pole_sensors(){
 	uart1_init(UART_BAUD_SELECT(9600, F_CPU));
 	uart0_init(UART_BAUD_SELECT(9600, F_CPU));
 	//char str[32];
 	char test[16];
-	uint8_t last_val = 1;	
+	uint8_t last_val = 1;
 	for(;;){
 		uint16_t x = read_adc(14);
 		int16_t radius = x*3.9101-2000;
@@ -78,22 +155,22 @@ void pole_sensors(){
 		//uint16_t x = read_adc(14);
 		//uint16_t y = read_adc(15);
 		//sprintf(str, "x: %d, y: %d, vel: %d, rad: %d\n", x, y, velocity, radius);
-		
+
 		//uart0_puts(str);
 		//uart0_puts(test);
 		//uint16_t last_val = 1;
 		//init digital pin 22 and set as input
 		//DDRA = 0x00;
 		//PORTA = 0xFF;
-			
-		uint8_t val = PINA & _BV(PA0); 
+
+		uint8_t val = PINA & _BV(PA0);
 		//(PINA & (1<<PA0));
-		
+
 		sprintf(test, "val: %d, last: %d\n", val, last_val);
 		uart0_puts(test);
 
 		//map values from joystick
-		
+
 		//int16_t velocity = map(y, 0, 1023, -500, 500);
 		/*int16_t velocity = 0;
 		if (y>800) velocity = 500;
@@ -137,7 +214,7 @@ int a_main() {
 	DDRL = 0xFF;
 	PORTL = 0xFF;
 	DDRA &= ~_BV(DDA0);
-	
+
 	adc_init();
 	//uart0_init(UART_BAUD_SELECT(19200, F_CPU));
 	uart1_init(UART_BAUD_SELECT(19200, F_CPU));
@@ -146,7 +223,7 @@ int a_main() {
 	Task_Create(idle, 9, 0);
 	//Task_Create(blink, 8, 0);
 	Task_Create(pole_sensors, 8, 0);
-	
+
 	Task_Terminate();
 	//return 0;
 }

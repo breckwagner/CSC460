@@ -7,13 +7,7 @@
 #include "../lib/roomba-lib/roomba.h"
 #include "../lib/avr-uart/uart.h"
 #include "../lib/rtos/os.h"
-
-#define ROOMBA_RPC 0x01
-#define REMOTE_PROCEDURE_CALL 0x01
-#define REMOTE_FIRE 0x02
-
-#define LOW_BYTE(v)   ((unsigned char) (v))
-#define HIGH_BYTE(v)  ((unsigned char) (((unsigned int) (v)) >> 8))
+#include "../lib/shared.h"
 
 #define DD_DDR DDRE
 #define DD_PORT PORTE
@@ -62,7 +56,6 @@ void pole_sensors();
 
 void blink();
 
-void Task_P1();
 
 
 
@@ -181,7 +174,7 @@ void blink() {
 
 void handle_radio() {
   // GET USER input
-
+  Mutex_Lock(uart_mutex);
   // Wait for data otherwise sleep
   while(!uart2_available());
 
@@ -211,6 +204,8 @@ void handle_radio() {
   } else {
     uart2_flush();
   }
+
+  Mutex_Unlock(uart_mutex);
 }
 
 void update_roomba_state() {
@@ -249,6 +244,10 @@ void pole_sensors(){
       uart2_putc(2);
 			Task_Create(blink, 8, 0);
 			flag = 10;
+      for(;;) {
+        roomba_stop();
+        Task_Sleep(1)
+      }
 		}
 		if(flag) flag--;
 		Task_Sleep(25);
