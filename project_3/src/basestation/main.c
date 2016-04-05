@@ -10,11 +10,13 @@
 #include "../lib/rtos/os.h"
 #include "../lib/shared.h"
 
+#include <string.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdbool.h>
 
 #define btnRIGHT  0
 #define btnUP     1
@@ -28,6 +30,9 @@
 
 int lcd_key     = 0;
 int adc_key_in  = 0;
+uint8_t send_flag = true;
+uint8_t prev_send_flag = true;
+
 
 void adc_init(void);
 
@@ -142,32 +147,24 @@ void pole_sensors(){
 		else {
 			radius = (radius==abs(radius))?1:-1;
 		}
-		//else if(abs(radius) < 100){
-		//	if (radius > 0) radius = ROOMBA_ANGLE_CLOCKWISE;
-		//	else radius = ROOMBA_ANGLE_COUNTER_CLOCKWISE;
-		//}
+		/*if(abs(radius) < 100){
+			if (radius > 0) radius = ROOMBA_ANGLE_CLOCKWISE;
+			else radius = ROOMBA_ANGLE_COUNTER_CLOCKWISE;
+      velocity = 500;
+		}*/
 
 		uint16_t y = read_adc(15);
 		int16_t velocity = -(y*0.97752-500);
 		if(abs(velocity)<25) velocity = 0;
-		//map(y, 0, 1023, -500, 500);
-		//read input from analog pins 14,15
-		//uint16_t x = read_adc(14);
-		//uint16_t y = read_adc(15);
-		//sprintf(str, "x: %d, y: %d, vel: %d, rad: %d\n", x, y, velocity, radius);
-
-		//uart0_puts(str);
-		//uart0_puts(test);
-		//uint16_t last_val = 1;
-		//init digital pin 22 and set as input
-		//DDRA = 0x00;
-		//PORTA = 0xFF;
+    if(radius==ROOMBA_ANGLE_CLOCKWISE||radius==ROOMBA_ANGLE_COUNTER_CLOCKWISE) {
+      velocity = abs(velocity);
+    }
 
 		uint8_t val = PINA & _BV(PA0);
 		//(PINA & (1<<PA0));
 
-		sprintf(test, "val: %d, last: %d\n", val, last_val);
-		uart0_puts(test);
+		//sprintf(test, "val: %d, last: %d\n", val, last_val);
+		//uart0_puts(test);
 
 		//map values from joystick
 
@@ -180,17 +177,31 @@ void pole_sensors(){
 		// Inverts y controls
 		velocity *= -0.5;
 		int16_t radius = 0x8000;//map(x, 0, 1023, -2000, 2000);
+
 		//send values to trigger manual control*/
-		uart1_putc(1);
-		uart1_putc(2);
-		//uart1_putc(3);
-		uart1_putc(5);
-		uart1_putc(ROOMBA_DRIVE);
-		//split bytes per Roomba specs
-		uart1_putc(HIGH_BYTE(velocity));
-		uart1_putc(LOW_BYTE(velocity));
-		uart1_putc(HIGH_BYTE(radius));
-		uart1_putc(LOW_BYTE(radius));
+    // reset send flag
+    //send_flag=true;
+
+    // test if in dead zone
+    /*if(x> (512-25) && x < (512+25) && y > (512-25) && y < (512+25)) {
+      if(prev_send_flag) send_flag = prev_send_flag;
+    } else {
+      send_flag = true;
+    }*/
+
+
+    if (send_flag==true) {
+  		uart1_putc(1);
+  		uart1_putc(2);
+  		//uart1_putc(3);
+  		uart1_putc(5);
+  		uart1_putc(ROOMBA_DRIVE);
+  		//split bytes per Roomba specs
+  		uart1_putc(HIGH_BYTE(velocity));
+  		uart1_putc(LOW_BYTE(velocity));
+  		uart1_putc(HIGH_BYTE(radius));
+  		uart1_putc(LOW_BYTE(radius));
+    }
 		//toggle laser and send input from button
 		//uart1_putc(3);
 		if(val!=last_val){
@@ -209,6 +220,8 @@ void idle(){
 		Task_Next();
 	}
 }
+
+
 
 int a_main() {
 	DDRL = 0xFF;

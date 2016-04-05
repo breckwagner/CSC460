@@ -23,6 +23,7 @@ ROOMBA_PACKET_GROUP_100 roomba_state;
 int32_t current_x = 0;
 int32_t current_y = 0;
 
+uint8_t mode = RPC_MANUAL_MODE;
 
 MUTEX uart_mutex;
 
@@ -34,17 +35,19 @@ uint16_t read_adc(uint8_t channel);
 
 void roomba_stop();
 
+void roomba_drive(int16_t velocity, int16_t radius);
+
 void toggle_laser(uint8_t val);
 
 /******************************************************************************/
 
 void idle();
 
-
-
 void layer_1();
 void layer_2();
 void layer_3();
+
+void autonomous ();
 
 void roomba_init();
 
@@ -60,7 +63,7 @@ void blink();
 
 
 int a_main() {
-
+  memset(&roomba_state, 0, sizeof(roomba_state));
   // Init Lazer
   DDRB = 0xFF;
   PORTB &= ~(1 << PB6); // Go low
@@ -124,12 +127,13 @@ void roomba_init() {
   Task_Sleep(2); // sleep 20ms
 
   Task_Create(layer_1, 1, 0);
-
-  //Task_Create(layer_2, 1, 0);
-
-  //Task_Create(blink, 1, 0);
-
   Task_Create(pole_sensors, 1, 0);
+
+  //Task_Create(update_roomba_state, 1, 0);
+
+  //Task_Create(autonomous, 1, 0);
+
+
 
   Task_Terminate();
 }
@@ -174,7 +178,7 @@ void blink() {
 
 void handle_radio() {
   // GET USER input
-  Mutex_Lock(uart_mutex);
+  //Mutex_Lock(uart_mutex);
   // Wait for data otherwise sleep
   while(!uart2_available());
 
@@ -194,7 +198,7 @@ void handle_radio() {
       for(uint8_t i = 0; i < size; i++) {
         uart1_putc(command[i]);
       }
-      //uart2_flush();
+      mode= 10;
     } else if (tmp_cmd==ROOMBA_RPC+2) {
       while(!uart2_available());
       toggle_laser(uart2_getc());
@@ -205,52 +209,59 @@ void handle_radio() {
     uart2_flush();
   }
 
-  Mutex_Unlock(uart_mutex);
+  //Mutex_Unlock(uart_mutex);
 }
 
 void update_roomba_state() {
-	char x[] = {ROOMBA_QUERY_LIST,
-		ROOMBA_IR_OPCODE,
-		ROOMBA_IR_OPCODE_LEFT,
-		ROOMBA_IR_OPCODE_RIGHT, '\0'};
-
-	uart1_puts(x);
-
-	while(uart1_available()) {
-		//uart0_puts(uart1_getc());
+  uart1_flush();
+	uart1_putc(ROOMBA_SENSORS);
+  uart1_putc(101); // Get group 101
+  uint8_t * pointer = &(roomba_state.encoder_counts_left);
+	for(uint8_t i = 0; i < 28; i++) {
+    while(!uart1_available());
+		*pointer = (uint8_t)uart1_getc();
+    pointer++;
 	}
-	Task_Sleep(10);
+
+  uart2_putc(ROOMBA_QUERY_LIST);
+  uart2_putc(2);
+  uart2_putc(ROOMBA_VIRTUAL_WALL);
+  uart2_putc(ROOMBA_WALL);
+  while(!uart1_available());
+  roomba_state.virtual_wall = (uint8_t)uart1_getc();
+  while(!uart1_available());
+  roomba_state.roomba_wall = (uint8_t)uart1_getc();
+	Task_Sleep(2);
 }
 
 void pole_sensors(){
   uint8_t i = 0;
 	uint8_t buffersize = 16;
 	uint16_t value[buffersize];
-	uint8_t flag = 0;
+	uint8_t flag = 4;
 	for(i = read_adc(PF0);;i = ((++i)%buffersize)){
 		value[i] = read_adc(PF0);
-		char message[15];
+    //
+    /*char message[15];
 		itoa(value[i], message, 10);
 		uart1_putc(ROOMBA_DIGIT_LEDS_ASCII);
 		uart1_putc(message[0]);
 		uart1_putc(message[1]);
 		uart1_putc(message[2]);
-		uart1_putc(message[3]);
+		uart1_putc(message[3]);*/
 		//sprintf(message, "0%.4d\0", tmp);
 		//for(uint8_t i = 0; i < 5; i++) uart1_putc(message[i]);
 		//blink();
-		if(!flag && (i)?(value[i]>(value[i-1]+10)):(value[i]>(value[buffersize]+10))){
-      uart2_putc(REMOTE_PROCEDURE_CALL);
-      uart2_putc(2);
-			Task_Create(blink, 8, 0);
+		if(flag==0 && (i)?(value[i]>(value[i-1]+10)):(value[i]>(value[buffersize]+S_SENSATIVITY))){
+      //uart2_putc(REMOTE_PROCEDURE_CALL);
+      //uart2_putc(2);
+			Task_Create(blink, 0, 0);
 			flag = 10;
-      for(;;) {
-        roomba_stop();
-        Task_Sleep(1)
-      }
+      roomba_stop();
+      uart1_putc(ROOMBA_POWER);
 		}
 		if(flag) flag--;
-		Task_Sleep(25);
+		Task_Sleep(5);
 	}
 }
 
@@ -260,12 +271,36 @@ void toggle_laser(uint8_t val) {
   else PORTB |= (1<<PB6);
 }
 
+void autonomous () {
+  for(;;){
+    if(mode==0) {
+      // if ir back up 1 second pick new direction
+      if(roomba_state.virtual_wall==1) {
+        roomba_drive(-100, ROOMBA_ANGLE_STRAIGHT);
+        Task_Sleep(10);
+        roomba_drive(100, ROOMBA_ANGLE_CLOCKWISE);
+        Task_Sleep(10);
+        roomba_drive(100, ROOMBA_ANGLE_STRAIGHT);
+      } else {
+        roomba_drive(100, ROOMBA_ANGLE_STRAIGHT);
+      }
+      // if bump back up 0.1 second pick new direction to oposite of bump 30
+      // degrees
+    } else {
+      mode--;
+    }
+
+    Task_Sleep(1);
+  }
+}
+
 
 
 void layer_1() {
-
   for(;;) {
     handle_radio();
+    //autonomous();
+
 
     Task_Sleep(1);
   }
@@ -276,16 +311,12 @@ void roomba_turn(int16_t degrees) {
   if(!degrees) return;
 
   {
-    int16_t velocity = 500;
-    int16_t angle = ROOMBA_ANGLE_COUNTER_CLOCKWISE;
+    int16_t velocity = 100;
+    int16_t radius = ROOMBA_ANGLE_COUNTER_CLOCKWISE;
     //if(degrees>0) angle = ROOMBA_ANGLE_CLOCKWISE;
     //else angle = ROOMBA_ANGLE_COUNTER_CLOCKWISE;
 
-    uart1_putc(ROOMBA_DRIVE);
-    uart1_putc(HIGH_BYTE(velocity));
-    uart1_putc(LOW_BYTE(velocity));
-    uart1_putc(HIGH_BYTE(angle));
-    uart1_putc(LOW_BYTE(angle));
+    roomba_drive(velocity, radius);
   }
 
 
@@ -302,23 +333,17 @@ void roomba_turn(int16_t degrees) {
     uart1_putc(1);
     uart1_putc(ROOMBA_ANGLE);
     while(!uart1_available()); // TODO: get rid of magic number
-    angle += (uart1_getc() << 8) | uart1_getc();
+    angle += 10;//(((uint8_t)uart1_getc()) << 8) | (uint8_t)uart1_getc();
     Task_Sleep(10);
   }
 
   {
-    int16_t velocity = 0;
-    int16_t angle = 0x7FFF;
-    uart1_putc(ROOMBA_DRIVE);
-    uart1_putc(HIGH_BYTE(velocity));
-    uart1_putc(LOW_BYTE(velocity));
-    uart1_putc(HIGH_BYTE(angle));
-    uart1_putc(LOW_BYTE(angle));
+    roomba_stop();
   }
 }
 
 void layer_2() {
-
+  roomba_turn(180);
   /*int16_t velocity = 250;
   int16_t angle = -1;
   char message[] = "TEST";
@@ -335,10 +360,10 @@ void layer_2() {
   uart1_putc(HIGH_BYTE(angle));
   uart1_putc(LOW_BYTE(angle));*/
   //Mutex_Unlock(uart_mutex);
-  Task_Create(blink, 0, 0);
+  //Task_Create(blink, 0, 0);
   for(;;) {
-    roomba_turn(rand()%360);
-    Task_Sleep(10000);
+    //roomba_turn(rand()%360);
+    //Task_Sleep(10000);
   }
 }
 
@@ -351,9 +376,12 @@ void layer_3() {
 
 
 void roomba_stop() {
+  roomba_drive(0x00, 0x7FFF);
+}
+void roomba_drive(int16_t velocity, int16_t radius) {
   uart1_putc(ROOMBA_DRIVE);
-  uart1_putc(HIGH_BYTE(0x00));
-  uart1_putc(LOW_BYTE(0x00));
-  uart1_putc(HIGH_BYTE(0x7FFF));
-  uart1_putc(LOW_BYTE(0x7FFF));
+  uart1_putc(HIGH_BYTE(velocity));
+  uart1_putc(LOW_BYTE(velocity));
+  uart1_putc(HIGH_BYTE(radius));
+  uart1_putc(LOW_BYTE(radius));
 }
