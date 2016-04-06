@@ -126,12 +126,12 @@ void roomba_init() {
   uart1_putc(ROOMBA_SAFE);
   Task_Sleep(2); // sleep 20ms
 
-  Task_Create(layer_1, 1, 0);
-  Task_Create(pole_sensors, 1, 0);
+  //Task_Create(layer_1, 1, 0);
+  //Task_Create(pole_sensors, 1, 0);
 
-  //Task_Create(update_roomba_state, 1, 0);
+  Task_Create(update_roomba_state, 1, 0);
 
-  //Task_Create(autonomous, 1, 0);
+  Task_Create(autonomous, 1, 0);
 
 
 
@@ -212,49 +212,66 @@ void handle_radio() {
   //Mutex_Unlock(uart_mutex);
 }
 
+/**
+ * This function is intended to be run as a task and continually update the
+ * state information held the arduino associated with the roomba. The reasoning
+ * for this has to do with timing constraints.
+ */
 void update_roomba_state() {
-  uart1_flush();
-	uart1_putc(ROOMBA_SENSORS);
-  uart1_putc(101); // Get group 101
-  uint8_t * pointer = &(roomba_state.encoder_counts_left);
-	for(uint8_t i = 0; i < 28; i++) {
-    while(!uart1_available());
-		*pointer = (uint8_t)uart1_getc();
-    pointer++;
-	}
+  for(;;){
+    Mutex_Lock(uart_mutex);
+    uart1_flush();
+  	/*uart1_putc(ROOMBA_SENSORS);
+    uart1_putc(101); // Get group 101
+    uint8_t * pointer = &(roomba_state.encoder_counts_left);
+  	for(uint8_t i = 0; i < 28; i++) {
+      while(!uart1_available());
+  		*pointer = (uint8_t)uart1_getc();
+      pointer++;
+  	}*/
 
-  uart2_putc(ROOMBA_QUERY_LIST);
-  uart2_putc(2);
-  uart2_putc(ROOMBA_VIRTUAL_WALL);
-  uart2_putc(ROOMBA_WALL);
-  while(!uart1_available());
-  roomba_state.virtual_wall = (uint8_t)uart1_getc();
-  while(!uart1_available());
-  roomba_state.roomba_wall = (uint8_t)uart1_getc();
-	Task_Sleep(2);
+    uart1_putc(ROOMBA_QUERY_LIST);
+    uart1_putc(2);
+    uart1_putc(ROOMBA_VIRTUAL_WALL);
+    uart1_putc(ROOMBA_BUMPS_WHEELDROPS);
+    while(!uart1_available());
+    roomba_state.virtual_wall = (uint8_t)uart1_getc();
+    while(!uart1_available());
+    roomba_state.bumps_wheeldrops = (uint8_t)uart1_getc();
+
+    uart1_putc(ROOMBA_SENSORS);
+    uart1_putc(G106);
+    while(!uart1_available());
+    roomba_state.light_bump_left = (uint8_t)uart1_getc();
+    while(!uart1_available());
+    roomba_state.light_bump_front_left = (uint8_t)uart1_getc();
+    while(!uart1_available());
+    while(!uart1_available());
+    roomba_state.light_bump_center_left
+      = (((uint8_t)uart1_getc()) << 8) | (uint8_t)uart1_getc();
+    roomba_state.light_bump_center_right = (uint8_t)uart1_getc();
+    while(!uart1_available());
+    roomba_state.light_bump_front_right = (uint8_t)uart1_getc();
+    while(!uart1_available());
+    roomba_state.light_bump_right = (uint8_t)uart1_getc();
+
+    Mutex_Unlock(uart_mutex);
+  	Task_Sleep(5);
+  }
 }
 
-void pole_sensors(){
+/**
+ * This function is intended to be run as a task and continually check if the
+ * roomba "has been hit"
+ */
+void pole_sensors(void) {
   uint8_t i = 0;
 	uint8_t buffersize = 16;
 	uint16_t value[buffersize];
 	uint8_t flag = 4;
 	for(i = read_adc(PF0);;i = ((++i)%buffersize)){
 		value[i] = read_adc(PF0);
-    //
-    /*char message[15];
-		itoa(value[i], message, 10);
-		uart1_putc(ROOMBA_DIGIT_LEDS_ASCII);
-		uart1_putc(message[0]);
-		uart1_putc(message[1]);
-		uart1_putc(message[2]);
-		uart1_putc(message[3]);*/
-		//sprintf(message, "0%.4d\0", tmp);
-		//for(uint8_t i = 0; i < 5; i++) uart1_putc(message[i]);
-		//blink();
 		if(flag==0 && (i)?(value[i]>(value[i-1]+10)):(value[i]>(value[buffersize]+S_SENSATIVITY))){
-      //uart2_putc(REMOTE_PROCEDURE_CALL);
-      //uart2_putc(2);
 			Task_Create(blink, 0, 0);
 			flag = 10;
       roomba_stop();
@@ -273,22 +290,34 @@ void toggle_laser(uint8_t val) {
 
 void autonomous () {
   for(;;){
-    if(mode==0) {
+    //if(mode==0) {
       // if ir back up 1 second pick new direction
+      Mutex_Lock(uart_mutex);
       if(roomba_state.virtual_wall==1) {
-        roomba_drive(-100, ROOMBA_ANGLE_STRAIGHT);
-        Task_Sleep(10);
-        roomba_drive(100, ROOMBA_ANGLE_CLOCKWISE);
-        Task_Sleep(10);
-        roomba_drive(100, ROOMBA_ANGLE_STRAIGHT);
+        roomba_drive(-100, ROOMBA_RADIUS_STRAIGHT);
+        Task_Sleep(20);
+        roomba_drive(100, ROOMBA_RADIUS_CLOCKWISE);
+        Task_Sleep(20);
+        roomba_drive(100, ROOMBA_RADIUS_STRAIGHT);
+      } else if(roomba_state.bumps_wheeldrops&0x03) {
+        roomba_drive(-100, ROOMBA_RADIUS_STRAIGHT);
+        Task_Sleep(20);
+        if(roomba_state.bumps_wheeldrops&0x01) {
+          roomba_drive(100, ROOMBA_RADIUS_COUNTER_CLOCKWISE);
+        } else {
+          roomba_drive(100, ROOMBA_RADIUS_CLOCKWISE);
+        }
+        Task_Sleep(20);
+        roomba_drive(100, ROOMBA_RADIUS_STRAIGHT);
       } else {
-        roomba_drive(100, ROOMBA_ANGLE_STRAIGHT);
+        roomba_drive(100, ROOMBA_RADIUS_STRAIGHT);
       }
+      Mutex_Unlock(uart_mutex);
       // if bump back up 0.1 second pick new direction to oposite of bump 30
       // degrees
-    } else {
-      mode--;
-    }
+    //} else {
+    //  mode--;
+    //}
 
     Task_Sleep(1);
   }
@@ -312,7 +341,7 @@ void roomba_turn(int16_t degrees) {
 
   {
     int16_t velocity = 100;
-    int16_t radius = ROOMBA_ANGLE_COUNTER_CLOCKWISE;
+    int16_t radius = ROOMBA_RADIUS_COUNTER_CLOCKWISE;
     //if(degrees>0) angle = ROOMBA_ANGLE_CLOCKWISE;
     //else angle = ROOMBA_ANGLE_COUNTER_CLOCKWISE;
 

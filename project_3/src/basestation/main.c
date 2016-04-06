@@ -143,21 +143,22 @@ void pole_sensors(){
 		//map(x, 0, 1023, -2000, 2000);
 		if(radius>0) radius = (2000 - abs(radius));
 		else radius = -(2000 - abs(radius));
-		if(abs(radius) > 1000) radius = ROOMBA_ANGLE_STRAIGHT;
+		if(abs(radius) > 1000) radius = ROOMBA_RADIUS_STRAIGHT;
 		else {
 			radius = (radius==abs(radius))?1:-1;
 		}
-		/*if(abs(radius) < 100){
-			if (radius > 0) radius = ROOMBA_ANGLE_CLOCKWISE;
-			else radius = ROOMBA_ANGLE_COUNTER_CLOCKWISE;
-      velocity = 500;
-		}*/
 
 		uint16_t y = read_adc(15);
 		int16_t velocity = -(y*0.97752-500);
 		if(abs(velocity)<25) velocity = 0;
-    if(radius==ROOMBA_ANGLE_CLOCKWISE||radius==ROOMBA_ANGLE_COUNTER_CLOCKWISE) {
+    /*if(radius==ROOMBA_RADIUS_CLOCKWISE||radius==ROOMBA_RADIUS_COUNTER_CLOCKWISE) {
       velocity = abs(velocity);
+    }*/
+
+    if(abs(radius) < 100){
+      if (radius > 0) radius = ROOMBA_RADIUS_CLOCKWISE;
+      else radius = ROOMBA_RADIUS_COUNTER_CLOCKWISE;
+      velocity = 500;
     }
 
 		uint8_t val = PINA & _BV(PA0);
@@ -190,7 +191,7 @@ void pole_sensors(){
     }*/
 
 
-    if (send_flag==true) {
+    //if (send_flag==true) {
   		uart1_putc(1);
   		uart1_putc(2);
   		//uart1_putc(3);
@@ -201,7 +202,7 @@ void pole_sensors(){
   		uart1_putc(LOW_BYTE(velocity));
   		uart1_putc(HIGH_BYTE(radius));
   		uart1_putc(LOW_BYTE(radius));
-    }
+    //}
 		//toggle laser and send input from button
 		//uart1_putc(3);
 		if(val!=last_val){
