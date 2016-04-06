@@ -1,0 +1,1957 @@
+\hypertarget{group__roomba-lib}{}\section{Roomba Library}
+\label{group__roomba-lib}\index{Roomba Library@{Roomba Library}}
+
+
+Roomba library that enumurates the entire roomba open interface and defines useful commands and macros.  
+
+
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{struct__pkt__group__0}{\+\_\+pkt\+\_\+group\+\_\+0}
+\item 
+struct \hyperlink{struct__pkt__group__1}{\+\_\+pkt\+\_\+group\+\_\+1}
+\item 
+struct \hyperlink{struct__pkt__group__2}{\+\_\+pkt\+\_\+group\+\_\+2}
+\item 
+struct \hyperlink{struct__pkt__group__3}{\+\_\+pkt\+\_\+group\+\_\+3}
+\item 
+struct \hyperlink{struct__pkt__group__4}{\+\_\+pkt\+\_\+group\+\_\+4}
+\item 
+struct \hyperlink{struct__pkt__group__5}{\+\_\+pkt\+\_\+group\+\_\+5}
+\item 
+struct \hyperlink{struct__pkt__group__6}{\+\_\+pkt\+\_\+group\+\_\+6}
+\item 
+struct \hyperlink{struct__pkt__group__100}{\+\_\+pkt\+\_\+group\+\_\+100}
+\item 
+struct \hyperlink{struct__pkt__group__101}{\+\_\+pkt\+\_\+group\+\_\+101}
+\item 
+struct \hyperlink{struct__pkt__group__106}{\+\_\+pkt\+\_\+group\+\_\+106}
+\item 
+struct \hyperlink{struct__pkt__group__107}{\+\_\+pkt\+\_\+group\+\_\+107}
+\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef enum \hyperlink{group__roomba-lib_ga305e17dfb7050ad83ea49ded2e6a2e24}{\+\_\+roomba\+\_\+op\+\_\+code} \hyperlink{group__roomba-lib_gaa48d04e007e0ae60ee9bc055a5a159fe}{R\+O\+O\+M\+B\+A\+\_\+\+O\+P\+\_\+\+C\+O\+D\+E}
+\begin{DoxyCompactList}\small\item\em O\+P\+\_\+\+C\+O\+D\+E enum. \end{DoxyCompactList}\item 
+typedef enum \hyperlink{group__roomba-lib_ga46f008b5055c4a08d3123c6a3478373e}{\+\_\+pv} \hyperlink{group__roomba-lib_gada33faf3aeb650fa045d8516c6257174}{R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+C\+O\+D\+E}
+\begin{DoxyCompactList}\small\item\em Roomba Open Interface Sensor Packets Roomba sends back one of 58 different sensor data packets, depending on the value of the packet data byte, when responding to a Sensors command, Query List command, or Stream command’s request for a packet of sensor data bytes. \end{DoxyCompactList}\item 
+\hypertarget{group__roomba-lib_ga060a7d130526614e3fbff4b98ddc0bb3}{}typedef enum \+\_\+roomba\+\_\+op\+\_\+mode {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+M\+O\+D\+E}\label{group__roomba-lib_ga060a7d130526614e3fbff4b98ddc0bb3}
+
+\item 
+\hypertarget{group__roomba-lib_ga74ecb9c5d0e098aaa7487dfe597f86cb}{}typedef struct \hyperlink{struct__pkt__group__0}{\+\_\+pkt\+\_\+group\+\_\+0} {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+G\+R\+O\+U\+P\+\_\+0}\label{group__roomba-lib_ga74ecb9c5d0e098aaa7487dfe597f86cb}
+
+\item 
+\hypertarget{group__roomba-lib_ga2f1fed18d4402cd13047ae8783d17388}{}typedef struct \hyperlink{struct__pkt__group__1}{\+\_\+pkt\+\_\+group\+\_\+1} {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+G\+R\+O\+U\+P\+\_\+1}\label{group__roomba-lib_ga2f1fed18d4402cd13047ae8783d17388}
+
+\item 
+\hypertarget{group__roomba-lib_ga6eba4d343cf4f71cf5dbdd54b17c6941}{}typedef struct \hyperlink{struct__pkt__group__2}{\+\_\+pkt\+\_\+group\+\_\+2} {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+G\+R\+O\+U\+P\+\_\+2}\label{group__roomba-lib_ga6eba4d343cf4f71cf5dbdd54b17c6941}
+
+\item 
+\hypertarget{group__roomba-lib_ga1f00a169fd796ec9eb8ade1aa7dec2df}{}typedef struct \hyperlink{struct__pkt__group__3}{\+\_\+pkt\+\_\+group\+\_\+3} {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+G\+R\+O\+U\+P\+\_\+3}\label{group__roomba-lib_ga1f00a169fd796ec9eb8ade1aa7dec2df}
+
+\item 
+\hypertarget{group__roomba-lib_ga59c26ed8020cca7dd87400e66738a010}{}typedef struct \hyperlink{struct__pkt__group__4}{\+\_\+pkt\+\_\+group\+\_\+4} {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+G\+R\+O\+U\+P\+\_\+4}\label{group__roomba-lib_ga59c26ed8020cca7dd87400e66738a010}
+
+\item 
+\hypertarget{group__roomba-lib_gab537bc74eca0d7213dcfba2ee37c6b81}{}typedef struct \hyperlink{struct__pkt__group__5}{\+\_\+pkt\+\_\+group\+\_\+5} {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+G\+R\+O\+U\+P\+\_\+5}\label{group__roomba-lib_gab537bc74eca0d7213dcfba2ee37c6b81}
+
+\item 
+\hypertarget{group__roomba-lib_ga9eb279c4797806751dfeefcb2968a636}{}typedef struct \hyperlink{struct__pkt__group__6}{\+\_\+pkt\+\_\+group\+\_\+6} {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+G\+R\+O\+U\+P\+\_\+6}\label{group__roomba-lib_ga9eb279c4797806751dfeefcb2968a636}
+
+\item 
+\hypertarget{group__roomba-lib_ga7a9adf14c7d16375e9b63842bd444bda}{}typedef struct \hyperlink{struct__pkt__group__100}{\+\_\+pkt\+\_\+group\+\_\+100} {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+G\+R\+O\+U\+P\+\_\+100}\label{group__roomba-lib_ga7a9adf14c7d16375e9b63842bd444bda}
+
+\item 
+\hypertarget{group__roomba-lib_ga4524afb00b3767350c67dd348a774a09}{}typedef struct \hyperlink{struct__pkt__group__101}{\+\_\+pkt\+\_\+group\+\_\+101} {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+G\+R\+O\+U\+P\+\_\+101}\label{group__roomba-lib_ga4524afb00b3767350c67dd348a774a09}
+
+\item 
+\hypertarget{group__roomba-lib_ga1e149334f68aca1aa488cace5a8b6593}{}typedef struct \hyperlink{struct__pkt__group__106}{\+\_\+pkt\+\_\+group\+\_\+106} {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+G\+R\+O\+U\+P\+\_\+106}\label{group__roomba-lib_ga1e149334f68aca1aa488cace5a8b6593}
+
+\item 
+\hypertarget{group__roomba-lib_gab30399751d2795904c23e2a42e2f8a41}{}typedef struct \hyperlink{struct__pkt__group__107}{\+\_\+pkt\+\_\+group\+\_\+107} {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+G\+R\+O\+U\+P\+\_\+107}\label{group__roomba-lib_gab30399751d2795904c23e2a42e2f8a41}
+
+\end{DoxyCompactItemize}
+\subsection*{Enumerations}
+\begin{DoxyCompactItemize}
+\item 
+enum \hyperlink{group__roomba-lib_ga305e17dfb7050ad83ea49ded2e6a2e24}{\+\_\+roomba\+\_\+op\+\_\+code} \{ \\*
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a42d615c28dbc113dcc6d742efe148eb6}{R\+O\+O\+M\+B\+A\+\_\+\+R\+E\+S\+E\+T} = 7, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a2a01acef0ce68b399d3d0ff55e2c9439}{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+A\+R\+T} = 128, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a2461f308d895f39a96b6002f55753b6e}{R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+U\+D} = 129, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24afc1db2d92cee63105d5591b7c033b65e}{R\+O\+O\+M\+B\+A\+\_\+\+C\+O\+N\+T\+R\+O\+L} = 130, 
+\\*
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ae30c6c0f4e9ea706fea43c6098f35cec}{R\+O\+O\+M\+B\+A\+\_\+\+S\+A\+F\+E} = 131, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a7ec5893abd5169837596b51b7a85c489}{R\+O\+O\+M\+B\+A\+\_\+\+F\+U\+L\+L} = 132, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a5f448683aabbaddfd5a6f82e2e03a571}{R\+O\+O\+M\+B\+A\+\_\+\+P\+O\+W\+E\+R} = 133, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a51432a5c7706ae489570eca7ba0a55b8}{R\+O\+O\+M\+B\+A\+\_\+\+S\+P\+O\+T} = 134, 
+\\*
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24abfb77b700185666cad669081837c6bff}{R\+O\+O\+M\+B\+A\+\_\+\+C\+O\+V\+E\+R} = 135, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24abed3f4709f037352df127ea6b5e45acd}{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+E\+A\+N} = 135, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a4009137101f5f5008ebb98e6bb7c3436}{R\+O\+O\+M\+B\+A\+\_\+\+D\+E\+M\+O} = 136, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a8dbcf646bf6f314d1d9109cb233e9768}{R\+O\+O\+M\+B\+A\+\_\+\+M\+A\+X} = 136, 
+\\*
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24aaf858c1a076d79bae24353fe65a5f1ae}{R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E} = 137, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a7afe27d88fb8c345d23402faff25a6e3}{R\+O\+O\+M\+B\+A\+\_\+\+M\+O\+T\+O\+R\+S} = 138, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ae4122f32b1c10a1b6f8606da15522599}{R\+O\+O\+M\+B\+A\+\_\+\+L\+E\+D\+S} = 139, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a81a248bb3504b8d3b302aa6037f2df7b}{R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G} = 140, 
+\\*
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24adfc5020e343dfdc400651002301374b2}{R\+O\+O\+M\+B\+A\+\_\+\+P\+L\+A\+Y} = 141, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a301ea9dba750cbbe96f96545436b659a}{R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+N\+S\+O\+R\+S} = 142, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24aaadf37ce35045bca639aeb6cd10ff6bf}{R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+E\+K\+\_\+\+D\+O\+C\+K} = 143, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ab1891f6f7f69dc7936ca25751b7dfd8f}{R\+O\+O\+M\+B\+A\+\_\+\+P\+W\+M\+\_\+\+M\+O\+T\+O\+R\+S} = 144, 
+\\*
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a16a8f754217439e90a92a47d5e19c605}{R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E\+\_\+\+D\+I\+R\+E\+C\+T} = 145, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a6c802b8d83b06edb676b7f777f4ebecc}{R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E\+\_\+\+P\+W\+M} = 146, 
+{\bfseries D\+I\+G\+I\+T\+A\+L\+\_\+\+O\+U\+T\+P\+U\+T\+S} = 147, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ad81a1446d5956b6717c8a28ec74c2bf9}{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+R\+E\+A\+M} = 148, 
+\\*
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a0bf4541e5eb8a17aa5e6550ce5ca70e3}{R\+O\+O\+M\+B\+A\+\_\+\+Q\+U\+E\+R\+Y\+\_\+\+L\+I\+S\+T} = 149, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ab58d7a4edc71f5877180d177bc7f83d0}{R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+U\+S\+E\+\_\+\+R\+E\+S\+U\+M\+E\+\_\+\+S\+T\+R\+E\+A\+M} = 150, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a9de59aa841a98e5e44796ea3cca14c79}{S\+E\+N\+D\+\_\+\+I\+R} = 151, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a65154c0ec97cb74cba7359ca02c4ab54}{S\+C\+R\+I\+P\+T} = 152, 
+\\*
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a83540b81be6becb532a766b7dd3a5ade}{P\+L\+A\+Y\+\_\+\+S\+C\+R\+I\+P\+T} = 153, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a709160dfcdb78b233459a7c046b91b5c}{S\+H\+O\+W\+\_\+\+S\+C\+R\+I\+P\+T} = 154, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a3dbca2a6576b16fc30af00cbf8ff3b6d}{W\+A\+I\+T\+\_\+\+T\+I\+M\+E} = 155, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a35cc18edb14f8cc7586f8767d2a57585}{W\+A\+I\+T\+\_\+\+D\+I\+S\+T\+A\+N\+C\+E} = 156, 
+\\*
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24afe16224c28a9b186c8357e539358d96e}{W\+A\+I\+T\+\_\+\+A\+N\+G\+L\+E} = 157, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a4c81a6746d2eacab9a179c21531658fd}{W\+A\+I\+T\+\_\+\+E\+V\+E\+N\+T} = 158, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a86faa808c27ddad1404fa882193f0db7}{R\+O\+O\+M\+B\+A\+\_\+\+S\+C\+H\+E\+D\+U\+L\+I\+N\+G\+\_\+\+L\+E\+D\+S} = 162, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24acd27e02da97cb9cc482177a27e135c45}{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+G\+I\+T\+\_\+\+L\+E\+D\+S\+\_\+\+R\+A\+W} = 163, 
+\\*
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a094d22b24aae1379b33389cf701b5356}{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+G\+I\+T\+\_\+\+L\+E\+D\+S\+\_\+\+A\+S\+C\+I\+I} = 164, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ab369d673cdfb4414fb307ddaef5288dd}{R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+T\+T\+O\+N\+S\+\_\+\+C\+M\+D} = 165, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ac4b9ca54bc982f8b9b565c72cb642ccc}{R\+O\+O\+M\+B\+A\+\_\+\+S\+C\+H\+E\+D\+U\+L\+E} = 167, 
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a17519d3bc7b9e8c70af28afe85d92229}{R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+T\+\_\+\+D\+A\+Y\+\_\+\+T\+I\+M\+E} = 168, 
+\\*
+\hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a4c60272718e8bd851c58e6a9545f0d9f}{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+O\+P} = 173
+ \}
+\begin{DoxyCompactList}\small\item\em O\+P\+\_\+\+C\+O\+D\+E enum. \end{DoxyCompactList}\item 
+\hypertarget{group__roomba-lib_ga2026337683ba0d60af6b639e7a56456d}{}enum {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+C\+O\+D\+E} \{ \\*
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+L\+E\+F\+T} = 129, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+F\+O\+R\+W\+A\+R\+D} = 130, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+R\+I\+G\+H\+T} = 131, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+S\+P\+O\+T} = 132, 
+\\*
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+M\+A\+X} = 133, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+S\+M\+A\+L\+L} = 134, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+M\+E\+D\+I\+U\+M} = 135, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+L\+A\+R\+G\+E\+\_\+\+C\+L\+E\+A\+N} = 136, 
+\\*
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+S\+T\+O\+P\+\_\+1} = 137, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+P\+O\+W\+E\+R} = 138, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+A\+R\+C\+\_\+\+L\+E\+F\+T} = 139, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+A\+R\+C\+\_\+\+R\+I\+G\+H\+T} = 140, 
+\\*
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+S\+T\+O\+P\+\_\+2} = 141, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+D\+O\+W\+N\+L\+O\+A\+D} = 142, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+S\+E\+E\+K\+\_\+\+D\+O\+C\+K} = 143, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+R\+E\+S\+E\+R\+V\+E\+D\+\_\+1} = 240, 
+\\*
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+R\+E\+D\+\_\+\+B\+U\+O\+Y} = 248, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+G\+R\+E\+E\+N\+\_\+\+B\+U\+O\+Y} = 244, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+F\+O\+R\+C\+E\+\_\+\+F\+I\+E\+L\+D} = 242, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+R\+E\+D\+\_\+\+B\+U\+O\+Y\+\_\+\+A\+N\+D\+\_\+\+G\+R\+E\+E\+N\+\_\+\+B\+U\+O\+Y} = 252, 
+\\*
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+R\+E\+D\+\_\+\+B\+U\+O\+Y\+\_\+\+A\+N\+D\+\_\+\+F\+O\+R\+C\+E\+\_\+\+F\+I\+E\+L\+D} = 250, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+G\+R\+E\+E\+N\+\_\+\+B\+U\+O\+Y\+\_\+\+A\+N\+D\+\_\+\+F\+O\+R\+C\+E\+\_\+\+F\+I\+E\+L\+D} = 246, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+R\+E\+D\+\_\+\+B\+U\+O\+Y\+\_\+\+G\+R\+E\+E\+N\+\_\+\+B\+U\+O\+Y\+\_\+\+A\+N\+D\+\_\+\+F\+O\+R\+C\+E\+\_\+\+F\+I\+E\+L\+D} = 254, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+R\+E\+S\+E\+R\+V\+E\+D\+\_\+2} = 160, 
+\\*
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+C\+H\+A\+R\+A\+C\+T\+E\+R\+\_\+\+V\+I\+R\+T\+U\+A\+L\+\_\+\+W\+A\+L\+L} = 162
+ \}\label{group__roomba-lib_ga2026337683ba0d60af6b639e7a56456d}
+
+\item 
+enum \hyperlink{group__roomba-lib_ga46f008b5055c4a08d3123c6a3478373e}{\+\_\+pv} \{ \\*
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaa0592e11488b7d631c805b25a5a6a4b2}{R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+M\+P\+S\+\_\+\+W\+H\+E\+E\+L\+D\+R\+O\+P\+S} = 7, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaa845fdedd5b341aa9caa152ecfb4a724}{R\+O\+O\+M\+B\+A\+\_\+\+W\+A\+L\+L} = 8, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eac453ff43b4e5be8cdf511130d316c4f3}{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+L\+E\+F\+T} = 9, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaaf46988ebd91103295f53cff3b13d3c9}{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T} = 10, 
+\\*
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea8dc2c319fff150dfaf3ebe832a89571d}{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T} = 11, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eabfc438ea8d6ad4505d651226791efe43}{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+R\+I\+G\+H\+T} = 12, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea77bf37294b6048b213bd8b323f10d7d9}{R\+O\+O\+M\+B\+A\+\_\+\+V\+I\+R\+T\+U\+A\+L\+\_\+\+W\+A\+L\+L} = 13, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaacff57f6cfe6ccf34a80de88efee8ad9}{R\+O\+O\+M\+B\+A\+\_\+\+O\+V\+E\+R\+C\+U\+R\+R\+E\+N\+T\+S} = 14, 
+\\*
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea9c217151461c8bf797485ad78f1a62cb}{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+R\+T\+\_\+\+D\+E\+T\+E\+C\+T} = 15, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eabb1001411d09b705509b3683150b6f5f}{R\+O\+O\+M\+B\+A\+\_\+\+U\+N\+U\+S\+E\+D\+\_\+1} = 16, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea2643c115b4c5cf1851b3d80917a49015}{R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E} = 17, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea384322ca8586075fed5c6a4a6c8d45a2}{R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+T\+T\+O\+N\+S\+\_\+\+P\+K\+T} = 18, 
+\\*
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eab9db41437cc82100d3efb7579e6e2704}{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+S\+T\+A\+N\+C\+E} = 19, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eae8c4ed6d765ba0bbe8a4d07824c4e7c1}{R\+O\+O\+M\+B\+A\+\_\+\+A\+N\+G\+L\+E} = 20, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaf2eae234a42573cc6afcd3a96f4022fa}{R\+O\+O\+M\+B\+A\+\_\+\+C\+H\+A\+R\+G\+I\+N\+G\+\_\+\+S\+T\+A\+T\+E} = 21, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea6e2211c35c4d928b8a7b17ccb9315250}{R\+O\+O\+M\+B\+A\+\_\+\+V\+O\+L\+T\+A\+G\+E} = 22, 
+\\*
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea4d65c164218b7190fca61c69e8f60f93}{R\+O\+O\+M\+B\+A\+\_\+\+C\+U\+R\+R\+E\+N\+T} = 23, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea0e59d463778d6b12a2fcb2ac23bbc850}{R\+O\+O\+M\+B\+A\+\_\+\+T\+E\+M\+P\+E\+R\+A\+T\+U\+R\+E} = 24, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea492387b172d9b626fe66b3d632a38955}{R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+T\+T\+E\+R\+Y\+\_\+\+C\+H\+A\+R\+G\+E} = 25, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaa53df1ccfa1de33d1754272fa9edd804}{R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+T\+T\+E\+R\+Y\+\_\+\+C\+A\+P\+A\+C\+I\+T\+Y} = 26, 
+\\*
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea820e04f3b6cf1fe3830dc773981e38cd}{R\+O\+O\+M\+B\+A\+\_\+\+W\+A\+L\+L\+\_\+\+S\+I\+G\+N\+A\+L} = 27, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaca31b264512f0b2561a98c474d9afcaf}{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+G\+N\+A\+L} = 28, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eacb540adc5f1ba1e6d9bdb429dc4bad9b}{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+G\+N\+A\+L} = 29, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea9b156ee45545b742e7900a29b3e4dadf}{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T\+\_\+\+S\+I\+G\+N\+A\+L} = 30, 
+\\*
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea3430e06a7beb23fd86879c2c404e802e}{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+R\+I\+G\+H\+T\+\_\+\+S\+I\+G\+N\+A\+L} = 31, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea96857c95ae47a3687fa89cbee702c45f}{R\+O\+O\+M\+B\+A\+\_\+\+U\+N\+U\+S\+E\+D\+\_\+2} = 32, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+U\+N\+U\+S\+E\+D\+\_\+3} = 33, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea837e14ab43e08cf649b5ab37556023de}{R\+O\+O\+M\+B\+A\+\_\+\+C\+H\+A\+R\+G\+E\+R\+\_\+\+A\+V\+A\+I\+L\+A\+B\+L\+E} = 34, 
+\\*
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eae25dca775bd76962783a86811ea93b74}{R\+O\+O\+M\+B\+A\+\_\+\+O\+P\+E\+N\+\_\+\+I\+N\+T\+E\+R\+F\+A\+C\+E\+\_\+\+M\+O\+D\+E} = 35, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eadc89af73d417da0fe50b1c642a8898b9}{R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G\+\_\+\+N\+U\+M\+B\+E\+R} = 36, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea974977adff508d49ff6ae6137d14299a}{R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G\+\_\+\+P\+L\+A\+Y\+I\+N\+G} = 37, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ead75c3ca1795b78e599fe29b5927de5fd}{R\+O\+O\+M\+B\+A\+\_\+\+O\+I\+\_\+\+S\+T\+R\+E\+A\+M\+\_\+\+N\+U\+M\+\_\+\+P\+A\+C\+K\+E\+T\+S} = 38, 
+\\*
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eac813a8d1be0b3f7780aa56aa280a426b}{R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y} = 39, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea59a616d59cce7972a21c6803d1e3e047}{R\+O\+O\+M\+B\+A\+\_\+\+R\+A\+D\+I\+U\+S} = 40, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eae155dc459e649f7a3b38bd8c9b4b14b0}{R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+R\+I\+G\+H\+T} = 41, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea17b84d811ed8f98698e2ba5d477492ba}{R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+L\+E\+F\+T} = 42, 
+\\*
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eac09cc1853f89d600d088a1f558180572}{R\+O\+O\+M\+B\+A\+\_\+\+E\+N\+C\+O\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+S\+\_\+\+L\+E\+F\+T} = 43, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea5918780386e79aadb498f23d3471c9da}{R\+O\+O\+M\+B\+A\+\_\+\+E\+N\+C\+O\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+S\+\_\+\+R\+I\+G\+H\+T} = 44, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea11af024cc8c3de71acadd02c432d55ce}{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+E\+R} = 45, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea7059f77010aa227d28fd5f875bcae9b1}{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+L\+E\+F\+T} = 46, 
+\\*
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea309109f9c53e16a26d9d096c5c56ff71}{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T} = 47, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea5987a92277142efcf0ed3cabba1a1bae}{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+L\+E\+F\+T} = 48, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea6105c9a570e4b4a7e69262f113f03fe1}{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+R\+I\+G\+H\+T} = 49, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea94217c4da645d2bed66a8ef46485b776}{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T} = 50, 
+\\*
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ead32d8a13d2506234d1358f7622725331}{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+R\+I\+G\+H\+T} = 51, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea9ebd0d5b7b0d25ab79377208546ed5bd}{R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E\+\_\+\+L\+E\+F\+T} = 52, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaea5b0df07c05b451fc103c732c6e74eb}{R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E\+\_\+\+R\+I\+G\+H\+T} = 53, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaeadd154f9f2f7647caf3488d27bd4fef}{R\+O\+O\+M\+B\+A\+\_\+\+L\+E\+F\+T\+\_\+\+M\+O\+T\+O\+R\+\_\+\+C\+U\+R\+R\+E\+N\+T} = 54, 
+\\*
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea7a02b4928368639e9bd9fcec9656462b}{R\+O\+O\+M\+B\+A\+\_\+\+R\+I\+G\+H\+T\+\_\+\+M\+O\+T\+O\+R\+\_\+\+C\+U\+R\+R\+E\+N\+T} = 55, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea31137d3179ccc5981923bd6aa8b63b95}{R\+O\+O\+M\+B\+A\+\_\+\+M\+A\+I\+N\+\_\+\+B\+R\+U\+S\+H\+\_\+\+C\+U\+R\+R\+E\+N\+T} =56, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea7c8ef5075b9ed0f0d6699c83d6359952}{R\+O\+O\+M\+B\+A\+\_\+\+S\+I\+D\+E\+\_\+\+B\+R\+U\+S\+H\+\_\+\+C\+U\+R\+R\+E\+N\+T} = 57, 
+\hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea0e892ee610c71a2a567e51ecd5d1e043}{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+A\+S\+I\+S} = 58
+ \}
+\begin{DoxyCompactList}\small\item\em Roomba Open Interface Sensor Packets Roomba sends back one of 58 different sensor data packets, depending on the value of the packet data byte, when responding to a Sensors command, Query List command, or Stream command’s request for a packet of sensor data bytes. \end{DoxyCompactList}\item 
+\hypertarget{group__roomba-lib_ga159a5a543d2cf5401e5bd4c44c860ba0}{}enum {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+G\+R\+O\+U\+P} \{ \\*
+{\bfseries G0} = 0, 
+{\bfseries G1} = 1, 
+{\bfseries G2} = 2, 
+{\bfseries G3} = 3, 
+\\*
+{\bfseries G4} = 4, 
+{\bfseries G5} = 5, 
+{\bfseries G6} = 6, 
+{\bfseries A\+L\+L\+\_\+\+P\+A\+C\+K\+E\+T\+S} = 100, 
+\\*
+{\bfseries G101} =101, 
+{\bfseries G106} = 106, 
+{\bfseries G107} = 107
+ \}\label{group__roomba-lib_ga159a5a543d2cf5401e5bd4c44c860ba0}
+
+\item 
+\hypertarget{group__roomba-lib_ga0c31a759b4cf7799473fe7b259dec1e2}{}enum {\bfseries \+\_\+roomba\+\_\+op\+\_\+mode} \{ {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+O\+F\+F\+\_\+\+M\+O\+D\+E}, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+S\+S\+I\+V\+E\+\_\+\+M\+O\+D\+E}, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+S\+A\+F\+E\+\_\+\+M\+O\+D\+E}, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+\+F\+U\+L\+L\+\_\+\+M\+O\+D\+E}
+ \}\label{group__roomba-lib_ga0c31a759b4cf7799473fe7b259dec1e2}
+
+\item 
+\hypertarget{group__roomba-lib_gac817969a7f890c4cb8a32db5284a2f00}{}enum {\bfseries R\+O\+O\+M\+B\+A\+\_\+\+B\+I\+T\+R\+A\+T\+E} \{ \\*
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+300\+B\+P\+S} = 0, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+600\+B\+P\+S} = 1, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+1200\+B\+P\+S} = 2, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+2400\+B\+P\+S} = 3, 
+\\*
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+4800\+B\+P\+S} = 4, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+9600\+B\+P\+S} = 5, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+14400\+B\+P\+S} = 6, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+19200\+B\+P\+S} = 7, 
+\\*
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+28800\+B\+P\+S} = 8, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+38400\+B\+P\+S} = 9, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+57600\+B\+P\+S} = 10, 
+{\bfseries R\+O\+O\+M\+B\+A\+\_\+115200\+B\+P\+S} = 11
+ \}\label{group__roomba-lib_gac817969a7f890c4cb8a32db5284a2f00}
+
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__roomba-lib_gaf230b08ce6e9261ed954b51db2f2898f}{}int {\bfseries is\+\_\+valid\+\_\+roomba\+\_\+command} (uint8\+\_\+t command\mbox{[}$\,$\mbox{]}, uint16\+\_\+t size)\label{group__roomba-lib_gaf230b08ce6e9261ed954b51db2f2898f}
+
+\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{group__roomba-lib_ga43d410571f53c7a07ec83af0fd27af67}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::bumps\+\_\+wheeldrops}\label{group__roomba-lib_ga43d410571f53c7a07ec83af0fd27af67}
+
+\item 
+\hypertarget{group__roomba-lib_ga08baebb4bc07ca1874409e1e291db267}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::wall}\label{group__roomba-lib_ga08baebb4bc07ca1874409e1e291db267}
+
+\item 
+\hypertarget{group__roomba-lib_gacbb273688037792bd5db9cf68cdd71e2}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::cliff\+\_\+left}\label{group__roomba-lib_gacbb273688037792bd5db9cf68cdd71e2}
+
+\item 
+\hypertarget{group__roomba-lib_ga26e3b496bee293c76ba307c7ea63fb8a}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::cliff\+\_\+front\+\_\+left}\label{group__roomba-lib_ga26e3b496bee293c76ba307c7ea63fb8a}
+
+\item 
+\hypertarget{group__roomba-lib_gafe6c78f85285c5047ba015a0b6706279}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::cliff\+\_\+front\+\_\+right}\label{group__roomba-lib_gafe6c78f85285c5047ba015a0b6706279}
+
+\item 
+\hypertarget{group__roomba-lib_ga7c894dfe1a679d2353ebebb037b1208c}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::cliff\+\_\+right}\label{group__roomba-lib_ga7c894dfe1a679d2353ebebb037b1208c}
+
+\item 
+\hypertarget{group__roomba-lib_ga6805795f2220476f4067b5c95d497301}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::virtual\+\_\+wall}\label{group__roomba-lib_ga6805795f2220476f4067b5c95d497301}
+
+\item 
+\hypertarget{group__roomba-lib_gab2625de257c5580a827ee5bb7509787f}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::overcurrents}\label{group__roomba-lib_gab2625de257c5580a827ee5bb7509787f}
+
+\item 
+\hypertarget{group__roomba-lib_ga9ccd750ef8615469466f93db2605cfa1}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::dirt\+\_\+detect}\label{group__roomba-lib_ga9ccd750ef8615469466f93db2605cfa1}
+
+\item 
+\hypertarget{group__roomba-lib_ga7601c93edd806422c44f23acb1f04e25}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::unused\+\_\+1}\label{group__roomba-lib_ga7601c93edd806422c44f23acb1f04e25}
+
+\item 
+\hypertarget{group__roomba-lib_ga9f77bcc036318f7d862c433bcf7efd65}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::ir\+\_\+opcode}\label{group__roomba-lib_ga9f77bcc036318f7d862c433bcf7efd65}
+
+\item 
+\hypertarget{group__roomba-lib_ga401f999368acbd379c7711170b72de89}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::buttons\+\_\+pkt}\label{group__roomba-lib_ga401f999368acbd379c7711170b72de89}
+
+\item 
+\hypertarget{group__roomba-lib_ga1fcbb890062dd586ff86a086a602893d}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::distance}\label{group__roomba-lib_ga1fcbb890062dd586ff86a086a602893d}
+
+\item 
+\hypertarget{group__roomba-lib_ga48231f4871a323c2b0a0f3d9597d5043}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::angle}\label{group__roomba-lib_ga48231f4871a323c2b0a0f3d9597d5043}
+
+\item 
+\hypertarget{group__roomba-lib_ga2adb514c4766dd622c86e6d2bbc7485f}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::charging\+\_\+state}\label{group__roomba-lib_ga2adb514c4766dd622c86e6d2bbc7485f}
+
+\item 
+\hypertarget{group__roomba-lib_ga7ef5d3c12b11f7d3d09b827c0c3c54d3}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::voltage}\label{group__roomba-lib_ga7ef5d3c12b11f7d3d09b827c0c3c54d3}
+
+\item 
+\hypertarget{group__roomba-lib_ga61306111eac0f15e4e4d2d939a02bdd0}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::current}\label{group__roomba-lib_ga61306111eac0f15e4e4d2d939a02bdd0}
+
+\item 
+\hypertarget{group__roomba-lib_gacc424a4672fd8b32df7f5268a79c8d7c}{}int8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::temperature}\label{group__roomba-lib_gacc424a4672fd8b32df7f5268a79c8d7c}
+
+\item 
+\hypertarget{group__roomba-lib_gae544ca13929fe4c706f593cc2139ea3e}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::battery\+\_\+charge}\label{group__roomba-lib_gae544ca13929fe4c706f593cc2139ea3e}
+
+\item 
+\hypertarget{group__roomba-lib_ga8b4e0c15d144e27ee1e5dc3f0623afcb}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+0\+::battery\+\_\+capacity}\label{group__roomba-lib_ga8b4e0c15d144e27ee1e5dc3f0623afcb}
+
+\item 
+\hypertarget{group__roomba-lib_gad576e2f36a82ecbb5918f424a7e17188}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+1\+::bumps\+\_\+wheeldrops}\label{group__roomba-lib_gad576e2f36a82ecbb5918f424a7e17188}
+
+\item 
+\hypertarget{group__roomba-lib_gad985091322f8602c097f7bead6b6cc65}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+1\+::wall}\label{group__roomba-lib_gad985091322f8602c097f7bead6b6cc65}
+
+\item 
+\hypertarget{group__roomba-lib_ga7cbecdcd7d0ecfc8cfc827721f4e3294}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+1\+::cliff\+\_\+left}\label{group__roomba-lib_ga7cbecdcd7d0ecfc8cfc827721f4e3294}
+
+\item 
+\hypertarget{group__roomba-lib_ga86de120f341192ccc5029f1efc5a5b45}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+1\+::cliff\+\_\+front\+\_\+left}\label{group__roomba-lib_ga86de120f341192ccc5029f1efc5a5b45}
+
+\item 
+\hypertarget{group__roomba-lib_ga5bed17d2510c78692af8ab1b676309d0}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+1\+::cliff\+\_\+front\+\_\+right}\label{group__roomba-lib_ga5bed17d2510c78692af8ab1b676309d0}
+
+\item 
+\hypertarget{group__roomba-lib_ga99123edf9a592989087c67ab8c9f317c}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+1\+::cliff\+\_\+right}\label{group__roomba-lib_ga99123edf9a592989087c67ab8c9f317c}
+
+\item 
+\hypertarget{group__roomba-lib_gaa9bd9c014a5f805b3a885caa6bcc6a82}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+1\+::virtual\+\_\+wall}\label{group__roomba-lib_gaa9bd9c014a5f805b3a885caa6bcc6a82}
+
+\item 
+\hypertarget{group__roomba-lib_ga503643688b4890f0e551f1a26b86a20d}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+1\+::overcurrents}\label{group__roomba-lib_ga503643688b4890f0e551f1a26b86a20d}
+
+\item 
+\hypertarget{group__roomba-lib_gaa264f0bbadd7e838f27060a63f203be5}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+1\+::dirt\+\_\+detect}\label{group__roomba-lib_gaa264f0bbadd7e838f27060a63f203be5}
+
+\item 
+\hypertarget{group__roomba-lib_gaf15886560f5f0117f0543358c578995a}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+1\+::unused\+\_\+1}\label{group__roomba-lib_gaf15886560f5f0117f0543358c578995a}
+
+\item 
+\hypertarget{group__roomba-lib_ga7494ef600683ac83238b92858a4e94b3}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+2\+::ir\+\_\+opcode}\label{group__roomba-lib_ga7494ef600683ac83238b92858a4e94b3}
+
+\item 
+\hypertarget{group__roomba-lib_ga2e2e9f09a86e88f3b7f65e2f6b5b5e89}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+2\+::buttons\+\_\+pkt}\label{group__roomba-lib_ga2e2e9f09a86e88f3b7f65e2f6b5b5e89}
+
+\item 
+\hypertarget{group__roomba-lib_ga072d8646d6d10af62984a86f56f1daac}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+2\+::distance}\label{group__roomba-lib_ga072d8646d6d10af62984a86f56f1daac}
+
+\item 
+\hypertarget{group__roomba-lib_ga42c6ce09c2a6d93ce385e0e2e6226db3}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+2\+::angle}\label{group__roomba-lib_ga42c6ce09c2a6d93ce385e0e2e6226db3}
+
+\item 
+\hypertarget{group__roomba-lib_ga6203bea1e00b76dbb7a61943c5c22b1a}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+3\+::charging\+\_\+state}\label{group__roomba-lib_ga6203bea1e00b76dbb7a61943c5c22b1a}
+
+\item 
+\hypertarget{group__roomba-lib_ga9fbf52d47f1750117e7e3225b22ff24d}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+3\+::voltage}\label{group__roomba-lib_ga9fbf52d47f1750117e7e3225b22ff24d}
+
+\item 
+\hypertarget{group__roomba-lib_ga97c15d9609c2b55522cedc2f4415c1a6}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+3\+::current}\label{group__roomba-lib_ga97c15d9609c2b55522cedc2f4415c1a6}
+
+\item 
+\hypertarget{group__roomba-lib_gae0f74f4252afce745b4d9208750cbced}{}int8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+3\+::temperature}\label{group__roomba-lib_gae0f74f4252afce745b4d9208750cbced}
+
+\item 
+\hypertarget{group__roomba-lib_ga22283c5ac5d429e82cc923f42efb29f0}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+3\+::battery\+\_\+charge}\label{group__roomba-lib_ga22283c5ac5d429e82cc923f42efb29f0}
+
+\item 
+\hypertarget{group__roomba-lib_ga2fe1ef419191101a8511027079014558}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+3\+::battery\+\_\+capacity}\label{group__roomba-lib_ga2fe1ef419191101a8511027079014558}
+
+\item 
+\hypertarget{group__roomba-lib_ga25dfb5758c3481928fd01259472581f5}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+4\+::wall\+\_\+signal}\label{group__roomba-lib_ga25dfb5758c3481928fd01259472581f5}
+
+\item 
+\hypertarget{group__roomba-lib_ga91ffc6b1dc09dc3d418c2394c5435fa3}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+4\+::cliff\+\_\+left\+\_\+signal}\label{group__roomba-lib_ga91ffc6b1dc09dc3d418c2394c5435fa3}
+
+\item 
+\hypertarget{group__roomba-lib_gab156cf15990c58a4a61ecb6a268ebfa4}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+4\+::cliff\+\_\+front\+\_\+left\+\_\+signal}\label{group__roomba-lib_gab156cf15990c58a4a61ecb6a268ebfa4}
+
+\item 
+\hypertarget{group__roomba-lib_ga6ad7056b713673503898d022ef765f6e}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+4\+::cliff\+\_\+front\+\_\+right\+\_\+signal}\label{group__roomba-lib_ga6ad7056b713673503898d022ef765f6e}
+
+\item 
+\hypertarget{group__roomba-lib_gaa3fa03339974ede4ab6ba0215532da2b}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+4\+::cliff\+\_\+right\+\_\+signal}\label{group__roomba-lib_gaa3fa03339974ede4ab6ba0215532da2b}
+
+\item 
+\hypertarget{group__roomba-lib_gab54ab066eb72c6597b14857b03e98458}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+4\+::unused\+\_\+2}\label{group__roomba-lib_gab54ab066eb72c6597b14857b03e98458}
+
+\item 
+\hypertarget{group__roomba-lib_gaedbbfb65e01c007f84cfd034208152c0}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+4\+::unused\+\_\+3}\label{group__roomba-lib_gaedbbfb65e01c007f84cfd034208152c0}
+
+\item 
+\hypertarget{group__roomba-lib_gaf2998b6db33b57101022655fbae35d4d}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+4\+::charger\+\_\+available}\label{group__roomba-lib_gaf2998b6db33b57101022655fbae35d4d}
+
+\item 
+\hypertarget{group__roomba-lib_ga95f014b775e0a88146275cc8c02fd0a6}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+5\+::open\+\_\+interface\+\_\+mode}\label{group__roomba-lib_ga95f014b775e0a88146275cc8c02fd0a6}
+
+\item 
+\hypertarget{group__roomba-lib_gaa6217d6706245d585e199f0f68a267e6}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+5\+::song\+\_\+number}\label{group__roomba-lib_gaa6217d6706245d585e199f0f68a267e6}
+
+\item 
+\hypertarget{group__roomba-lib_gaef36cb1a116e22e532a0bb1749b613cd}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+5\+::song\+\_\+playing}\label{group__roomba-lib_gaef36cb1a116e22e532a0bb1749b613cd}
+
+\item 
+\hypertarget{group__roomba-lib_gab222e529ead66fbcc944874273461685}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+5\+::oi\+\_\+stream\+\_\+num\+\_\+packets}\label{group__roomba-lib_gab222e529ead66fbcc944874273461685}
+
+\item 
+\hypertarget{group__roomba-lib_ga467761ebc543ee859377b24c2753bb07}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+5\+::velocity}\label{group__roomba-lib_ga467761ebc543ee859377b24c2753bb07}
+
+\item 
+\hypertarget{group__roomba-lib_gaaea9910e6bafda799f0b50dcfe30fd67}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+5\+::radius}\label{group__roomba-lib_gaaea9910e6bafda799f0b50dcfe30fd67}
+
+\item 
+\hypertarget{group__roomba-lib_ga521639ee0605d21dd4a3003e41ccb9fc}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+5\+::velocity\+\_\+right}\label{group__roomba-lib_ga521639ee0605d21dd4a3003e41ccb9fc}
+
+\item 
+\hypertarget{group__roomba-lib_gaf43d79ba2a8a202a6cba221a59f38e4e}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+5\+::velocity\+\_\+left}\label{group__roomba-lib_gaf43d79ba2a8a202a6cba221a59f38e4e}
+
+\item 
+\hypertarget{group__roomba-lib_ga2bbb9856351748fe9b2dc5b4bb64e314}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::bumps\+\_\+wheeldrops}\label{group__roomba-lib_ga2bbb9856351748fe9b2dc5b4bb64e314}
+
+\item 
+\hypertarget{group__roomba-lib_gaa6ae5b6cf200fe413bb10c2456e11b44}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::wall}\label{group__roomba-lib_gaa6ae5b6cf200fe413bb10c2456e11b44}
+
+\item 
+\hypertarget{group__roomba-lib_gaffe3e98e0a58a11cee7b93932b9bb3e9}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::cliff\+\_\+left}\label{group__roomba-lib_gaffe3e98e0a58a11cee7b93932b9bb3e9}
+
+\item 
+\hypertarget{group__roomba-lib_ga29afaba741fbaa8b8a3a3abcdfc67a07}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::cliff\+\_\+front\+\_\+left}\label{group__roomba-lib_ga29afaba741fbaa8b8a3a3abcdfc67a07}
+
+\item 
+\hypertarget{group__roomba-lib_ga5df6c2bcee47f121a1f6cef74f5cd58a}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::cliff\+\_\+front\+\_\+right}\label{group__roomba-lib_ga5df6c2bcee47f121a1f6cef74f5cd58a}
+
+\item 
+\hypertarget{group__roomba-lib_ga4f0702134fab31fc4f7274813b2145a3}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::cliff\+\_\+right}\label{group__roomba-lib_ga4f0702134fab31fc4f7274813b2145a3}
+
+\item 
+\hypertarget{group__roomba-lib_ga6d031bd9a7e62d2c6e26a182497a9033}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::virtual\+\_\+wall}\label{group__roomba-lib_ga6d031bd9a7e62d2c6e26a182497a9033}
+
+\item 
+\hypertarget{group__roomba-lib_ga494dc63329054eb34a18b17c7c7e72f0}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::overcurrents}\label{group__roomba-lib_ga494dc63329054eb34a18b17c7c7e72f0}
+
+\item 
+\hypertarget{group__roomba-lib_ga78144fefe79b1528974b7e8034ec89e6}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::dirt\+\_\+detect}\label{group__roomba-lib_ga78144fefe79b1528974b7e8034ec89e6}
+
+\item 
+\hypertarget{group__roomba-lib_ga69a34f6ab1d6d514ec3a9be75150278d}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::unused\+\_\+1}\label{group__roomba-lib_ga69a34f6ab1d6d514ec3a9be75150278d}
+
+\item 
+\hypertarget{group__roomba-lib_ga6a3f9ac86b16c68e8f67d63bdbaec1bd}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::ir\+\_\+opcode}\label{group__roomba-lib_ga6a3f9ac86b16c68e8f67d63bdbaec1bd}
+
+\item 
+\hypertarget{group__roomba-lib_ga996ac1e63fff310ee54ec79eb8e4ecb1}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::buttons\+\_\+pkt}\label{group__roomba-lib_ga996ac1e63fff310ee54ec79eb8e4ecb1}
+
+\item 
+\hypertarget{group__roomba-lib_gaa2bff2ee56fe385006823136dd2672a3}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::distance}\label{group__roomba-lib_gaa2bff2ee56fe385006823136dd2672a3}
+
+\item 
+\hypertarget{group__roomba-lib_gaf57d0be48fa37518915a9562c47f6e84}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::angle}\label{group__roomba-lib_gaf57d0be48fa37518915a9562c47f6e84}
+
+\item 
+\hypertarget{group__roomba-lib_ga2181d59118d7d5bfdbfc4f5e08d3144a}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::charging\+\_\+state}\label{group__roomba-lib_ga2181d59118d7d5bfdbfc4f5e08d3144a}
+
+\item 
+\hypertarget{group__roomba-lib_ga1293d45b10688bdf401cd74eaae7f67c}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::voltage}\label{group__roomba-lib_ga1293d45b10688bdf401cd74eaae7f67c}
+
+\item 
+\hypertarget{group__roomba-lib_gaa0437984d7359eb2c3d87d9ef35603d6}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::current}\label{group__roomba-lib_gaa0437984d7359eb2c3d87d9ef35603d6}
+
+\item 
+\hypertarget{group__roomba-lib_ga0d32d1c274dc57366de4a5dac48b029f}{}int8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::temperature}\label{group__roomba-lib_ga0d32d1c274dc57366de4a5dac48b029f}
+
+\item 
+\hypertarget{group__roomba-lib_ga79ddf92956718508204e32251184bdc6}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::battery\+\_\+charge}\label{group__roomba-lib_ga79ddf92956718508204e32251184bdc6}
+
+\item 
+\hypertarget{group__roomba-lib_gaee2a991fe43f16ec3b20b56b326a1223}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::battery\+\_\+capacity}\label{group__roomba-lib_gaee2a991fe43f16ec3b20b56b326a1223}
+
+\item 
+\hypertarget{group__roomba-lib_ga6d2b5159f2f5706153a61e07db31ec89}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::wall\+\_\+signal}\label{group__roomba-lib_ga6d2b5159f2f5706153a61e07db31ec89}
+
+\item 
+\hypertarget{group__roomba-lib_ga2301a2828ba6778fdb50df01b8255dd4}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::cliff\+\_\+left\+\_\+signal}\label{group__roomba-lib_ga2301a2828ba6778fdb50df01b8255dd4}
+
+\item 
+\hypertarget{group__roomba-lib_ga72cfc12609ec044adf81216e27b3e30f}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::cliff\+\_\+front\+\_\+left\+\_\+signal}\label{group__roomba-lib_ga72cfc12609ec044adf81216e27b3e30f}
+
+\item 
+\hypertarget{group__roomba-lib_gac9f195bd7ec42005365c954bc1edadce}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::cliff\+\_\+front\+\_\+right\+\_\+signal}\label{group__roomba-lib_gac9f195bd7ec42005365c954bc1edadce}
+
+\item 
+\hypertarget{group__roomba-lib_ga7558f1957ba15fcbdf357db28534f299}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::cliff\+\_\+right\+\_\+signal}\label{group__roomba-lib_ga7558f1957ba15fcbdf357db28534f299}
+
+\item 
+\hypertarget{group__roomba-lib_ga9a294e4b534f6c8e32c574eb51803d1d}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::unused\+\_\+2}\label{group__roomba-lib_ga9a294e4b534f6c8e32c574eb51803d1d}
+
+\item 
+\hypertarget{group__roomba-lib_ga12176b875d2c8520ca9543a715e948a1}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::unused\+\_\+3}\label{group__roomba-lib_ga12176b875d2c8520ca9543a715e948a1}
+
+\item 
+\hypertarget{group__roomba-lib_gaee7319bdb7d6605393e112f846a1a0e4}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::charger\+\_\+available}\label{group__roomba-lib_gaee7319bdb7d6605393e112f846a1a0e4}
+
+\item 
+\hypertarget{group__roomba-lib_gac2f02a70107dd608fd52ce6fd7e0e6e8}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::open\+\_\+interface\+\_\+mode}\label{group__roomba-lib_gac2f02a70107dd608fd52ce6fd7e0e6e8}
+
+\item 
+\hypertarget{group__roomba-lib_ga4555c6fbef8603704920f166b769c336}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::song\+\_\+number}\label{group__roomba-lib_ga4555c6fbef8603704920f166b769c336}
+
+\item 
+\hypertarget{group__roomba-lib_gad0ca49b2f11f06d401f9487315d87f3c}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::song\+\_\+playing}\label{group__roomba-lib_gad0ca49b2f11f06d401f9487315d87f3c}
+
+\item 
+\hypertarget{group__roomba-lib_gac5aa7f5bbd15fc5d47626edba0c28663}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::oi\+\_\+stream\+\_\+num\+\_\+packets}\label{group__roomba-lib_gac5aa7f5bbd15fc5d47626edba0c28663}
+
+\item 
+\hypertarget{group__roomba-lib_ga5a709be41fa0b2c21b9e680ac3576210}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::velocity}\label{group__roomba-lib_ga5a709be41fa0b2c21b9e680ac3576210}
+
+\item 
+\hypertarget{group__roomba-lib_gaa74b14e5372c0a8c7bd5e4b1cf93ae77}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::radius}\label{group__roomba-lib_gaa74b14e5372c0a8c7bd5e4b1cf93ae77}
+
+\item 
+\hypertarget{group__roomba-lib_ga10b7bddf0983644e3a9321a57a6284d9}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::velocity\+\_\+right}\label{group__roomba-lib_ga10b7bddf0983644e3a9321a57a6284d9}
+
+\item 
+\hypertarget{group__roomba-lib_gae8cc0bf870e2a6dbfadb014db81cfbfe}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+6\+::velocity\+\_\+left}\label{group__roomba-lib_gae8cc0bf870e2a6dbfadb014db81cfbfe}
+
+\item 
+\hypertarget{group__roomba-lib_ga3004971973262fcf3431e8d44e2e95bd}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::bumps\+\_\+wheeldrops}\label{group__roomba-lib_ga3004971973262fcf3431e8d44e2e95bd}
+
+\item 
+\hypertarget{group__roomba-lib_gadb734a950816275b6f00c8aab774c83b}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::wall}\label{group__roomba-lib_gadb734a950816275b6f00c8aab774c83b}
+
+\item 
+\hypertarget{group__roomba-lib_gab61f2e58a14c322ec413de399e75f4b5}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::cliff\+\_\+left}\label{group__roomba-lib_gab61f2e58a14c322ec413de399e75f4b5}
+
+\item 
+\hypertarget{group__roomba-lib_ga7669dea9f4417239baec590457f82d42}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::cliff\+\_\+front\+\_\+left}\label{group__roomba-lib_ga7669dea9f4417239baec590457f82d42}
+
+\item 
+\hypertarget{group__roomba-lib_ga8b0b176ef80ede1a185e4b316b1527a6}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::cliff\+\_\+front\+\_\+right}\label{group__roomba-lib_ga8b0b176ef80ede1a185e4b316b1527a6}
+
+\item 
+\hypertarget{group__roomba-lib_gab48e40026d0680046f178104b8b0f794}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::cliff\+\_\+right}\label{group__roomba-lib_gab48e40026d0680046f178104b8b0f794}
+
+\item 
+\hypertarget{group__roomba-lib_ga43f968759169dd0b8c557c6d98491a05}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::virtual\+\_\+wall}\label{group__roomba-lib_ga43f968759169dd0b8c557c6d98491a05}
+
+\item 
+\hypertarget{group__roomba-lib_ga3c0ffea9b6f30cf49197591edeaf969d}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::overcurrents}\label{group__roomba-lib_ga3c0ffea9b6f30cf49197591edeaf969d}
+
+\item 
+\hypertarget{group__roomba-lib_ga35e0ef034603e7bc2a20560be0ed9108}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::dirt\+\_\+detect}\label{group__roomba-lib_ga35e0ef034603e7bc2a20560be0ed9108}
+
+\item 
+\hypertarget{group__roomba-lib_ga8b19ac8ce5e2f04f6c070d7b4bf888ba}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::unused\+\_\+1}\label{group__roomba-lib_ga8b19ac8ce5e2f04f6c070d7b4bf888ba}
+
+\item 
+\hypertarget{group__roomba-lib_gab8e021406397624ee4efbb7dff1bf5f7}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::ir\+\_\+opcode}\label{group__roomba-lib_gab8e021406397624ee4efbb7dff1bf5f7}
+
+\item 
+\hypertarget{group__roomba-lib_gacee96468c8545379a00c808ba20a1d08}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::buttons\+\_\+pkt}\label{group__roomba-lib_gacee96468c8545379a00c808ba20a1d08}
+
+\item 
+\hypertarget{group__roomba-lib_ga9efca08cae31fd9dcca6bb1215d1cf43}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::distance}\label{group__roomba-lib_ga9efca08cae31fd9dcca6bb1215d1cf43}
+
+\item 
+\hypertarget{group__roomba-lib_ga6bccae8c43255beac2141f5b055ccd9e}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::angle}\label{group__roomba-lib_ga6bccae8c43255beac2141f5b055ccd9e}
+
+\item 
+\hypertarget{group__roomba-lib_ga42257a8345f22d44adec50aeb3273def}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::charging\+\_\+state}\label{group__roomba-lib_ga42257a8345f22d44adec50aeb3273def}
+
+\item 
+\hypertarget{group__roomba-lib_gafbb347cde8b883bb25c9d34e1758b366}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::voltage}\label{group__roomba-lib_gafbb347cde8b883bb25c9d34e1758b366}
+
+\item 
+\hypertarget{group__roomba-lib_ga03061bfedba1f8c40ba4ecbca7a2f4ba}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::current}\label{group__roomba-lib_ga03061bfedba1f8c40ba4ecbca7a2f4ba}
+
+\item 
+\hypertarget{group__roomba-lib_gafa6f545b2d2fb03fa43576dcf21656e1}{}int8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::temperature}\label{group__roomba-lib_gafa6f545b2d2fb03fa43576dcf21656e1}
+
+\item 
+\hypertarget{group__roomba-lib_ga0f14bb2e1aa6194e5762c2d670f30969}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::battery\+\_\+charge}\label{group__roomba-lib_ga0f14bb2e1aa6194e5762c2d670f30969}
+
+\item 
+\hypertarget{group__roomba-lib_ga835aa4fbf0f5991bec4809ce527e0c5e}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::battery\+\_\+capacity}\label{group__roomba-lib_ga835aa4fbf0f5991bec4809ce527e0c5e}
+
+\item 
+\hypertarget{group__roomba-lib_ga7e7ae0e808a27271e60aa913b8d46c15}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::wall\+\_\+signal}\label{group__roomba-lib_ga7e7ae0e808a27271e60aa913b8d46c15}
+
+\item 
+\hypertarget{group__roomba-lib_gab8e0719ade6458cda3c0f144d7e334b8}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::cliff\+\_\+left\+\_\+signal}\label{group__roomba-lib_gab8e0719ade6458cda3c0f144d7e334b8}
+
+\item 
+\hypertarget{group__roomba-lib_gab3a0e2316ff2ff7306a9076ded5be399}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::cliff\+\_\+front\+\_\+left\+\_\+signal}\label{group__roomba-lib_gab3a0e2316ff2ff7306a9076ded5be399}
+
+\item 
+\hypertarget{group__roomba-lib_gaf58dd5881c6c009bbea9aad4d65c2a58}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::cliff\+\_\+front\+\_\+right\+\_\+signal}\label{group__roomba-lib_gaf58dd5881c6c009bbea9aad4d65c2a58}
+
+\item 
+\hypertarget{group__roomba-lib_ga45e63a9640cc3a2f227deb2b82b3c359}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::cliff\+\_\+right\+\_\+signal}\label{group__roomba-lib_ga45e63a9640cc3a2f227deb2b82b3c359}
+
+\item 
+\hypertarget{group__roomba-lib_ga15cb0411237250d70c86d248930813c2}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::unused\+\_\+2}\label{group__roomba-lib_ga15cb0411237250d70c86d248930813c2}
+
+\item 
+\hypertarget{group__roomba-lib_ga84c17686e2a8930c3d0126626bcfc8f4}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::unused\+\_\+3}\label{group__roomba-lib_ga84c17686e2a8930c3d0126626bcfc8f4}
+
+\item 
+\hypertarget{group__roomba-lib_gac61e0fb99269a84221800b5b39a5c445}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::charger\+\_\+available}\label{group__roomba-lib_gac61e0fb99269a84221800b5b39a5c445}
+
+\item 
+\hypertarget{group__roomba-lib_ga1f959128e277e39e02182cb39e5959a7}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::open\+\_\+interface\+\_\+mode}\label{group__roomba-lib_ga1f959128e277e39e02182cb39e5959a7}
+
+\item 
+\hypertarget{group__roomba-lib_ga5096e1e7aed4c59b4898a4a655032618}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::song\+\_\+number}\label{group__roomba-lib_ga5096e1e7aed4c59b4898a4a655032618}
+
+\item 
+\hypertarget{group__roomba-lib_gabebdfed5c8d14b6acd67d02e7d520ef1}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::song\+\_\+playing}\label{group__roomba-lib_gabebdfed5c8d14b6acd67d02e7d520ef1}
+
+\item 
+\hypertarget{group__roomba-lib_ga95dcc6454bd3e5eb15746b100ad79c1a}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::oi\+\_\+stream\+\_\+num\+\_\+packets}\label{group__roomba-lib_ga95dcc6454bd3e5eb15746b100ad79c1a}
+
+\item 
+\hypertarget{group__roomba-lib_gaffeab31fb14fd98f5da391eb3459f102}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::velocity}\label{group__roomba-lib_gaffeab31fb14fd98f5da391eb3459f102}
+
+\item 
+\hypertarget{group__roomba-lib_gaf39cdcdd38958b46dda4a5bfc7318887}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::radius}\label{group__roomba-lib_gaf39cdcdd38958b46dda4a5bfc7318887}
+
+\item 
+\hypertarget{group__roomba-lib_ga211671e764f4c601d02e959428d6e02d}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::velocity\+\_\+right}\label{group__roomba-lib_ga211671e764f4c601d02e959428d6e02d}
+
+\item 
+\hypertarget{group__roomba-lib_ga0701b0c98b1767a26df2c4fd0c02476e}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::velocity\+\_\+left}\label{group__roomba-lib_ga0701b0c98b1767a26df2c4fd0c02476e}
+
+\item 
+\hypertarget{group__roomba-lib_gad81aac03cc4aa076c9518e0fd45e507c}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::encoder\+\_\+counts\+\_\+left}\label{group__roomba-lib_gad81aac03cc4aa076c9518e0fd45e507c}
+
+\item 
+\hypertarget{group__roomba-lib_ga9debd2b8f2a1f9a5c011d54e25cb8fc3}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::encoder\+\_\+counts\+\_\+right}\label{group__roomba-lib_ga9debd2b8f2a1f9a5c011d54e25cb8fc3}
+
+\item 
+\hypertarget{group__roomba-lib_gac6084afbf012a1c3449767437e10f44a}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::light\+\_\+bumper}\label{group__roomba-lib_gac6084afbf012a1c3449767437e10f44a}
+
+\item 
+\hypertarget{group__roomba-lib_ga813e5c6653ac466e27a4949f7383ee61}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::light\+\_\+bump\+\_\+left}\label{group__roomba-lib_ga813e5c6653ac466e27a4949f7383ee61}
+
+\item 
+\hypertarget{group__roomba-lib_ga454aa5afd6aafd4b0b0056b4fca7b54b}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::light\+\_\+bump\+\_\+front\+\_\+left}\label{group__roomba-lib_ga454aa5afd6aafd4b0b0056b4fca7b54b}
+
+\item 
+\hypertarget{group__roomba-lib_ga21173a24d9d565080337949a7f4e70eb}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::light\+\_\+bump\+\_\+center\+\_\+left}\label{group__roomba-lib_ga21173a24d9d565080337949a7f4e70eb}
+
+\item 
+\hypertarget{group__roomba-lib_gacfa0c799a61aad0346f4fdde5236cb08}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::light\+\_\+bump\+\_\+center\+\_\+right}\label{group__roomba-lib_gacfa0c799a61aad0346f4fdde5236cb08}
+
+\item 
+\hypertarget{group__roomba-lib_ga9163d7234f5a09246695533984600641}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::light\+\_\+bump\+\_\+front\+\_\+right}\label{group__roomba-lib_ga9163d7234f5a09246695533984600641}
+
+\item 
+\hypertarget{group__roomba-lib_gaeea0683ec04f0138be81007ef874fc9c}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::light\+\_\+bump\+\_\+right}\label{group__roomba-lib_gaeea0683ec04f0138be81007ef874fc9c}
+
+\item 
+\hypertarget{group__roomba-lib_ga0f46b791af38f118212ca6236513bd91}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::ir\+\_\+opcode\+\_\+left}\label{group__roomba-lib_ga0f46b791af38f118212ca6236513bd91}
+
+\item 
+\hypertarget{group__roomba-lib_ga14e1d03ed11234b70c3e6ad9fb42c440}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::ir\+\_\+opcode\+\_\+right}\label{group__roomba-lib_ga14e1d03ed11234b70c3e6ad9fb42c440}
+
+\item 
+\hypertarget{group__roomba-lib_gabcbb278060143cf89a63741267813c40}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::left\+\_\+motor\+\_\+current}\label{group__roomba-lib_gabcbb278060143cf89a63741267813c40}
+
+\item 
+\hypertarget{group__roomba-lib_ga650e96f7760308678e145f58e15301c6}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::right\+\_\+motor\+\_\+current}\label{group__roomba-lib_ga650e96f7760308678e145f58e15301c6}
+
+\item 
+\hypertarget{group__roomba-lib_ga5da7c3a4c8e56bd2e359eec4db31bb59}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::main\+\_\+brush\+\_\+current}\label{group__roomba-lib_ga5da7c3a4c8e56bd2e359eec4db31bb59}
+
+\item 
+\hypertarget{group__roomba-lib_ga480d7a16d91c35b29d80f375d618af8f}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::side\+\_\+brush\+\_\+current}\label{group__roomba-lib_ga480d7a16d91c35b29d80f375d618af8f}
+
+\item 
+\hypertarget{group__roomba-lib_ga70aafd5ca9d423c9de407f6f3fd1e59d}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+100\+::stasis}\label{group__roomba-lib_ga70aafd5ca9d423c9de407f6f3fd1e59d}
+
+\item 
+\hypertarget{group__roomba-lib_gac67c2df811fa6b016babff589d49a334}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::encoder\+\_\+counts\+\_\+left}\label{group__roomba-lib_gac67c2df811fa6b016babff589d49a334}
+
+\item 
+\hypertarget{group__roomba-lib_gaf241e5ac898f0af032ef9a2fda8435cf}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::encoder\+\_\+counts\+\_\+right}\label{group__roomba-lib_gaf241e5ac898f0af032ef9a2fda8435cf}
+
+\item 
+\hypertarget{group__roomba-lib_ga9d8c0585cdfc7fd3b618fc69a747d216}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::light\+\_\+bumper}\label{group__roomba-lib_ga9d8c0585cdfc7fd3b618fc69a747d216}
+
+\item 
+\hypertarget{group__roomba-lib_gae55a54b9b25669739aa113d402a4e2d2}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::light\+\_\+bump\+\_\+left}\label{group__roomba-lib_gae55a54b9b25669739aa113d402a4e2d2}
+
+\item 
+\hypertarget{group__roomba-lib_ga30567925e0f9765463335c092f83229c}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::light\+\_\+bump\+\_\+front\+\_\+left}\label{group__roomba-lib_ga30567925e0f9765463335c092f83229c}
+
+\item 
+\hypertarget{group__roomba-lib_gaeeb1ac2f38084972135c8cc8ddb9b245}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::light\+\_\+bump\+\_\+center\+\_\+left}\label{group__roomba-lib_gaeeb1ac2f38084972135c8cc8ddb9b245}
+
+\item 
+\hypertarget{group__roomba-lib_ga82e8b7ec16d40c7eb6a44a692ec9223b}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::light\+\_\+bump\+\_\+center\+\_\+right}\label{group__roomba-lib_ga82e8b7ec16d40c7eb6a44a692ec9223b}
+
+\item 
+\hypertarget{group__roomba-lib_ga60db7aefc4a621e07174101743d3e62e}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::light\+\_\+bump\+\_\+front\+\_\+right}\label{group__roomba-lib_ga60db7aefc4a621e07174101743d3e62e}
+
+\item 
+\hypertarget{group__roomba-lib_gab1f0b337b13492bf416a392bdd94bb54}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::light\+\_\+bump\+\_\+right}\label{group__roomba-lib_gab1f0b337b13492bf416a392bdd94bb54}
+
+\item 
+\hypertarget{group__roomba-lib_gacc8eade26f0b95c21fda66fe62cb50a6}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::ir\+\_\+opcode\+\_\+left}\label{group__roomba-lib_gacc8eade26f0b95c21fda66fe62cb50a6}
+
+\item 
+\hypertarget{group__roomba-lib_ga36fd48407b82b248741b666060dcb6df}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::ir\+\_\+opcode\+\_\+right}\label{group__roomba-lib_ga36fd48407b82b248741b666060dcb6df}
+
+\item 
+\hypertarget{group__roomba-lib_gace8a74734805c0951ae53fa3e828f555}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::left\+\_\+motor\+\_\+current}\label{group__roomba-lib_gace8a74734805c0951ae53fa3e828f555}
+
+\item 
+\hypertarget{group__roomba-lib_ga3b91ad760130be2525877771cf8fc6ff}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::right\+\_\+motor\+\_\+current}\label{group__roomba-lib_ga3b91ad760130be2525877771cf8fc6ff}
+
+\item 
+\hypertarget{group__roomba-lib_gaea3fb7ae386d9504d3acfec6aad3f143}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::main\+\_\+brush\+\_\+current}\label{group__roomba-lib_gaea3fb7ae386d9504d3acfec6aad3f143}
+
+\item 
+\hypertarget{group__roomba-lib_ga50e4c322184f845967d69305a6a86c76}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::side\+\_\+brush\+\_\+current}\label{group__roomba-lib_ga50e4c322184f845967d69305a6a86c76}
+
+\item 
+\hypertarget{group__roomba-lib_gad676c0f29b774557ad0b4a2164616e5f}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+101\+::stasis}\label{group__roomba-lib_gad676c0f29b774557ad0b4a2164616e5f}
+
+\item 
+\hypertarget{group__roomba-lib_ga2686ced69a7deee493d3617a7e3f25e9}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+106\+::light\+\_\+bump\+\_\+left}\label{group__roomba-lib_ga2686ced69a7deee493d3617a7e3f25e9}
+
+\item 
+\hypertarget{group__roomba-lib_ga616ec94b794aef982a6e24e6555fc22c}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+106\+::light\+\_\+bump\+\_\+front\+\_\+left}\label{group__roomba-lib_ga616ec94b794aef982a6e24e6555fc22c}
+
+\item 
+\hypertarget{group__roomba-lib_ga1a5e8d286ff1759ef39f97b0b16965e3}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+106\+::light\+\_\+bump\+\_\+center\+\_\+left}\label{group__roomba-lib_ga1a5e8d286ff1759ef39f97b0b16965e3}
+
+\item 
+\hypertarget{group__roomba-lib_ga10a5914d43822355fa6118a4d1a8d389}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+106\+::light\+\_\+bump\+\_\+center\+\_\+right}\label{group__roomba-lib_ga10a5914d43822355fa6118a4d1a8d389}
+
+\item 
+\hypertarget{group__roomba-lib_gad722687c41c2876edb9be69972c88576}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+106\+::light\+\_\+bump\+\_\+front\+\_\+right}\label{group__roomba-lib_gad722687c41c2876edb9be69972c88576}
+
+\item 
+\hypertarget{group__roomba-lib_ga2a7b04b214fadc407fcd20a25687227e}{}uint16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+106\+::light\+\_\+bump\+\_\+right}\label{group__roomba-lib_ga2a7b04b214fadc407fcd20a25687227e}
+
+\item 
+\hypertarget{group__roomba-lib_ga1a8fd8fdbde5ae27c089a7d7ec1bc43a}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+107\+::left\+\_\+motor\+\_\+current}\label{group__roomba-lib_ga1a8fd8fdbde5ae27c089a7d7ec1bc43a}
+
+\item 
+\hypertarget{group__roomba-lib_gaeb30e39724a737ddec26de7fa00c837f}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+107\+::right\+\_\+motor\+\_\+current}\label{group__roomba-lib_gaeb30e39724a737ddec26de7fa00c837f}
+
+\item 
+\hypertarget{group__roomba-lib_ga0135c0b235c3206d5f666f0c595ed366}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+107\+::main\+\_\+brush\+\_\+current}\label{group__roomba-lib_ga0135c0b235c3206d5f666f0c595ed366}
+
+\item 
+\hypertarget{group__roomba-lib_gace7e4ea4d207869a25a51ac94a52eb9f}{}int16\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+107\+::side\+\_\+brush\+\_\+current}\label{group__roomba-lib_gace7e4ea4d207869a25a51ac94a52eb9f}
+
+\item 
+\hypertarget{group__roomba-lib_ga0ed18b08023ce3926077caf11e77592a}{}uint8\+\_\+t {\bfseries \+\_\+pkt\+\_\+group\+\_\+107\+::stasis}\label{group__roomba-lib_ga0ed18b08023ce3926077caf11e77592a}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Roomba library that enumurates the entire roomba open interface and defines useful commands and macros. 
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <roomba.h>} 
+\end{DoxyCode}
+
+
+\begin{DoxyNote}{Note}
+Based on the i\+Robot® Create® 2 Open Interface (O\+I) written by the i\+Robot®. Specification based on the i\+Robot® Roomba® 600 but may be compatible with other models.
+\end{DoxyNote}
+\begin{DoxyAuthor}{Author}
+Richard B. Wagner 
+\end{DoxyAuthor}
+\begin{DoxyDate}{Date}
+2016-\/04-\/04 
+\end{DoxyDate}
+
+
+\subsection{Typedef Documentation}
+\hypertarget{group__roomba-lib_gaa48d04e007e0ae60ee9bc055a5a159fe}{}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+O\+P\+\_\+\+C\+O\+D\+E@{R\+O\+O\+M\+B\+A\+\_\+\+O\+P\+\_\+\+C\+O\+D\+E}}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+O\+P\+\_\+\+C\+O\+D\+E@{R\+O\+O\+M\+B\+A\+\_\+\+O\+P\+\_\+\+C\+O\+D\+E}!Roomba Library@{Roomba Library}}
+\subsubsection[{R\+O\+O\+M\+B\+A\+\_\+\+O\+P\+\_\+\+C\+O\+D\+E}]{\setlength{\rightskip}{0pt plus 5cm}typedef enum {\bf \+\_\+roomba\+\_\+op\+\_\+code}  {\bf R\+O\+O\+M\+B\+A\+\_\+\+O\+P\+\_\+\+C\+O\+D\+E}}\label{group__roomba-lib_gaa48d04e007e0ae60ee9bc055a5a159fe}
+
+
+O\+P\+\_\+\+C\+O\+D\+E enum. 
+
+Operation codes for roomba \hypertarget{group__roomba-lib_gada33faf3aeb650fa045d8516c6257174}{}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+C\+O\+D\+E@{R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+C\+O\+D\+E}}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+C\+O\+D\+E@{R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+C\+O\+D\+E}!Roomba Library@{Roomba Library}}
+\subsubsection[{R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+C\+O\+D\+E}]{\setlength{\rightskip}{0pt plus 5cm}typedef enum {\bf \+\_\+pv}  {\bf R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+C\+K\+E\+T\+\_\+\+C\+O\+D\+E}}\label{group__roomba-lib_gada33faf3aeb650fa045d8516c6257174}
+
+
+Roomba Open Interface Sensor Packets Roomba sends back one of 58 different sensor data packets, depending on the value of the packet data byte, when responding to a Sensors command, Query List command, or Stream command’s request for a packet of sensor data bytes. 
+
+Some packets contain groups of other packets. Some of the sensor data values are 16 bit values. Most of the packets (numbers 7 – 58) contain the value of a single sensor or variable, which can be either 1 byte or 2 bytes. Two byte packets correspond to 16-\/bit values, sent high byte first. Some of the packets (0-\/6, 100-\/107) contain groups of the single-\/value packets.
+
+\begin{TabularC}{3}
+\hline
+\rowcolor{lightgray}{\bf Group Packet I\+D }&{\bf Packet Size }&{\bf Contains Packets  }\\\cline{1-3}
+0 &26 &7 -\/ 26 \\\cline{1-3}
+1 &10 &7 -\/ 16 \\\cline{1-3}
+2 &6 &17 -\/ 20 \\\cline{1-3}
+3 &10 &21 -\/ 26 \\\cline{1-3}
+4 &14 &27 -\/ 34 \\\cline{1-3}
+5 &12 &35 -\/ 42 \\\cline{1-3}
+6 &52 &7 -\/ 42 \\\cline{1-3}
+100 &80 &7 -\/ 58 \\\cline{1-3}
+101 &28 &43 -\/ 58 \\\cline{1-3}
+106 &12 &46 -\/ 51 \\\cline{1-3}
+107 &9 &54 -\/ 58 \\\cline{1-3}
+\end{TabularC}
+
+
+\subsection{Enumeration Type Documentation}
+\hypertarget{group__roomba-lib_ga46f008b5055c4a08d3123c6a3478373e}{}\index{Roomba Library@{Roomba Library}!\+\_\+pv@{\+\_\+pv}}
+\index{\+\_\+pv@{\+\_\+pv}!Roomba Library@{Roomba Library}}
+\subsubsection[{\+\_\+pv}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf \+\_\+pv}}\label{group__roomba-lib_ga46f008b5055c4a08d3123c6a3478373e}
+
+
+Roomba Open Interface Sensor Packets Roomba sends back one of 58 different sensor data packets, depending on the value of the packet data byte, when responding to a Sensors command, Query List command, or Stream command’s request for a packet of sensor data bytes. 
+
+Some packets contain groups of other packets. Some of the sensor data values are 16 bit values. Most of the packets (numbers 7 – 58) contain the value of a single sensor or variable, which can be either 1 byte or 2 bytes. Two byte packets correspond to 16-\/bit values, sent high byte first. Some of the packets (0-\/6, 100-\/107) contain groups of the single-\/value packets.
+
+\begin{TabularC}{3}
+\hline
+\rowcolor{lightgray}{\bf Group Packet I\+D }&{\bf Packet Size }&{\bf Contains Packets  }\\\cline{1-3}
+0 &26 &7 -\/ 26 \\\cline{1-3}
+1 &10 &7 -\/ 16 \\\cline{1-3}
+2 &6 &17 -\/ 20 \\\cline{1-3}
+3 &10 &21 -\/ 26 \\\cline{1-3}
+4 &14 &27 -\/ 34 \\\cline{1-3}
+5 &12 &35 -\/ 42 \\\cline{1-3}
+6 &52 &7 -\/ 42 \\\cline{1-3}
+100 &80 &7 -\/ 58 \\\cline{1-3}
+101 &28 &43 -\/ 58 \\\cline{1-3}
+106 &12 &46 -\/ 51 \\\cline{1-3}
+107 &9 &54 -\/ 58 \\\cline{1-3}
+\end{TabularC}
+\begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+M\+P\+S\+\_\+\+W\+H\+E\+E\+L\+D\+R\+O\+P\+S@{R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+M\+P\+S\+\_\+\+W\+H\+E\+E\+L\+D\+R\+O\+P\+S}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+M\+P\+S\+\_\+\+W\+H\+E\+E\+L\+D\+R\+O\+P\+S@{R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+M\+P\+S\+\_\+\+W\+H\+E\+E\+L\+D\+R\+O\+P\+S}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaa0592e11488b7d631c805b25a5a6a4b2}{}R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+M\+P\+S\+\_\+\+W\+H\+E\+E\+L\+D\+R\+O\+P\+S\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaa0592e11488b7d631c805b25a5a6a4b2}
+}]Bumps and Wheel Drops Packet I\+D\+: 7 Data Bytes\+: 1, unsigned. The state of the bumper (0 = no bump, 1 = bump) and wheel drop sensors (0 = wheel raised, 1 = wheel dropped) are sent as individual bits. Range\+: 0 – 15 $\vert$ Bit $\vert$ 7 $\vert$ 6 $\vert$ 5 $\vert$ 4 $\vert$ 3 $\vert$ 2 $\vert$ 1 $\vert$ 0 $\vert$ $\vert$-\/-\/-\/-\/---$\vert$---$\vert$---$\vert$---$\vert$---$\vert$---$\vert$---$\vert$---$\vert$---$\vert$ $\vert$ Value $\vert$ Reserved $\vert$ Wheel Drop Left? $\vert$ Wheel Drop Right? $\vert$ Bump Left? $\vert$ Bump Right? $\vert$ \index{R\+O\+O\+M\+B\+A\+\_\+\+W\+A\+L\+L@{R\+O\+O\+M\+B\+A\+\_\+\+W\+A\+L\+L}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+W\+A\+L\+L@{R\+O\+O\+M\+B\+A\+\_\+\+W\+A\+L\+L}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaa845fdedd5b341aa9caa152ecfb4a724}{}R\+O\+O\+M\+B\+A\+\_\+\+W\+A\+L\+L\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaa845fdedd5b341aa9caa152ecfb4a724}
+}]Wall Packet I\+D\+: 8 Data Bytes\+: 1, unsigned. The state of the wall sensor is sent as a 1 bit value (0 = no wall, 1 = wall seen).
+
+Range\+: 0 – 1 \index{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+L\+E\+F\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+L\+E\+F\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eac453ff43b4e5be8cdf511130d316c4f3}{}R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+L\+E\+F\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eac453ff43b4e5be8cdf511130d316c4f3}
+}]Cliff Left Packet I\+D\+: 9 Data Bytes\+: 1, unsigned. The state of the cliff sensor on the left side of Roomba is sent as a 1 bit value (0 = no cliff, 1 = cliff).
+
+Range\+: 0 – 1 \index{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaaf46988ebd91103295f53cff3b13d3c9}{}R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaaf46988ebd91103295f53cff3b13d3c9}
+}]Cliff Front Left Packet I\+D\+: 10 Data Bytes\+: 1, unsigned. The state of the cliff sensor on the front left of Roomba is sent as a 1 bit value (0 = no cliff, 1 = cliff).
+
+Range\+: 0 – 1 \index{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea8dc2c319fff150dfaf3ebe832a89571d}{}R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea8dc2c319fff150dfaf3ebe832a89571d}
+}]Cliff Front Right Packet I\+D\+: 11 Data Bytes\+: 1, unsigned. The state of the cliff sensor on the front right of Roomba is sent as a 1 bit value (0 = no cliff, 1 = cliff)
+
+Range\+: 0 – 1 \index{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+R\+I\+G\+H\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+R\+I\+G\+H\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eabfc438ea8d6ad4505d651226791efe43}{}R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+R\+I\+G\+H\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eabfc438ea8d6ad4505d651226791efe43}
+}]Cliff Right Packet I\+D\+: 12 Data Bytes\+: 1, unsigned. The state of the cliff sensor on the right side of Roomba is sent as a 1 bit value (0 = no cliff, 1 = cliff)
+
+Range\+: 0 – 1 \index{R\+O\+O\+M\+B\+A\+\_\+\+V\+I\+R\+T\+U\+A\+L\+\_\+\+W\+A\+L\+L@{R\+O\+O\+M\+B\+A\+\_\+\+V\+I\+R\+T\+U\+A\+L\+\_\+\+W\+A\+L\+L}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+V\+I\+R\+T\+U\+A\+L\+\_\+\+W\+A\+L\+L@{R\+O\+O\+M\+B\+A\+\_\+\+V\+I\+R\+T\+U\+A\+L\+\_\+\+W\+A\+L\+L}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea77bf37294b6048b213bd8b323f10d7d9}{}R\+O\+O\+M\+B\+A\+\_\+\+V\+I\+R\+T\+U\+A\+L\+\_\+\+W\+A\+L\+L\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea77bf37294b6048b213bd8b323f10d7d9}
+}]Virtual Wall Packet I\+D\+: 13 Data Bytes\+: 1, unsigned. The state of the virtual wall detector is sent as a 1 bit value (0 = no virtual wall detected, 1 = virtual wall detected).
+
+Range\+: 0 – 1 \index{R\+O\+O\+M\+B\+A\+\_\+\+O\+V\+E\+R\+C\+U\+R\+R\+E\+N\+T\+S@{R\+O\+O\+M\+B\+A\+\_\+\+O\+V\+E\+R\+C\+U\+R\+R\+E\+N\+T\+S}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+O\+V\+E\+R\+C\+U\+R\+R\+E\+N\+T\+S@{R\+O\+O\+M\+B\+A\+\_\+\+O\+V\+E\+R\+C\+U\+R\+R\+E\+N\+T\+S}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaacff57f6cfe6ccf34a80de88efee8ad9}{}R\+O\+O\+M\+B\+A\+\_\+\+O\+V\+E\+R\+C\+U\+R\+R\+E\+N\+T\+S\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaacff57f6cfe6ccf34a80de88efee8ad9}
+}]Wheel Overcurrents Packet I\+D\+: 14 Data Bytes\+: 1, unsigned. The state of the four wheel overcurrent sensors are sent as individual bits (0 = no overcurrent, 1 = overcurrent). There is no overcurrent sensor for the vacuum on Roomba 600.
+
+Range\+: 0 – 31
+
+$\vert$ Bit $\vert$ 7 $\vert$ 6 $\vert$ 5 $\vert$ 4 $\vert$ 3 $\vert$ 2 $\vert$ 1 $\vert$ 0 $\vert$ $\vert$-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/-\/-\/-\/-\/-\/-\/-\/---$\vert$-\/-\/-\/---$\vert$-\/-\/-\/-\/---$\vert$---$\vert$---$\vert$---$\vert$ $\vert$ Value $\vert$ Reserved $\vert$ Left Wheel $\vert$ Right Wheel $\vert$ Main $\vert$ Brush $\vert$ Reserved $\vert$ Side Brush $\vert$ \index{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+R\+T\+\_\+\+D\+E\+T\+E\+C\+T@{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+R\+T\+\_\+\+D\+E\+T\+E\+C\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+R\+T\+\_\+\+D\+E\+T\+E\+C\+T@{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+R\+T\+\_\+\+D\+E\+T\+E\+C\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea9c217151461c8bf797485ad78f1a62cb}{}R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+R\+T\+\_\+\+D\+E\+T\+E\+C\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea9c217151461c8bf797485ad78f1a62cb}
+}]Dirt Detect Packet I\+Ds\+: 15 Data Bytes\+: 1. The level of the dirt detect sensor.
+
+Range\+: 0-\/255 \index{R\+O\+O\+M\+B\+A\+\_\+\+U\+N\+U\+S\+E\+D\+\_\+1@{R\+O\+O\+M\+B\+A\+\_\+\+U\+N\+U\+S\+E\+D\+\_\+1}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+U\+N\+U\+S\+E\+D\+\_\+1@{R\+O\+O\+M\+B\+A\+\_\+\+U\+N\+U\+S\+E\+D\+\_\+1}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eabb1001411d09b705509b3683150b6f5f}{}R\+O\+O\+M\+B\+A\+\_\+\+U\+N\+U\+S\+E\+D\+\_\+1\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eabb1001411d09b705509b3683150b6f5f}
+}]Unused Byte Packet I\+Ds\+: 16 Data Bytes\+: 1. Unused bytes\+: One unused byte is sent after the dirt detect byte when the requested packet is 0, 1, or 6. The value of the unused byte is always 0.
+
+Range\+: 0 \index{R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E@{R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E@{R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea2643c115b4c5cf1851b3d80917a49015}{}R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea2643c115b4c5cf1851b3d80917a49015}
+}]Infrared Character Omni Packet I\+D\+: 17 Data Bytes\+: 1, unsigned. This value identifies the 8-\/bit I\+R character currently being received by Roomba’s omnidirectional receiver. A value of 0 indicates that no character is being received. These characters include those sent by the Roomba Remote, Dock, Virtual Walls, Create robots using the Send-\/\+I\+R command, and user-\/created devices.
+
+Range\+: 0 – 255 \index{R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+T\+T\+O\+N\+S\+\_\+\+P\+K\+T@{R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+T\+T\+O\+N\+S\+\_\+\+P\+K\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+T\+T\+O\+N\+S\+\_\+\+P\+K\+T@{R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+T\+T\+O\+N\+S\+\_\+\+P\+K\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea384322ca8586075fed5c6a4a6c8d45a2}{}R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+T\+T\+O\+N\+S\+\_\+\+P\+K\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea384322ca8586075fed5c6a4a6c8d45a2}
+}]Buttons Packet I\+D\+: 18 Data Bytes\+: 1, unsigned. The state of the Roomba buttons are sent as individual bits (0 = button not pressed, 1 = button pressed). The day, hour, minute, clock, and scheduling buttons that exist only on Roomba 560 and 570 will always return 0 on a Roomba 510 or 530 robot.
+
+Range\+: 0 – 255
+
+\begin{TabularC}{9}
+\hline
+\rowcolor{lightgray}{\bf Bit }&{\bf 7 }&{\bf 6 }&{\bf 5 }&{\bf 4 }&{\bf 3 }&{\bf 2 }&{\bf 1 }&{\bf 0  }\\\cline{1-9}
+Value &Clock &Schedule &Day &Hour &Minute &Dock &Spot &Clean \\\cline{1-9}
+\end{TabularC}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+S\+T\+A\+N\+C\+E@{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+S\+T\+A\+N\+C\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+S\+T\+A\+N\+C\+E@{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+S\+T\+A\+N\+C\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eab9db41437cc82100d3efb7579e6e2704}{}R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+S\+T\+A\+N\+C\+E\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eab9db41437cc82100d3efb7579e6e2704}
+}]Distance Packet I\+D\+: 19 Data Bytes\+: 2, signed. The distance that Roomba has traveled in millimeters since the distance it was last requested is sent as a signed 16-\/bit value, high byte first. This is the same as the sum of the distance traveled by both wheels divided by two. Positive values indicate travel in the forward direction; negative values indicate travel in the reverse direction. If the value is not polled frequently enough, it is capped at its minimum or maximum.
+
+Range\+: -\/32768 – 32767
+
+\begin{DoxyNote}{Note}
+Create 2 and Roomba 500/600 firmware versions prior to 3.\+3.\+0 return an incorrect value for sensors measured in millimeters. To determine the firmware version on your robot, send a 7 via the serial port to reset it. The robot will print a long welcome message which will include the firmware version, for example\+: r3\+\_\+robot/tags/release-\/3.\+3.\+0. 
+\end{DoxyNote}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+A\+N\+G\+L\+E@{R\+O\+O\+M\+B\+A\+\_\+\+A\+N\+G\+L\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+A\+N\+G\+L\+E@{R\+O\+O\+M\+B\+A\+\_\+\+A\+N\+G\+L\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eae8c4ed6d765ba0bbe8a4d07824c4e7c1}{}R\+O\+O\+M\+B\+A\+\_\+\+A\+N\+G\+L\+E\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eae8c4ed6d765ba0bbe8a4d07824c4e7c1}
+}]Angle Packet I\+D\+: 20 Data Bytes\+: 2, signed. The angle in degrees that Roomba has turned since the angle was last requested is sent as a signed 16-\/bit value, high byte first. Counter-\/clockwise angles are positive and clockwise angles are negative. If the value is not polled frequently enough, it is capped at its minimum or maximum.
+
+Range\+: -\/32768 – 32767 \index{R\+O\+O\+M\+B\+A\+\_\+\+C\+H\+A\+R\+G\+I\+N\+G\+\_\+\+S\+T\+A\+T\+E@{R\+O\+O\+M\+B\+A\+\_\+\+C\+H\+A\+R\+G\+I\+N\+G\+\_\+\+S\+T\+A\+T\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+C\+H\+A\+R\+G\+I\+N\+G\+\_\+\+S\+T\+A\+T\+E@{R\+O\+O\+M\+B\+A\+\_\+\+C\+H\+A\+R\+G\+I\+N\+G\+\_\+\+S\+T\+A\+T\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaf2eae234a42573cc6afcd3a96f4022fa}{}R\+O\+O\+M\+B\+A\+\_\+\+C\+H\+A\+R\+G\+I\+N\+G\+\_\+\+S\+T\+A\+T\+E\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaf2eae234a42573cc6afcd3a96f4022fa}
+}]Charging State Packet I\+D\+: 21 Data Bytes\+: 1, unsigned. This code indicates Roomba’s current charging state.
+
+Range\+: 0 – 5
+
+\begin{TabularC}{2}
+\hline
+\rowcolor{lightgray}{\bf Code }&{\bf Charging State  }\\\cline{1-2}
+0 &Not charging \\\cline{1-2}
+1 &Reconditioning Charging \\\cline{1-2}
+2 &Full Charging \\\cline{1-2}
+3 &Trickle Charging \\\cline{1-2}
+4 &Waiting \\\cline{1-2}
+5 &Charging Fault Condition \\\cline{1-2}
+\end{TabularC}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+V\+O\+L\+T\+A\+G\+E@{R\+O\+O\+M\+B\+A\+\_\+\+V\+O\+L\+T\+A\+G\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+V\+O\+L\+T\+A\+G\+E@{R\+O\+O\+M\+B\+A\+\_\+\+V\+O\+L\+T\+A\+G\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea6e2211c35c4d928b8a7b17ccb9315250}{}R\+O\+O\+M\+B\+A\+\_\+\+V\+O\+L\+T\+A\+G\+E\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea6e2211c35c4d928b8a7b17ccb9315250}
+}]Voltage Packet I\+D\+: 22 Data Bytes\+: 2, unsigned. This code indicates the voltage of Roomba’s battery in millivolts (m\+V).
+
+Range\+: 0 – 65535 m\+V \index{R\+O\+O\+M\+B\+A\+\_\+\+C\+U\+R\+R\+E\+N\+T@{R\+O\+O\+M\+B\+A\+\_\+\+C\+U\+R\+R\+E\+N\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+C\+U\+R\+R\+E\+N\+T@{R\+O\+O\+M\+B\+A\+\_\+\+C\+U\+R\+R\+E\+N\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea4d65c164218b7190fca61c69e8f60f93}{}R\+O\+O\+M\+B\+A\+\_\+\+C\+U\+R\+R\+E\+N\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea4d65c164218b7190fca61c69e8f60f93}
+}]Current Packet I\+D\+: 23 Data Bytes\+: 2, signed. The current in milliamps (m\+A) flowing into or out of Roomba’s battery. Negative currents indicate that the current is flowing out of the battery, as during normal running. Positive currents indicate that the current is flowing into the battery, as during charging.
+
+Range\+: -\/32768 – 32767 m\+A \index{R\+O\+O\+M\+B\+A\+\_\+\+T\+E\+M\+P\+E\+R\+A\+T\+U\+R\+E@{R\+O\+O\+M\+B\+A\+\_\+\+T\+E\+M\+P\+E\+R\+A\+T\+U\+R\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+T\+E\+M\+P\+E\+R\+A\+T\+U\+R\+E@{R\+O\+O\+M\+B\+A\+\_\+\+T\+E\+M\+P\+E\+R\+A\+T\+U\+R\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea0e59d463778d6b12a2fcb2ac23bbc850}{}R\+O\+O\+M\+B\+A\+\_\+\+T\+E\+M\+P\+E\+R\+A\+T\+U\+R\+E\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea0e59d463778d6b12a2fcb2ac23bbc850}
+}]Temperature Packet I\+D\+: 24 Data Bytes\+: 1, signed. The temperature of Roomba’s battery in degrees Celsius.
+
+Range\+: -\/128 – 127 \index{R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+T\+T\+E\+R\+Y\+\_\+\+C\+H\+A\+R\+G\+E@{R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+T\+T\+E\+R\+Y\+\_\+\+C\+H\+A\+R\+G\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+T\+T\+E\+R\+Y\+\_\+\+C\+H\+A\+R\+G\+E@{R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+T\+T\+E\+R\+Y\+\_\+\+C\+H\+A\+R\+G\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea492387b172d9b626fe66b3d632a38955}{}R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+T\+T\+E\+R\+Y\+\_\+\+C\+H\+A\+R\+G\+E\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea492387b172d9b626fe66b3d632a38955}
+}]Battery Charge Packet I\+D\+: 25 Data Bytes\+: 2, unsigned. The current charge of Roomba’s battery in milliamp-\/hours (m\+Ah). The charge value decreases as the battery is depleted during running and increases when the battery is charged.
+
+Range\+: 0 – 65535 m\+Ah \index{R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+T\+T\+E\+R\+Y\+\_\+\+C\+A\+P\+A\+C\+I\+T\+Y@{R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+T\+T\+E\+R\+Y\+\_\+\+C\+A\+P\+A\+C\+I\+T\+Y}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+T\+T\+E\+R\+Y\+\_\+\+C\+A\+P\+A\+C\+I\+T\+Y@{R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+T\+T\+E\+R\+Y\+\_\+\+C\+A\+P\+A\+C\+I\+T\+Y}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaa53df1ccfa1de33d1754272fa9edd804}{}R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+T\+T\+E\+R\+Y\+\_\+\+C\+A\+P\+A\+C\+I\+T\+Y\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaa53df1ccfa1de33d1754272fa9edd804}
+}]Battery Capacity Packet I\+D\+: 26 Data Bytes\+: 2, unsigned. The estimated charge capacity of Roomba’s battery in milliamp-\/hours (m\+Ah).
+
+Range\+: 0 – 65535 m\+Ah \index{R\+O\+O\+M\+B\+A\+\_\+\+W\+A\+L\+L\+\_\+\+S\+I\+G\+N\+A\+L@{R\+O\+O\+M\+B\+A\+\_\+\+W\+A\+L\+L\+\_\+\+S\+I\+G\+N\+A\+L}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+W\+A\+L\+L\+\_\+\+S\+I\+G\+N\+A\+L@{R\+O\+O\+M\+B\+A\+\_\+\+W\+A\+L\+L\+\_\+\+S\+I\+G\+N\+A\+L}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea820e04f3b6cf1fe3830dc773981e38cd}{}R\+O\+O\+M\+B\+A\+\_\+\+W\+A\+L\+L\+\_\+\+S\+I\+G\+N\+A\+L\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea820e04f3b6cf1fe3830dc773981e38cd}
+}]Wall Signal Packet I\+D\+: 27 Data Bytes\+: 2, unsigned. The strength of the wall signal is returned as an unsigned 16-\/bit value, high byte first.
+
+Range\+: 0-\/1023. \index{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+G\+N\+A\+L@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+G\+N\+A\+L}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+G\+N\+A\+L@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+G\+N\+A\+L}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaca31b264512f0b2561a98c474d9afcaf}{}R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+G\+N\+A\+L\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaca31b264512f0b2561a98c474d9afcaf}
+}]Cliff Left Signal Package I\+D\+: 28 Data Bytes\+: 2, unsigned. The strength of the cliff left signal is returned as an unsigned 16-\/bit value, high byte first.
+
+Range\+: 0-\/4095 \index{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+G\+N\+A\+L@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+G\+N\+A\+L}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+G\+N\+A\+L@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+G\+N\+A\+L}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eacb540adc5f1ba1e6d9bdb429dc4bad9b}{}R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T\+\_\+\+S\+I\+G\+N\+A\+L\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eacb540adc5f1ba1e6d9bdb429dc4bad9b}
+}]Cliff Front Left Signal Package I\+D\+: 29 Data Bytes 2, unsigned. The strength of the cliff front left signal is returned as an unsigned 16-\/bit value, high byte first.
+
+Range\+: 0-\/4095 \index{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T\+\_\+\+S\+I\+G\+N\+A\+L@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T\+\_\+\+S\+I\+G\+N\+A\+L}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T\+\_\+\+S\+I\+G\+N\+A\+L@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T\+\_\+\+S\+I\+G\+N\+A\+L}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea9b156ee45545b742e7900a29b3e4dadf}{}R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T\+\_\+\+S\+I\+G\+N\+A\+L\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea9b156ee45545b742e7900a29b3e4dadf}
+}]Cliff Front Right Signal Package I\+D\+: 30 Data Bytes 2, unsigned. The strength of the cliff front right signal is returned as an unsigned 16-\/bit value, high byte first.
+
+Range\+: 0-\/4095 \index{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+R\+I\+G\+H\+T\+\_\+\+S\+I\+G\+N\+A\+L@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+R\+I\+G\+H\+T\+\_\+\+S\+I\+G\+N\+A\+L}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+R\+I\+G\+H\+T\+\_\+\+S\+I\+G\+N\+A\+L@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+R\+I\+G\+H\+T\+\_\+\+S\+I\+G\+N\+A\+L}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea3430e06a7beb23fd86879c2c404e802e}{}R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+I\+F\+F\+\_\+\+R\+I\+G\+H\+T\+\_\+\+S\+I\+G\+N\+A\+L\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea3430e06a7beb23fd86879c2c404e802e}
+}]Cliff Right Signal Package I\+D\+: 31 Data Bytes 2, unsigned. The strength of the cliff right signal is returned as an unsigned 16-\/bit value, high byte first.
+
+Range\+: 0-\/4095 \index{R\+O\+O\+M\+B\+A\+\_\+\+U\+N\+U\+S\+E\+D\+\_\+2@{R\+O\+O\+M\+B\+A\+\_\+\+U\+N\+U\+S\+E\+D\+\_\+2}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+U\+N\+U\+S\+E\+D\+\_\+2@{R\+O\+O\+M\+B\+A\+\_\+\+U\+N\+U\+S\+E\+D\+\_\+2}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea96857c95ae47a3687fa89cbee702c45f}{}R\+O\+O\+M\+B\+A\+\_\+\+U\+N\+U\+S\+E\+D\+\_\+2\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea96857c95ae47a3687fa89cbee702c45f}
+}]Unused Packet I\+D\+: 32-\/33 Data Bytes, 3. \index{R\+O\+O\+M\+B\+A\+\_\+\+C\+H\+A\+R\+G\+E\+R\+\_\+\+A\+V\+A\+I\+L\+A\+B\+L\+E@{R\+O\+O\+M\+B\+A\+\_\+\+C\+H\+A\+R\+G\+E\+R\+\_\+\+A\+V\+A\+I\+L\+A\+B\+L\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+C\+H\+A\+R\+G\+E\+R\+\_\+\+A\+V\+A\+I\+L\+A\+B\+L\+E@{R\+O\+O\+M\+B\+A\+\_\+\+C\+H\+A\+R\+G\+E\+R\+\_\+\+A\+V\+A\+I\+L\+A\+B\+L\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea837e14ab43e08cf649b5ab37556023de}{}R\+O\+O\+M\+B\+A\+\_\+\+C\+H\+A\+R\+G\+E\+R\+\_\+\+A\+V\+A\+I\+L\+A\+B\+L\+E\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea837e14ab43e08cf649b5ab37556023de}
+}]Charging Sources Available Packet I\+D\+: 34 Data Bytes 1, unsigned. Roomba’s connection to the Home Base and Internal Charger are returned as individual bits, as below.
+
+Range\+: 0-\/3
+
+1 = charging source present and powered; 0 = charging source not present or not powered.
+
+\begin{TabularC}{9}
+\hline
+\rowcolor{lightgray}{\bf Bit }&{\bf 7 }&{\bf 6 }&{\bf 5 }&{\bf 4 }&{\bf 3 }&{\bf 2 }&{\bf 1 }&{\bf 0  }\\\cline{1-9}
+Value &Reserved &&&&Home &Base &Internal &Charger \\\cline{1-9}
+\end{TabularC}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+O\+P\+E\+N\+\_\+\+I\+N\+T\+E\+R\+F\+A\+C\+E\+\_\+\+M\+O\+D\+E@{R\+O\+O\+M\+B\+A\+\_\+\+O\+P\+E\+N\+\_\+\+I\+N\+T\+E\+R\+F\+A\+C\+E\+\_\+\+M\+O\+D\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+O\+P\+E\+N\+\_\+\+I\+N\+T\+E\+R\+F\+A\+C\+E\+\_\+\+M\+O\+D\+E@{R\+O\+O\+M\+B\+A\+\_\+\+O\+P\+E\+N\+\_\+\+I\+N\+T\+E\+R\+F\+A\+C\+E\+\_\+\+M\+O\+D\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eae25dca775bd76962783a86811ea93b74}{}R\+O\+O\+M\+B\+A\+\_\+\+O\+P\+E\+N\+\_\+\+I\+N\+T\+E\+R\+F\+A\+C\+E\+\_\+\+M\+O\+D\+E\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eae25dca775bd76962783a86811ea93b74}
+}]O\+I Mode Packet I\+D\+: 35 Data Bytes 1, unsigned. The current O\+I mode is returned. See table below.
+
+Range\+: 0-\/3
+
+\begin{TabularC}{2}
+\hline
+\rowcolor{lightgray}{\bf Number }&{\bf Mode  }\\\cline{1-2}
+0 &Off \\\cline{1-2}
+1 &Passive \\\cline{1-2}
+2 &Safe \\\cline{1-2}
+3 &Full \\\cline{1-2}
+\end{TabularC}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G\+\_\+\+N\+U\+M\+B\+E\+R@{R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G\+\_\+\+N\+U\+M\+B\+E\+R}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G\+\_\+\+N\+U\+M\+B\+E\+R@{R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G\+\_\+\+N\+U\+M\+B\+E\+R}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eadc89af73d417da0fe50b1c642a8898b9}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G\+\_\+\+N\+U\+M\+B\+E\+R\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eadc89af73d417da0fe50b1c642a8898b9}
+}]Song Number Packet I\+D\+: 36 Data Bytes 1, unsigned. The currently selected O\+I song is returned.
+
+Range\+: 0-\/15 \index{R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G\+\_\+\+P\+L\+A\+Y\+I\+N\+G@{R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G\+\_\+\+P\+L\+A\+Y\+I\+N\+G}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G\+\_\+\+P\+L\+A\+Y\+I\+N\+G@{R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G\+\_\+\+P\+L\+A\+Y\+I\+N\+G}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea974977adff508d49ff6ae6137d14299a}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G\+\_\+\+P\+L\+A\+Y\+I\+N\+G\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea974977adff508d49ff6ae6137d14299a}
+}]Song Playing Packet I\+D\+: 37 Data Bytes 1, unsigned. The state of the O\+I song player is returned. 1 = O\+I song currently playing; 0 = O\+I song not playing.
+
+Range\+: 0-\/1 \index{R\+O\+O\+M\+B\+A\+\_\+\+O\+I\+\_\+\+S\+T\+R\+E\+A\+M\+\_\+\+N\+U\+M\+\_\+\+P\+A\+C\+K\+E\+T\+S@{R\+O\+O\+M\+B\+A\+\_\+\+O\+I\+\_\+\+S\+T\+R\+E\+A\+M\+\_\+\+N\+U\+M\+\_\+\+P\+A\+C\+K\+E\+T\+S}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+O\+I\+\_\+\+S\+T\+R\+E\+A\+M\+\_\+\+N\+U\+M\+\_\+\+P\+A\+C\+K\+E\+T\+S@{R\+O\+O\+M\+B\+A\+\_\+\+O\+I\+\_\+\+S\+T\+R\+E\+A\+M\+\_\+\+N\+U\+M\+\_\+\+P\+A\+C\+K\+E\+T\+S}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ead75c3ca1795b78e599fe29b5927de5fd}{}R\+O\+O\+M\+B\+A\+\_\+\+O\+I\+\_\+\+S\+T\+R\+E\+A\+M\+\_\+\+N\+U\+M\+\_\+\+P\+A\+C\+K\+E\+T\+S\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ead75c3ca1795b78e599fe29b5927de5fd}
+}]Number of Stream Packets Packet I\+D\+: 38 Data Bytes 1, unsigned. The number of data stream packets is returned.
+
+Range\+: 0-\/108 \index{R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y@{R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y@{R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eac813a8d1be0b3f7780aa56aa280a426b}{}R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eac813a8d1be0b3f7780aa56aa280a426b}
+}]Requested Velocity Packet I\+D\+: 39 Data Bytes 2, signed. The velocity most recently requested with a Drive command is returned as a signed 16-\/bit number, high byte first.
+
+Range\+: -\/500 -\/ 500 mm/s \index{R\+O\+O\+M\+B\+A\+\_\+\+R\+A\+D\+I\+U\+S@{R\+O\+O\+M\+B\+A\+\_\+\+R\+A\+D\+I\+U\+S}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+R\+A\+D\+I\+U\+S@{R\+O\+O\+M\+B\+A\+\_\+\+R\+A\+D\+I\+U\+S}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea59a616d59cce7972a21c6803d1e3e047}{}R\+O\+O\+M\+B\+A\+\_\+\+R\+A\+D\+I\+U\+S\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea59a616d59cce7972a21c6803d1e3e047}
+}]Requested Radius Packet I\+D\+: 40 Data Bytes 2, signed. The radius most recently requested with a Drive command is returned as a signed 16-\/bit number, high byte first.
+
+Range\+: -\/32768 -\/ 32767 mm
+
+\begin{DoxyNote}{Note}
+Create 2 and Roomba 500/600 firmware versions prior to 3.\+3.\+0 return an incorrect value for sensors measured in millimeters. To determine the firmware version on your robot, send a 7 via the serial port to reset it. The robot will print a long welcome message which will include the firmware version, for example\+: r3\+\_\+robot/tags/release-\/3.\+3.\+0. 
+\end{DoxyNote}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+R\+I\+G\+H\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+R\+I\+G\+H\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eae155dc459e649f7a3b38bd8c9b4b14b0}{}R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+R\+I\+G\+H\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eae155dc459e649f7a3b38bd8c9b4b14b0}
+}]Requested Right Velocity Packet I\+D\+: 41 Data Bytes 2, signed. The right wheel velocity most recently requested with a Drive Direct command is returned as a signed 16-\/bit number, high byte first.
+
+Range\+: -\/500 -\/ 500 mm/s \index{R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+L\+E\+F\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+L\+E\+F\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea17b84d811ed8f98698e2ba5d477492ba}{}R\+O\+O\+M\+B\+A\+\_\+\+V\+E\+L\+O\+C\+I\+T\+Y\+\_\+\+L\+E\+F\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea17b84d811ed8f98698e2ba5d477492ba}
+}]Requested Left Velocity Packet I\+D\+: 42 Data Bytes 2, signed The left wheel velocity most recently requested with a Drive Direct command is returned as a signed 16-\/bit number, high byte first. Range\+: -\/500 -\/ 500 mm/s \index{R\+O\+O\+M\+B\+A\+\_\+\+E\+N\+C\+O\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+S\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+E\+N\+C\+O\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+S\+\_\+\+L\+E\+F\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+E\+N\+C\+O\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+S\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+E\+N\+C\+O\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+S\+\_\+\+L\+E\+F\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eac09cc1853f89d600d088a1f558180572}{}R\+O\+O\+M\+B\+A\+\_\+\+E\+N\+C\+O\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+S\+\_\+\+L\+E\+F\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eac09cc1853f89d600d088a1f558180572}
+}]Left Encoder Counts Packet I\+D\+: 43 Data Bytes 2, unsigned. The cumulative number of raw left encoder counts is returned as an unsigned 16-\/bit number, high byte first. This number will roll over to 0 after it passes 65535.
+
+Range\+: 0 -\/ 65535 \index{R\+O\+O\+M\+B\+A\+\_\+\+E\+N\+C\+O\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+S\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+E\+N\+C\+O\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+S\+\_\+\+R\+I\+G\+H\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+E\+N\+C\+O\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+S\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+E\+N\+C\+O\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+S\+\_\+\+R\+I\+G\+H\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea5918780386e79aadb498f23d3471c9da}{}R\+O\+O\+M\+B\+A\+\_\+\+E\+N\+C\+O\+D\+E\+R\+\_\+\+C\+O\+U\+N\+T\+S\+\_\+\+R\+I\+G\+H\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea5918780386e79aadb498f23d3471c9da}
+}]Right Encoder Counts Packet I\+D\+: 44 Data Bytes 2, unsigned The cumulative number of raw right encoder counts is returned as an unsigned 16-\/bit number, high byte first. This number will roll over to 0 after it passes 65535.
+
+Range\+: 0 -\/ 65535 \index{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+E\+R@{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+E\+R}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+E\+R@{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+E\+R}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea11af024cc8c3de71acadd02c432d55ce}{}R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+E\+R\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea11af024cc8c3de71acadd02c432d55ce}
+}]Light Bumper Package I\+D\+: 45 Data Bytes 1, unsigned. The light bumper detections are returned as individual bits.
+
+$\vert$ Bit $\vert$ 7 $\vert$ 6 $\vert$ 5 $\vert$ 4 $\vert$ 3 $\vert$ 2 $\vert$ 1 $\vert$ 0 $\vert$ $\vert$-\/-\/-\/-\/---$\vert$---$\vert$---$\vert$---$\vert$---$\vert$---$\vert$---$\vert$---$\vert$---$\vert$ $\vert$ Value $\vert$ Reserved $\vert$ Lt Bumper Right? $\vert$ Lt Bumper Front Right? $\vert$ Lt Bumper Center Right? $\vert$ Lt Bumper Center Left? $\vert$ Lt Bumper Front Left? $\vert$ Lt Bumper Left? $\vert$
+
+Range\+: 0-\/127 \index{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+L\+E\+F\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+L\+E\+F\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea7059f77010aa227d28fd5f875bcae9b1}{}R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+L\+E\+F\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea7059f77010aa227d28fd5f875bcae9b1}
+}]Light Bump Left Signal Package I\+D\+: 46 Data Bytes 2, unsigned. The strength of the light bump left signal is returned as an unsigned 16-\/bit value, high byte first.
+
+Range\+: 0-\/4095 \index{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea309109f9c53e16a26d9d096c5c56ff71}{}R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+F\+R\+O\+N\+T\+\_\+\+L\+E\+F\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea309109f9c53e16a26d9d096c5c56ff71}
+}]Light Bump Front Left Signal Package I\+D\+: 47 Data Bytes 2, unsigned. The strength of the light bump front left signal is returned as an unsigned 16-\/bit value, high byte first.
+
+Range\+: 0-\/4095 \index{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+L\+E\+F\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+L\+E\+F\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea5987a92277142efcf0ed3cabba1a1bae}{}R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+L\+E\+F\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea5987a92277142efcf0ed3cabba1a1bae}
+}]Light Bump Center Left Signal Package I\+D\+: 48 Data Bytes 2, unsigned. The strength of the light bump center left signal is returned as an unsigned 16-\/bit value, high byte first.
+
+Range\+: 0-\/4095 \index{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+R\+I\+G\+H\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+R\+I\+G\+H\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea6105c9a570e4b4a7e69262f113f03fe1}{}R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+C\+E\+N\+T\+E\+R\+\_\+\+R\+I\+G\+H\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea6105c9a570e4b4a7e69262f113f03fe1}
+}]Light Bump Center Right Signal Package I\+D\+: 49 Data Bytes 2, unsigned. The strength of the light bump center right signal is returned as an unsigned 16-\/bit value, high byte first.
+
+Range\+: 0-\/4095 \index{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea94217c4da645d2bed66a8ef46485b776}{}R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+F\+R\+O\+N\+T\+\_\+\+R\+I\+G\+H\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea94217c4da645d2bed66a8ef46485b776}
+}]Light Bump Front Right Signal Package I\+D\+: 50 Data Bytes 2, unsigned. The strength of the light bump front right signal is returned as an unsigned 16-\/bit value, high byte first.
+
+Range\+: 0-\/4095 \index{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+R\+I\+G\+H\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+R\+I\+G\+H\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ead32d8a13d2506234d1358f7622725331}{}R\+O\+O\+M\+B\+A\+\_\+\+L\+I\+G\+H\+T\+\_\+\+B\+U\+M\+P\+\_\+\+R\+I\+G\+H\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ead32d8a13d2506234d1358f7622725331}
+}]Light Bump Right Signal Package I\+D\+: 51 Data Bytes 2, unsigned. The strength of the light bump right signal is returned as an unsigned 16-\/bit value, high byte first.
+
+Range\+: 0-\/4095 \index{R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E\+\_\+\+L\+E\+F\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E\+\_\+\+L\+E\+F\+T@{R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E\+\_\+\+L\+E\+F\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea9ebd0d5b7b0d25ab79377208546ed5bd}{}R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E\+\_\+\+L\+E\+F\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea9ebd0d5b7b0d25ab79377208546ed5bd}
+}]Infrared Character Left Packet I\+D\+: 52 Data Bytes\+: 1, unsigned. This value identifies the 8-\/bit I\+R character currently being received by Roomba’s left receiver. A value of 0 indicates that no character is being received. These characters include those sent by the Roomba Remote, Dock, Virtual Walls, Create robots using the Send-\/\+I\+R command, and user-\/created devices.
+
+Range\+: 0 – 255 \index{R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E\+\_\+\+R\+I\+G\+H\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E\+\_\+\+R\+I\+G\+H\+T@{R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E\+\_\+\+R\+I\+G\+H\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaea5b0df07c05b451fc103c732c6e74eb}{}R\+O\+O\+M\+B\+A\+\_\+\+I\+R\+\_\+\+O\+P\+C\+O\+D\+E\+\_\+\+R\+I\+G\+H\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaea5b0df07c05b451fc103c732c6e74eb}
+}]Infrared Character Right Packet I\+D\+: 53 Data Bytes\+: 1, unsigned. This value identifies the 8-\/bit I\+R character currently being received by Roomba’s right receiver. A value of 0 indicates that no character is being received. These characters include those sent by the Roomba Remote, Dock, Virtual Walls, Create robots using the Send-\/\+I\+R command, and user-\/created devices.
+
+Range\+: 0 – 255 \index{R\+O\+O\+M\+B\+A\+\_\+\+L\+E\+F\+T\+\_\+\+M\+O\+T\+O\+R\+\_\+\+C\+U\+R\+R\+E\+N\+T@{R\+O\+O\+M\+B\+A\+\_\+\+L\+E\+F\+T\+\_\+\+M\+O\+T\+O\+R\+\_\+\+C\+U\+R\+R\+E\+N\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+L\+E\+F\+T\+\_\+\+M\+O\+T\+O\+R\+\_\+\+C\+U\+R\+R\+E\+N\+T@{R\+O\+O\+M\+B\+A\+\_\+\+L\+E\+F\+T\+\_\+\+M\+O\+T\+O\+R\+\_\+\+C\+U\+R\+R\+E\+N\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaeadd154f9f2f7647caf3488d27bd4fef}{}R\+O\+O\+M\+B\+A\+\_\+\+L\+E\+F\+T\+\_\+\+M\+O\+T\+O\+R\+\_\+\+C\+U\+R\+R\+E\+N\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaeadd154f9f2f7647caf3488d27bd4fef}
+}]Left Motor Current Packet I\+D\+: 54 Data Bytes\+: 2, signed. This returns the current being drawn by the left wheel motor as an unsigned 16 bit value, high byte first.
+
+Range\+: -\/32768 – 32767 m\+A \index{R\+O\+O\+M\+B\+A\+\_\+\+R\+I\+G\+H\+T\+\_\+\+M\+O\+T\+O\+R\+\_\+\+C\+U\+R\+R\+E\+N\+T@{R\+O\+O\+M\+B\+A\+\_\+\+R\+I\+G\+H\+T\+\_\+\+M\+O\+T\+O\+R\+\_\+\+C\+U\+R\+R\+E\+N\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+R\+I\+G\+H\+T\+\_\+\+M\+O\+T\+O\+R\+\_\+\+C\+U\+R\+R\+E\+N\+T@{R\+O\+O\+M\+B\+A\+\_\+\+R\+I\+G\+H\+T\+\_\+\+M\+O\+T\+O\+R\+\_\+\+C\+U\+R\+R\+E\+N\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea7a02b4928368639e9bd9fcec9656462b}{}R\+O\+O\+M\+B\+A\+\_\+\+R\+I\+G\+H\+T\+\_\+\+M\+O\+T\+O\+R\+\_\+\+C\+U\+R\+R\+E\+N\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea7a02b4928368639e9bd9fcec9656462b}
+}]Right Motor Current Packet I\+D\+: 55 Data Bytes\+: 2, signed. This returns the current being drawn by the right wheel motor as an unsigned 16 bit value, high byte first.
+
+Range\+: -\/32768 – 32767 m\+A \index{R\+O\+O\+M\+B\+A\+\_\+\+M\+A\+I\+N\+\_\+\+B\+R\+U\+S\+H\+\_\+\+C\+U\+R\+R\+E\+N\+T@{R\+O\+O\+M\+B\+A\+\_\+\+M\+A\+I\+N\+\_\+\+B\+R\+U\+S\+H\+\_\+\+C\+U\+R\+R\+E\+N\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+M\+A\+I\+N\+\_\+\+B\+R\+U\+S\+H\+\_\+\+C\+U\+R\+R\+E\+N\+T@{R\+O\+O\+M\+B\+A\+\_\+\+M\+A\+I\+N\+\_\+\+B\+R\+U\+S\+H\+\_\+\+C\+U\+R\+R\+E\+N\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea31137d3179ccc5981923bd6aa8b63b95}{}R\+O\+O\+M\+B\+A\+\_\+\+M\+A\+I\+N\+\_\+\+B\+R\+U\+S\+H\+\_\+\+C\+U\+R\+R\+E\+N\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea31137d3179ccc5981923bd6aa8b63b95}
+}]Main Brush Motor Current Packet I\+D\+: 56 Data Bytes\+: 2, signed. This returns the current being drawn by the main brush motor as an unsigned 16 bit value, high byte first.
+
+Range\+: -\/32768 – 32767 m\+A \index{R\+O\+O\+M\+B\+A\+\_\+\+S\+I\+D\+E\+\_\+\+B\+R\+U\+S\+H\+\_\+\+C\+U\+R\+R\+E\+N\+T@{R\+O\+O\+M\+B\+A\+\_\+\+S\+I\+D\+E\+\_\+\+B\+R\+U\+S\+H\+\_\+\+C\+U\+R\+R\+E\+N\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+I\+D\+E\+\_\+\+B\+R\+U\+S\+H\+\_\+\+C\+U\+R\+R\+E\+N\+T@{R\+O\+O\+M\+B\+A\+\_\+\+S\+I\+D\+E\+\_\+\+B\+R\+U\+S\+H\+\_\+\+C\+U\+R\+R\+E\+N\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea7c8ef5075b9ed0f0d6699c83d6359952}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+I\+D\+E\+\_\+\+B\+R\+U\+S\+H\+\_\+\+C\+U\+R\+R\+E\+N\+T\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea7c8ef5075b9ed0f0d6699c83d6359952}
+}]Side Brush Motor Current Packet I\+D\+: 57 Data Bytes\+: 2, signed This returns the current being drawn by the side brush motor as an unsigned 16 bit value, high byte first. Range\+: -\/32768 – 32767 m\+A \index{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+A\+S\+I\+S@{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+A\+S\+I\+S}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+A\+S\+I\+S@{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+A\+S\+I\+S}}\item[{\em 
+\hypertarget{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea0e892ee610c71a2a567e51ecd5d1e043}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+A\+S\+I\+S\label{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea0e892ee610c71a2a567e51ecd5d1e043}
+}]Stasis Packet I\+D\+: 58 Data Bytes\+: 1. The stasis caster sensor returns 1 when the robot is making forward progress and 0 when it is not. This always returns 0 when the robot is turning, driving backward, or not driving. Range\+: 0 – 1 \end{description}
+\end{Desc}
+
+\begin{DoxyCode}
+1193                  \{
+1206   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaa0592e11488b7d631c805b25a5a6a4b2}{ROOMBA\_BUMPS\_WHEELDROPS}  = 7,
+1207 
+1218   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaa845fdedd5b341aa9caa152ecfb4a724}{ROOMBA\_WALL} = 8,
+1219 
+1230   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eac453ff43b4e5be8cdf511130d316c4f3}{ROOMBA\_CLIFF\_LEFT} = 9,
+1231 
+1242   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaaf46988ebd91103295f53cff3b13d3c9}{ROOMBA\_CLIFF\_FRONT\_LEFT} = 10,
+1243 
+1254   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea8dc2c319fff150dfaf3ebe832a89571d}{ROOMBA\_CLIFF\_FRONT\_RIGHT} = 11,
+1255 
+1266   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eabfc438ea8d6ad4505d651226791efe43}{ROOMBA\_CLIFF\_RIGHT} = 12,
+1267 
+1278   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea77bf37294b6048b213bd8b323f10d7d9}{ROOMBA\_VIRTUAL\_WALL} = 13,
+1279 
+1295   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaacff57f6cfe6ccf34a80de88efee8ad9}{ROOMBA\_OVERCURRENTS} = 14,
+1296 
+1306   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea9c217151461c8bf797485ad78f1a62cb}{ROOMBA\_DIRT\_DETECT} = 15,
+1307 
+1318   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eabb1001411d09b705509b3683150b6f5f}{ROOMBA\_UNUSED\_1} = 16,
+1319 
+1333   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea2643c115b4c5cf1851b3d80917a49015}{ROOMBA\_IR\_OPCODE} = 17,
+1334 
+1351   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea384322ca8586075fed5c6a4a6c8d45a2}{ROOMBA\_BUTTONS\_PKT} = 18,
+1352 
+1373   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eab9db41437cc82100d3efb7579e6e2704}{ROOMBA\_DISTANCE} = 19,
+1374 
+1388   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eae8c4ed6d765ba0bbe8a4d07824c4e7c1}{ROOMBA\_ANGLE} = 20,
+1389 
+1408   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaf2eae234a42573cc6afcd3a96f4022fa}{ROOMBA\_CHARGING\_STATE} = 21,
+1409 
+1419   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea6e2211c35c4d928b8a7b17ccb9315250}{ROOMBA\_VOLTAGE} = 22,
+1420 
+1433   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea4d65c164218b7190fca61c69e8f60f93}{ROOMBA\_CURRENT} = 23,
+1434 
+1444   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea0e59d463778d6b12a2fcb2ac23bbc850}{ROOMBA\_TEMPERATURE} = 24,
+1445 
+1457   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea492387b172d9b626fe66b3d632a38955}{ROOMBA\_BATTERY\_CHARGE} = 25,
+1458 
+1468   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaa53df1ccfa1de33d1754272fa9edd804}{ROOMBA\_BATTERY\_CAPACITY} = 26,
+1469 
+1480   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea820e04f3b6cf1fe3830dc773981e38cd}{ROOMBA\_WALL\_SIGNAL} = 27,
+1481 
+1492   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaca31b264512f0b2561a98c474d9afcaf}{ROOMBA\_CLIFF\_LEFT\_SIGNAL} = 28,
+1493 
+1504   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eacb540adc5f1ba1e6d9bdb429dc4bad9b}{ROOMBA\_CLIFF\_FRONT\_LEFT\_SIGNAL} = 29,
+1505 
+1516   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea9b156ee45545b742e7900a29b3e4dadf}{ROOMBA\_CLIFF\_FRONT\_RIGHT\_SIGNAL} = 30,
+1517 
+1528   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea3430e06a7beb23fd86879c2c404e802e}{ROOMBA\_CLIFF\_RIGHT\_SIGNAL} = 31,
+1529 
+1535   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea96857c95ae47a3687fa89cbee702c45f}{ROOMBA\_UNUSED\_2} = 32,
+1536 
+1537   ROOMBA\_UNUSED\_3 = 33,
+1538 
+1556   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea837e14ab43e08cf649b5ab37556023de}{ROOMBA\_CHARGER\_AVAILABLE} = 34,
+1557 
+1574   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eae25dca775bd76962783a86811ea93b74}{ROOMBA\_OPEN\_INTERFACE\_MODE} = 35,
+1575 
+1585   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eadc89af73d417da0fe50b1c642a8898b9}{ROOMBA\_SONG\_NUMBER} = 36,
+1586 
+1597   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea974977adff508d49ff6ae6137d14299a}{ROOMBA\_SONG\_PLAYING} = 37,
+1598 
+1608   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ead75c3ca1795b78e599fe29b5927de5fd}{ROOMBA\_OI\_STREAM\_NUM\_PACKETS} = 38,
+1609 
+1620   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eac813a8d1be0b3f7780aa56aa280a426b}{ROOMBA\_VELOCITY} = 39,
+1621 
+1638   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea59a616d59cce7972a21c6803d1e3e047}{ROOMBA\_RADIUS} = 40,
+1639 
+1650   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eae155dc459e649f7a3b38bd8c9b4b14b0}{ROOMBA\_VELOCITY\_RIGHT} = 41,
+1651 
+1661   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea17b84d811ed8f98698e2ba5d477492ba}{ROOMBA\_VELOCITY\_LEFT} = 42,
+1662 
+1674   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eac09cc1853f89d600d088a1f558180572}{ROOMBA\_ENCODER\_COUNTS\_LEFT} = 43,
+1675 
+1686   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea5918780386e79aadb498f23d3471c9da}{ROOMBA\_ENCODER\_COUNTS\_RIGHT} = 44,
+1687 
+1701   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea11af024cc8c3de71acadd02c432d55ce}{ROOMBA\_LIGHT\_BUMPER} = 45,
+1702 
+1713   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea7059f77010aa227d28fd5f875bcae9b1}{ROOMBA\_LIGHT\_BUMP\_LEFT} = 46,
+1714 
+1725   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea309109f9c53e16a26d9d096c5c56ff71}{ROOMBA\_LIGHT\_BUMP\_FRONT\_LEFT} = 47,
+1726 
+1737   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea5987a92277142efcf0ed3cabba1a1bae}{ROOMBA\_LIGHT\_BUMP\_CENTER\_LEFT} = 48,
+1738 
+1749   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea6105c9a570e4b4a7e69262f113f03fe1}{ROOMBA\_LIGHT\_BUMP\_CENTER\_RIGHT} = 49,
+1750 
+1761   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea94217c4da645d2bed66a8ef46485b776}{ROOMBA\_LIGHT\_BUMP\_FRONT\_RIGHT} = 50,
+1762 
+1773   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ead32d8a13d2506234d1358f7622725331}{ROOMBA\_LIGHT\_BUMP\_RIGHT} = 51,
+1774 
+1788   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea9ebd0d5b7b0d25ab79377208546ed5bd}{ROOMBA\_IR\_OPCODE\_LEFT} = 52,
+1789 
+1803   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaea5b0df07c05b451fc103c732c6e74eb}{ROOMBA\_IR\_OPCODE\_RIGHT} = 53,
+1804 
+1815   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373eaeadd154f9f2f7647caf3488d27bd4fef}{ROOMBA\_LEFT\_MOTOR\_CURRENT} = 54,
+1816 
+1827   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea7a02b4928368639e9bd9fcec9656462b}{ROOMBA\_RIGHT\_MOTOR\_CURRENT} = 55,
+1828 
+1839   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea31137d3179ccc5981923bd6aa8b63b95}{ROOMBA\_MAIN\_BRUSH\_CURRENT} =56,
+1840 
+1850   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea7c8ef5075b9ed0f0d6699c83d6359952}{ROOMBA\_SIDE\_BRUSH\_CURRENT} = 57,
+1851 
+1861   \hyperlink{group__roomba-lib_gga46f008b5055c4a08d3123c6a3478373ea0e892ee610c71a2a567e51ecd5d1e043}{ROOMBA\_STASIS} = 58,
+1862 
+1863 \} \hyperlink{group__roomba-lib_gada33faf3aeb650fa045d8516c6257174}{ROOMBA\_PACKET\_CODE};
+\end{DoxyCode}
+\hypertarget{group__roomba-lib_ga305e17dfb7050ad83ea49ded2e6a2e24}{}\index{Roomba Library@{Roomba Library}!\+\_\+roomba\+\_\+op\+\_\+code@{\+\_\+roomba\+\_\+op\+\_\+code}}
+\index{\+\_\+roomba\+\_\+op\+\_\+code@{\+\_\+roomba\+\_\+op\+\_\+code}!Roomba Library@{Roomba Library}}
+\subsubsection[{\+\_\+roomba\+\_\+op\+\_\+code}]{\setlength{\rightskip}{0pt plus 5cm}enum {\bf \+\_\+roomba\+\_\+op\+\_\+code}}\label{group__roomba-lib_ga305e17dfb7050ad83ea49ded2e6a2e24}
+
+
+O\+P\+\_\+\+C\+O\+D\+E enum. 
+
+Operation codes for roomba \begin{Desc}
+\item[Enumerator]\par
+\begin{description}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+R\+E\+S\+E\+T@{R\+O\+O\+M\+B\+A\+\_\+\+R\+E\+S\+E\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+R\+E\+S\+E\+T@{R\+O\+O\+M\+B\+A\+\_\+\+R\+E\+S\+E\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a42d615c28dbc113dcc6d742efe148eb6}{}R\+O\+O\+M\+B\+A\+\_\+\+R\+E\+S\+E\+T\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a42d615c28dbc113dcc6d742efe148eb6}
+}]Reset Opcode\+: 7 Data Bytes\+: 0. This command resets the robot, as if you had removed and reinserted the battery.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}7\mbox{]}.
+\item Available in modes\+: Always available.
+\item Changes mode to\+: Off. You will have to send \mbox{[}128\mbox{]} again to re-\/enter Open Interface mode.
+\end{DoxyItemize}
+
+\begin{DoxySince}{Since}
+0 (S\+C\+I) 
+\end{DoxySince}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+A\+R\+T@{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+A\+R\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+A\+R\+T@{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+A\+R\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a2a01acef0ce68b399d3d0ff55e2c9439}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+A\+R\+T\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a2a01acef0ce68b399d3d0ff55e2c9439}
+}]Start Opcode\+: 128 Data Bytes\+: 0. This command starts the O\+I. You must always send the Start command before sending any other commands to the O\+I.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}128\mbox{]}.
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: Passive. Roomba beeps once to acknowledge it is starting $\ast$ from “off” mode.
+\end{DoxyItemize}
+
+\begin{DoxySince}{Since}
+0 (S\+C\+I) 
+\end{DoxySince}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+U\+D@{R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+U\+D}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+U\+D@{R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+U\+D}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a2461f308d895f39a96b6002f55753b6e}{}R\+O\+O\+M\+B\+A\+\_\+\+B\+A\+U\+D\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a2461f308d895f39a96b6002f55753b6e}
+}]Baud Opcode\+: 129 Data Bytes\+: 1. This command sets the baud rate in bits per second (bps) at which O\+I commands and data are sent according to the baud code sent in the data byte. The default baud rate at power up is 115200 bps, but the starting baud rate can be changed to 19200 by following the method outlined on page
+\begin{DoxyEnumerate}
+\item Once the baud rate is changed, it persists until Roomba is power cycled by pressing the power button or removing the battery, or when the battery voltage falls below the minimum required for processor operation. You must wait 100ms after sending this command before sending additional commands at the new baud rate.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}129\mbox{]}\mbox{[}Baud Code\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: No Change
+\item Baud data byte 1\+: Baud Code (0 -\/ 11)
+\end{DoxyItemize}
+\end{DoxyEnumerate}
+
+\begin{TabularC}{2}
+\hline
+\rowcolor{lightgray}{\bf Baud Code }&{\bf Baud Rate in B\+P\+S  }\\\cline{1-2}
+0 &300 \\\cline{1-2}
+1 &600 \\\cline{1-2}
+2 &1200 \\\cline{1-2}
+3 &2400 \\\cline{1-2}
+4 &4800 \\\cline{1-2}
+5 &9600 \\\cline{1-2}
+6 &14400 \\\cline{1-2}
+7 &19200 \\\cline{1-2}
+8 &28800 \\\cline{1-2}
+9 &38400 \\\cline{1-2}
+10 &57600 \\\cline{1-2}
+11 &115200 \\\cline{1-2}
+\end{TabularC}
+\begin{DoxySince}{Since}
+0 (S\+C\+I) 
+\end{DoxySince}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+C\+O\+N\+T\+R\+O\+L@{R\+O\+O\+M\+B\+A\+\_\+\+C\+O\+N\+T\+R\+O\+L}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+C\+O\+N\+T\+R\+O\+L@{R\+O\+O\+M\+B\+A\+\_\+\+C\+O\+N\+T\+R\+O\+L}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24afc1db2d92cee63105d5591b7c033b65e}{}R\+O\+O\+M\+B\+A\+\_\+\+C\+O\+N\+T\+R\+O\+L\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24afc1db2d92cee63105d5591b7c033b65e}
+}]Control Command opcode\+: 130 Data bytes\+: 0. Enables user control of Roomba. This command must be sent after the start command and before any control commands are sent to the S\+C\+I. The S\+C\+I must be in passive mode to accept this command. This command puts the S\+C\+I in safe mode. Serial sequence\+: \mbox{[}130\mbox{]}
+
+\begin{DoxySince}{Since}
+0 (S\+C\+I)
+\end{DoxySince}
+\begin{DoxyRefDesc}{Deprecated}
+\item[\hyperlink{deprecated__deprecated000001}{Deprecated}]\end{DoxyRefDesc}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+S\+A\+F\+E@{R\+O\+O\+M\+B\+A\+\_\+\+S\+A\+F\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+A\+F\+E@{R\+O\+O\+M\+B\+A\+\_\+\+S\+A\+F\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ae30c6c0f4e9ea706fea43c6098f35cec}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+A\+F\+E\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ae30c6c0f4e9ea706fea43c6098f35cec}
+}]Safe Opcode\+: 131 Data Bytes\+: 0. This command puts the O\+I into Safe mode, enabling user control of Roomba. $\ast$ It turns off all L\+E\+Ds. The O\+I can be in Passive, Safe, or Full mode to accept this command. If a safety condition occurs (see above) Roomba reverts automatically to Passive mode.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}131\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: Safe
+\end{DoxyItemize}
+
+\begin{DoxyNote}{Note}
+The effect and usage of the Control command (130) are identical to the Safe command (131).
+\end{DoxyNote}
+\begin{DoxySince}{Since}
+0 (S\+C\+I) 
+\end{DoxySince}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+F\+U\+L\+L@{R\+O\+O\+M\+B\+A\+\_\+\+F\+U\+L\+L}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+F\+U\+L\+L@{R\+O\+O\+M\+B\+A\+\_\+\+F\+U\+L\+L}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a7ec5893abd5169837596b51b7a85c489}{}R\+O\+O\+M\+B\+A\+\_\+\+F\+U\+L\+L\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a7ec5893abd5169837596b51b7a85c489}
+}]Full Opcode\+: 132 Data Bytes\+: 0. This command gives you complete control over Roomba by putting the O\+I into Full mode, and turning off the cliff, wheel-\/drop and internal charger safety features. That is, in Full mode, Roomba executes any command that you send it, even if the internal charger is plugged in, or command triggers a cliff or wheel drop condition.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}132\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: Full
+\end{DoxyItemize}
+
+\begin{DoxyNote}{Note}
+Use the Start command (128) to change the mode to Passive
+\end{DoxyNote}
+\begin{DoxySince}{Since}
+0 (S\+C\+I) 
+\end{DoxySince}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+P\+O\+W\+E\+R@{R\+O\+O\+M\+B\+A\+\_\+\+P\+O\+W\+E\+R}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+P\+O\+W\+E\+R@{R\+O\+O\+M\+B\+A\+\_\+\+P\+O\+W\+E\+R}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a5f448683aabbaddfd5a6f82e2e03a571}{}R\+O\+O\+M\+B\+A\+\_\+\+P\+O\+W\+E\+R\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a5f448683aabbaddfd5a6f82e2e03a571}
+}]Power Opcode\+: 133 Data Bytes\+: 0. This command powers down Roomba. The O\+I can be in Passive, Safe, or Full mode to accept this command.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}133\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: Passive
+\end{DoxyItemize}
+
+\begin{DoxySince}{Since}
+0 (S\+C\+I) 
+\end{DoxySince}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+S\+P\+O\+T@{R\+O\+O\+M\+B\+A\+\_\+\+S\+P\+O\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+P\+O\+T@{R\+O\+O\+M\+B\+A\+\_\+\+S\+P\+O\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a51432a5c7706ae489570eca7ba0a55b8}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+P\+O\+T\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a51432a5c7706ae489570eca7ba0a55b8}
+}]Spot Opcode\+: 134 Data Bytes\+: 0. This command starts the Spot cleaning mode. This is the same as pressing Roomba’s Spot button, and will pause a cleaning cycle if one is already in progress.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}134\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: Passive
+\end{DoxyItemize}
+
+\begin{DoxySince}{Since}
+0 
+\end{DoxySince}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+C\+O\+V\+E\+R@{R\+O\+O\+M\+B\+A\+\_\+\+C\+O\+V\+E\+R}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+C\+O\+V\+E\+R@{R\+O\+O\+M\+B\+A\+\_\+\+C\+O\+V\+E\+R}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24abfb77b700185666cad669081837c6bff}{}R\+O\+O\+M\+B\+A\+\_\+\+C\+O\+V\+E\+R\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24abfb77b700185666cad669081837c6bff}
+}]Cover Opcode\+: 135 Data Bytes\+: 0. This command starts the Cover demo.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}135\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: Passive 
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+E\+A\+N@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+E\+A\+N}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+E\+A\+N@{R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+E\+A\+N}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24abed3f4709f037352df127ea6b5e45acd}{}R\+O\+O\+M\+B\+A\+\_\+\+C\+L\+E\+A\+N\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24abed3f4709f037352df127ea6b5e45acd}
+}]Clean Opcode\+: 135 Data Bytes\+: 0. This command starts the default cleaning mode. This is the same as pressing Roomba’s Clean button, and will pause a cleaning cycle if one is already in progress.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}135\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: Passive 
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+D\+E\+M\+O@{R\+O\+O\+M\+B\+A\+\_\+\+D\+E\+M\+O}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+D\+E\+M\+O@{R\+O\+O\+M\+B\+A\+\_\+\+D\+E\+M\+O}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a4009137101f5f5008ebb98e6bb7c3436}{}R\+O\+O\+M\+B\+A\+\_\+\+D\+E\+M\+O\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a4009137101f5f5008ebb98e6bb7c3436}
+}]Demo Opcode\+: 136 Data Bytes\+: 1. This command starts the requested built-\/in demo.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}136\mbox{]}\mbox{[}Which-\/demo\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: Passive
+\item Demo data byte 1\+: Demo number (-\/1 -\/ 9)
+\end{DoxyItemize}
+
+Demo Names, Descriptions and Numbers
+
+\begin{TabularC}{3}
+\hline
+\rowcolor{lightgray}{\bf Number }&{\bf Demo }&{\bf Description  }\\\cline{1-3}
+-\/1 (255) &Abort &current demo Stops the demo that Create is currently performing. \\\cline{1-3}
+\end{TabularC}
+$\vert$ 0 $\vert$ Cover $\vert$ Create attempts to cover an entire room using a combination of behaviors, such as random bounce, wall following, and spiraling. $\vert$
+
+$\vert$ 1 $\vert$ Cover and Dock $\vert$ Identical to the Cover demo, with one exception. If Create sees an infrared signal from an i\+Robot Home Base, it uses that signal to dock with the Home Base and recharge itself. $\vert$
+
+$\vert$ 2 $\vert$ Spot Cover $\vert$ Create covers an area around its starting position by spiraling outward, then inward. $\vert$
+
+$\vert$ 3 $\vert$ Mouse $\vert$ Create drives in search of a wall. Once a wall is found, Create drives along the wall, traveling around circumference of the room. $\vert$
+
+$\vert$ 4 Drive Figure Eight Create continuously drives in a figure 8 pattern.
+
+$\vert$ 5 Wimp Create drives forward when pushed from behind. If Create hits an obstacle while driving, it drives away from the obstacle.
+
+$\vert$ 6 Home Create drives toward an i\+Robot Virtual \begin{DoxyRefDesc}{Todo}
+\item[\hyperlink{todo__todo000001}{Todo}]formating Wall as long as the back and sides of the virtual wall receiver are blinded by black electrical tape. A Virtual Wall emits infrared signals that Create sees with its Omnidirectional Infrared Receiver, located on top of the bumper. If you want Create to home in on a Virtual Wall, cover all but a small opening in the front of the infrared receiver with black electrical tape. Create spins to locate a virtual wall, then drives toward it. Once Create hits the wall or another obstacle, it stops. Number Demo Description 7 Tag Identical to the Home demo, except Create drives into multiple virtual walls by bumping into one, turning around, driving to the next virtual wall, bumping into it and turning around to bump into the next virtual wall. 8 Pachelbel Create plays the notes of Pachelbel’s Canon in sequence when cliff sensors are activated. 9 Banjo Create plays a note of a chord for each of its four cliff sensors. Select the chord using the bumper, as follows\+: • No bumper\+: G major. • Right/left bumper\+: D major 7 • Both bumpers (center)\+: C major\end{DoxyRefDesc}
+
+
+\begin{DoxyRefDesc}{Deprecated}
+\item[\hyperlink{deprecated__deprecated000002}{Deprecated}]\end{DoxyRefDesc}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+M\+A\+X@{R\+O\+O\+M\+B\+A\+\_\+\+M\+A\+X}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+M\+A\+X@{R\+O\+O\+M\+B\+A\+\_\+\+M\+A\+X}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a8dbcf646bf6f314d1d9109cb233e9768}{}R\+O\+O\+M\+B\+A\+\_\+\+M\+A\+X\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a8dbcf646bf6f314d1d9109cb233e9768}
+}]Max Opcode\+: 136 Data Bytes\+: 0. This command starts the Max cleaning mode, which will clean until the battery is dead. This command will pause a cleaning cycle if one is already in progress.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}136\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: Passive 
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E@{R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E@{R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24aaf858c1a076d79bae24353fe65a5f1ae}{}R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24aaf858c1a076d79bae24353fe65a5f1ae}
+}]Drive Opcode\+: 137 Data Bytes\+: 4. This command controls Roomba’s drive wheels. It takes four data bytes, interpreted as two 16-\/bit signed values using two’s complement. (\href{http://en.wikipedia.org/wiki/Two%27s_complement}{\tt http\+://en.\+wikipedia.\+org/wiki/\+Two\%27s\+\_\+complement}) The first two bytes specify the average velocity of the drive wheels in millimeters per second (mm/s), with the high byte being sent first. The next two bytes specify the radius in millimeters at which Roomba will turn. The longer radii make Roomba drive straighter, while the shorter radii make Roomba turn more. The radius is measured from the center of the turning circle to the center of Roomba. A Drive command with a positive velocity and a positive radius makes Roomba drive forward while turning toward the left. A negative radius makes Roomba turn toward the right. Special cases for the radius make Roomba turn in place or drive straight, as specified below. A negative velocity makes Roomba drive backward. \begin{DoxyNote}{Note}
+Internal and environmental restrictions may prevent Roomba from accurately carrying out some drive commands. For example, it may not be possible for Roomba to drive at full speed in an arc with a large radius of curvature.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}137\mbox{]} \mbox{[}Velocity high byte\mbox{]} \mbox{[}Velocity low byte\mbox{]} \mbox{[}Radius high byte\mbox{]} \mbox{[}Radius low byte\mbox{]}
+\item Available in modes\+: Safe or Full
+\item Changes mode to\+: No Change
+\item Velocity (-\/500 – 500 mm/s)
+\item Radius (-\/2000 – 2000 mm) Special cases\+: Straight = 32768 or 32767 = 0x8000 or 0x7\+F\+F\+F Turn in place clockwise = -\/1 = 0x\+F\+F\+F\+F Turn in place counter-\/clockwise = 1 = 0x0001 Example\+: To drive in reverse at a velocity of -\/200 mm/s while turning at a radius of 500mm, send the following serial byte sequence\+: \mbox{[}137\mbox{]} \mbox{[}255\mbox{]} \mbox{[}56\mbox{]} \mbox{[}1\mbox{]} \mbox{[}244\mbox{]} Explanation\+: Desired value  two’s complement and convert to hex  split into 2 bytes  convert to decimal Velocity = -\/200 = 0x\+F\+F38 = \mbox{[}0x\+F\+F\mbox{]} \mbox{[}0x38\mbox{]} = \mbox{[}255\mbox{]} \mbox{[}56\mbox{]} Radius = 500 = 0x01\+F4 = \mbox{[}0x01\mbox{]} \mbox{[}0x\+F4\mbox{]} = \mbox{[}1\mbox{]} \mbox{[}244\mbox{]} 
+\end{DoxyItemize}
+\end{DoxyNote}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+M\+O\+T\+O\+R\+S@{R\+O\+O\+M\+B\+A\+\_\+\+M\+O\+T\+O\+R\+S}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+M\+O\+T\+O\+R\+S@{R\+O\+O\+M\+B\+A\+\_\+\+M\+O\+T\+O\+R\+S}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a7afe27d88fb8c345d23402faff25a6e3}{}R\+O\+O\+M\+B\+A\+\_\+\+M\+O\+T\+O\+R\+S\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a7afe27d88fb8c345d23402faff25a6e3}
+}]Motors Opcode\+: 138 Data Bytes\+: 1. This command lets you control the forward and backward motion of Roomba’s main brush, side brush, and vacuum independently. Motor velocity cannot be controlled with this command, all motors will run at maximum speed when enabled. The main brush and side brush can be run in either direction. The vacuum only runs forward. Serial sequence\+: \mbox{[}138\mbox{]} \mbox{[}Motors\mbox{]}
+\begin{DoxyItemize}
+\item Available in modes\+: Safe or Full
+\item Changes mode to\+: No Change
+\item Bits 0-\/2\+: 0 = off, 1 = on at 100\% pwm duty cycle
+\item Bits 3 \& 4\+: 0 = motor’s default direction, 1 = motor’s opposite direction. Default direction for the side brush is counterclockwise. Default direction for the main brush/flapper is inward. \begin{TabularC}{9}
+\hline
+\rowcolor{lightgray}{\bf Bit }&{\bf 7 }&{\bf 6 }&{\bf 5 }&{\bf 4 }&{\bf 3 }&{\bf 2 }&{\bf 1 }&{\bf 0  }\\\cline{1-9}
+Value &Reserved &&&Main Brush Direction &Side Brush Clockwise? &Main Brush &Vacuum &Side Brush \\\cline{1-9}
+\end{TabularC}
+Example\+: To turn on the main brush inward and the side brush clockwise, send\+: \mbox{[}138\mbox{]} \mbox{[}13\mbox{]} 
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+L\+E\+D\+S@{R\+O\+O\+M\+B\+A\+\_\+\+L\+E\+D\+S}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+L\+E\+D\+S@{R\+O\+O\+M\+B\+A\+\_\+\+L\+E\+D\+S}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ae4122f32b1c10a1b6f8606da15522599}{}R\+O\+O\+M\+B\+A\+\_\+\+L\+E\+D\+S\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ae4122f32b1c10a1b6f8606da15522599}
+}]L\+E\+Ds Opcode\+: 139 Data Bytes\+: 3. This command controls the L\+E\+Ds common to all models of Roomba 600. The power L\+E\+D is specified by two data bytes\+: one for the color and the other for the intensity.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}139\mbox{]} \mbox{[}L\+E\+D Bits\mbox{]} \mbox{[}Power Color\mbox{]} \mbox{[}Power Intensity\mbox{]}
+\item Available in modes\+: Safe or Full
+\item Changes mode to\+: No Change
+\item L\+E\+D Bits (0 – 255)
+\begin{DoxyItemize}
+\item Home and Spot use green L\+E\+Ds\+: 0 = off, 1 = on
+\item Check Robot uses an orange L\+E\+D.
+\item Debris uses a blue L\+E\+D.
+\item Power uses a bicolor (red/green) L\+E\+D. The intensity and color of this L\+E\+D can be controlled with 8-\/bit resolution.
+\end{DoxyItemize}
+\end{DoxyItemize}
+
+L\+E\+D Bits (0-\/255)
+
+\begin{TabularC}{9}
+\hline
+\rowcolor{lightgray}{\bf Bit }&{\bf 7 }&{\bf 6 }&{\bf 5 }&{\bf 4 }&{\bf 3 }&{\bf 2 }&{\bf 1 }&{\bf 0  }\\\cline{1-9}
+Value &Reserved &&&&Check Robot &Dock &Spot &Debris \\\cline{1-9}
+\end{TabularC}
+Power L\+E\+D Color (0 – 255) 0 = green, 255 = red. Intermediate values are intermediate colors (orange, yellow, etc).
+
+Power L\+E\+D Intensity (0 – 255) 0 = off, 255 = full intensity. Intermediate values are intermediate intensities.
+
+Example\+: To turn on the Home L\+E\+D and light the Power L\+E\+D green at half intensity, send the serial byte sequence \mbox{[}139\mbox{]} \mbox{[}4\mbox{]} \mbox{[}0\mbox{]} \mbox{[}128\mbox{]}. \index{R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G@{R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G@{R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a81a248bb3504b8d3b302aa6037f2df7b}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+O\+N\+G\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a81a248bb3504b8d3b302aa6037f2df7b}
+}]Song Opcode\+: 140 Data Bytes\+: 2\+N+2, where N is the number of notes in the song. This command lets you specify up to four songs to the O\+I that you can play at a later time. Each song is associated with a song number. The Play command uses the song number to identify your song selection. Each song can contain up to sixteen notes. Each note is associated with a note number that uses M\+I\+D\+I note definitions and a duration that is specified in fractions of a second. The number of data bytes varies, depending on the length of the song specified. A one note song is specified by four data bytes. For each additional note within a song, add two data bytes.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}140\mbox{]} \mbox{[}Song Number\mbox{]} \mbox{[}Song Length\mbox{]} \mbox{[}Note Number 1\mbox{]} \mbox{[}Note Duration 1\mbox{]} \mbox{[}Note Number 2\mbox{]} \mbox{[}Note Duration 2\mbox{]}, etc.
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: No Change
+\item Song Number (0 – 4) The song number associated with the specific song. If you send a second Song command, using the same song number, the old song is overwritten.
+\item Song Length (1 – 16) The length of the song, according to the number of musical notes within the song.
+\item Song data bytes 3, 5, 7, etc.\+: Note Number (31 – 127) The pitch of the musical note Roomba will play, according to the M\+I\+D\+I note numbering scheme. The lowest musical note that Roomba will play is Note \#31. Roomba considers all musical notes outside the range of 31 – 127 as rest notes, and will make no sound during the duration of those notes.
+\item Song data bytes 4, 6, 8, etc.\+: Note Duration (0 – 255) The duration of a musical note, in increments of 1/64th of a second. Example\+: a half-\/second long musical note has a duration value of 32.
+\end{DoxyItemize}
+
+\begin{TabularC}{9}
+\hline
+\rowcolor{lightgray}\PBS\raggedleft {\bf Number }&\PBS\centering {\bf Note }&\PBS\centering {\bf Freq. }&\PBS\raggedleft {\bf Number }&\PBS\centering {\bf Note }&\PBS\centering {\bf Freq. }&\PBS\raggedleft {\bf Number}&\PBS\centering {\bf Note }&\PBS\centering {\bf Freq.  }\\\cline{1-9}
+\PBS\raggedleft 31 &\PBS\centering G &\PBS\centering 49.\+0 &\PBS\raggedleft 58 &\PBS\centering A\# &\PBS\centering 233.\+1 &\PBS\raggedleft 85 &\PBS\centering C\# &\PBS\centering 1108.\+8 \\\cline{1-9}
+\PBS\raggedleft 32 &\PBS\centering G\# &\PBS\centering 51.\+9 &\PBS\raggedleft 59 &\PBS\centering B &\PBS\centering 246.\+9 &\PBS\raggedleft 86 &\PBS\centering D &\PBS\centering 1174.\+7 \\\cline{1-9}
+\PBS\raggedleft 33 &\PBS\centering A &\PBS\centering 55.\+0 &\PBS\raggedleft 60 &\PBS\centering C &\PBS\centering 261.\+6 &\PBS\raggedleft 87 &\PBS\centering D\# &\PBS\centering 1244.\+5 \\\cline{1-9}
+\PBS\raggedleft 34 &\PBS\centering A\# &\PBS\centering 58.\+3 &\PBS\raggedleft 61 &\PBS\centering C\# &\PBS\centering 277.\+2 &\PBS\raggedleft 88 &\PBS\centering E &\PBS\centering 1318.\+5 \\\cline{1-9}
+\PBS\raggedleft 35 &\PBS\centering B &\PBS\centering 61.\+7 &\PBS\raggedleft 62 &\PBS\centering D &\PBS\centering 293.\+7 &\PBS\raggedleft 89 &\PBS\centering F &\PBS\centering 1396.\+9 \\\cline{1-9}
+\PBS\raggedleft 36 &\PBS\centering C &\PBS\centering 65.\+4 &\PBS\raggedleft 63 &\PBS\centering D\# &\PBS\centering 311.\+1 &\PBS\raggedleft 90 &\PBS\centering F\# &\PBS\centering 1480.\+0 \\\cline{1-9}
+\PBS\raggedleft 37 &\PBS\centering C\# &\PBS\centering 69.\+3 &\PBS\raggedleft 64 &\PBS\centering E &\PBS\centering 329.\+6 &\PBS\raggedleft 91 &\PBS\centering G &\PBS\centering 1568.\+0 \\\cline{1-9}
+\PBS\raggedleft 38 &\PBS\centering D &\PBS\centering 73.\+4 &\PBS\raggedleft 65 &\PBS\centering F &\PBS\centering 349.\+2 &\PBS\raggedleft 92 &\PBS\centering G\# &\PBS\centering 1661.\+3 \\\cline{1-9}
+\PBS\raggedleft 39 &\PBS\centering D\# &\PBS\centering 77.\+8 &\PBS\raggedleft 66 &\PBS\centering F\# &\PBS\centering 370.\+0 &\PBS\raggedleft 93 &\PBS\centering A &\PBS\centering 1760.\+0 \\\cline{1-9}
+\PBS\raggedleft 40 &\PBS\centering E &\PBS\centering 82.\+4 &\PBS\raggedleft 67 &\PBS\centering G &\PBS\centering 392.\+0 &\PBS\raggedleft 94 &\PBS\centering A\# &\PBS\centering 1864.\+7 \\\cline{1-9}
+\PBS\raggedleft 41 &\PBS\centering F &\PBS\centering 87.\+3 &\PBS\raggedleft 68 &\PBS\centering G\# &\PBS\centering 415.\+3 &\PBS\raggedleft 95 &\PBS\centering B &\PBS\centering 1975.\+6 \\\cline{1-9}
+\PBS\raggedleft 42 &\PBS\centering F\# &\PBS\centering 92.\+5 &\PBS\raggedleft 69 &\PBS\centering A &\PBS\centering 440.\+0 &\PBS\raggedleft 96 &\PBS\centering C &\PBS\centering 2093.\+1 \\\cline{1-9}
+\PBS\raggedleft 43 &\PBS\centering G &\PBS\centering 98.\+0 &\PBS\raggedleft 70 &\PBS\centering A\# &\PBS\centering 466.\+2 &\PBS\raggedleft 97 &\PBS\centering C\# &\PBS\centering 2217.\+5 \\\cline{1-9}
+\PBS\raggedleft 44 &\PBS\centering G\# &\PBS\centering 103.\+8 &\PBS\raggedleft 71 &\PBS\centering B &\PBS\centering 493.\+9 &\PBS\raggedleft 98 &\PBS\centering D &\PBS\centering 2349.\+4 \\\cline{1-9}
+\PBS\raggedleft 45 &\PBS\centering A &\PBS\centering 110.\+0 &\PBS\raggedleft 72 &\PBS\centering C &\PBS\centering 523.\+3 &\PBS\raggedleft 99 &\PBS\centering D\# &\PBS\centering 2489.\+1 \\\cline{1-9}
+\PBS\raggedleft 46 &\PBS\centering A\# &\PBS\centering 116.\+5 &\PBS\raggedleft 73 &\PBS\centering C\# &\PBS\centering 554.\+4 &\PBS\raggedleft 100 &\PBS\centering E &\PBS\centering 2637.\+1 \\\cline{1-9}
+\PBS\raggedleft 47 &\PBS\centering B &\PBS\centering 123.\+5 &\PBS\raggedleft 74 &\PBS\centering D &\PBS\centering 587.\+3 &\PBS\raggedleft 101 &\PBS\centering F &\PBS\centering 2793.\+9 \\\cline{1-9}
+\PBS\raggedleft 48 &\PBS\centering C &\PBS\centering 130.\+8 &\PBS\raggedleft 75 &\PBS\centering D\# &\PBS\centering 622.\+3 &\PBS\raggedleft 102 &\PBS\centering F\# &\PBS\centering 2960.\+0 \\\cline{1-9}
+\PBS\raggedleft 49 &\PBS\centering C\# &\PBS\centering 138.\+6 &\PBS\raggedleft 76 &\PBS\centering E &\PBS\centering 659.\+3 &\PBS\raggedleft 103 &\PBS\centering G &\PBS\centering 3136.\+0 \\\cline{1-9}
+\PBS\raggedleft 50 &\PBS\centering D &\PBS\centering 146.\+8 &\PBS\raggedleft 77 &\PBS\centering F &\PBS\centering 698.\+5 &\PBS\raggedleft 104 &\PBS\centering G\# &\PBS\centering 3322.\+5 \\\cline{1-9}
+\PBS\raggedleft 51 &\PBS\centering D\# &\PBS\centering 155.\+6 &\PBS\raggedleft 78 &\PBS\centering F\# &\PBS\centering 740.\+0 &\PBS\raggedleft 105 &\PBS\centering A &\PBS\centering 3520.\+1 \\\cline{1-9}
+\PBS\raggedleft 52 &\PBS\centering E &\PBS\centering 164.\+8 &\PBS\raggedleft 79 &\PBS\centering G &\PBS\centering 784.\+0 &\PBS\raggedleft 106 &\PBS\centering A\# &\PBS\centering 3729.\+4 \\\cline{1-9}
+\PBS\raggedleft 53 &\PBS\centering F &\PBS\centering 174.\+6 &\PBS\raggedleft 80 &\PBS\centering G\# &\PBS\centering 830.\+6 &\PBS\raggedleft 107 &\PBS\centering B &\PBS\centering 3951.\+2 \\\cline{1-9}
+\PBS\raggedleft 54 &\PBS\centering F\# &\PBS\centering 185.\+0 &\PBS\raggedleft 81 &\PBS\centering A &\PBS\centering 880.\+0 &\PBS\raggedleft &\PBS\centering &\PBS\centering \\\cline{1-9}
+\PBS\raggedleft 55 &\PBS\centering G &\PBS\centering 196.\+0 &\PBS\raggedleft 82 &\PBS\centering A\# &\PBS\centering 932.\+4 &\PBS\raggedleft &\PBS\centering &\PBS\centering \\\cline{1-9}
+\PBS\raggedleft 56 &\PBS\centering G\# &\PBS\centering 207.\+7 &\PBS\raggedleft 83 &\PBS\centering B &\PBS\centering 987.\+8 &\PBS\raggedleft &\PBS\centering &\PBS\centering \\\cline{1-9}
+\PBS\raggedleft 57 &\PBS\centering A &\PBS\centering 220.\+0 &\PBS\raggedleft 84 &\PBS\centering C &\PBS\centering 1046.\+5 &\PBS\raggedleft &\PBS\centering &\PBS\centering \\\cline{1-9}
+\PBS\raggedleft 58 &\PBS\centering A\# &\PBS\centering 233.\+1 &\PBS\raggedleft 85 &\PBS\centering C\# &\PBS\centering 1108.\+8 &\PBS\raggedleft &\PBS\centering &\PBS\centering \\\cline{1-9}
+\end{TabularC}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+P\+L\+A\+Y@{R\+O\+O\+M\+B\+A\+\_\+\+P\+L\+A\+Y}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+P\+L\+A\+Y@{R\+O\+O\+M\+B\+A\+\_\+\+P\+L\+A\+Y}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24adfc5020e343dfdc400651002301374b2}{}R\+O\+O\+M\+B\+A\+\_\+\+P\+L\+A\+Y\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24adfc5020e343dfdc400651002301374b2}
+}]Play Opcode\+: 141 Data Bytes\+: 1. This command lets you select a song to play from the songs added to Roomba using the Song command. You must add one or more songs to Roomba using the Song command in order for the Play command to work.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}141\mbox{]} \mbox{[}Song Number\mbox{]}
+\item Available in modes\+: Safe or Full
+\item Changes mode to\+: No Change
+\item Song Number (0 – 4) The number of the song Roomba is to play. 
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+N\+S\+O\+R\+S@{R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+N\+S\+O\+R\+S}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+N\+S\+O\+R\+S@{R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+N\+S\+O\+R\+S}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a301ea9dba750cbbe96f96545436b659a}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+N\+S\+O\+R\+S\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a301ea9dba750cbbe96f96545436b659a}
+}]Sensors Opcode\+: 142 Data Bytes\+: 1. This command requests the O\+I to send a packet of sensor data bytes. There are 58 different sensor data packets. Each provides a value of a specific sensor or group of sensors. For more information on sensor packets, refer to the next section, “\+Roomba Open Interface Sensors Packets”.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}142\mbox{]} \mbox{[}Packet I\+D\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: No Change Identifies which of the 58 sensor data packets should be sent back by the O\+I. A value of 6 indicates a packet with all of the sensor data. Values of 0 through 5 indicate specific subgroups of the sensor data. 
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+E\+K\+\_\+\+D\+O\+C\+K@{R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+E\+K\+\_\+\+D\+O\+C\+K}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+E\+K\+\_\+\+D\+O\+C\+K@{R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+E\+K\+\_\+\+D\+O\+C\+K}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24aaadf37ce35045bca639aeb6cd10ff6bf}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+E\+K\+\_\+\+D\+O\+C\+K\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24aaadf37ce35045bca639aeb6cd10ff6bf}
+}]Seek Dock Opcode\+: 143 Data Bytes\+: 0. This command directs Roomba to drive onto the dock the next time it encounters the docking beams. This is the same as pressing Roomba’s Dock button, and will pause a cleaning cycle if one is already in progress.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}143\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: Passive 
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+P\+W\+M\+\_\+\+M\+O\+T\+O\+R\+S@{R\+O\+O\+M\+B\+A\+\_\+\+P\+W\+M\+\_\+\+M\+O\+T\+O\+R\+S}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+P\+W\+M\+\_\+\+M\+O\+T\+O\+R\+S@{R\+O\+O\+M\+B\+A\+\_\+\+P\+W\+M\+\_\+\+M\+O\+T\+O\+R\+S}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ab1891f6f7f69dc7936ca25751b7dfd8f}{}R\+O\+O\+M\+B\+A\+\_\+\+P\+W\+M\+\_\+\+M\+O\+T\+O\+R\+S\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ab1891f6f7f69dc7936ca25751b7dfd8f}
+}]P\+W\+M Motors Opcode\+: 144 Data Bytes\+: 3. This command lets you control the speed of Roomba’s main brush, side brush, and vacuum independently. With each data byte, you specify the duty cycle for the low side driver (max 128). For example, if you want to control a motor with 25\% of battery voltage, choose a duty cycle of 128 $\ast$ 25\% = 32. The main brush and side brush can be run in either direction. The vacuum only runs forward. Positive speeds turn the motor in its default (cleaning) direction. Default direction for the side brush is counterclockwise. Default direction for the main brush/flapper is inward. Serial sequence\+: \mbox{[}144\mbox{]} \mbox{[}Main Brush P\+W\+M\mbox{]} \mbox{[}Side Brush P\+W\+M\mbox{]} \mbox{[}Vacuum P\+W\+M\mbox{]}
+\begin{DoxyItemize}
+\item Available in modes\+: Safe or Full
+\item Changes mode to\+: No Change
+\item Main Brush and Side Brush duty cycle (-\/127 – 127)
+\item Vacuum duty cycle (0 – 127) 
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E\+\_\+\+D\+I\+R\+E\+C\+T@{R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E\+\_\+\+D\+I\+R\+E\+C\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E\+\_\+\+D\+I\+R\+E\+C\+T@{R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E\+\_\+\+D\+I\+R\+E\+C\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a16a8f754217439e90a92a47d5e19c605}{}R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E\+\_\+\+D\+I\+R\+E\+C\+T\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a16a8f754217439e90a92a47d5e19c605}
+}]Drive Direct Opcode\+: 145 Data Bytes\+: 4. This command lets you control the forward and backward motion of Roomba’s drive wheels independently. It takes four data bytes, which are interpreted as two 16-\/bit signed values using two’s complement. The first two bytes specify the velocity of the right wheel in millimeters per second (mm/s), with the high byte sent first. The next two bytes specify the velocity of the left wheel, in the same format. A positive velocity makes that wheel drive forward, while a negative velocity makes it drive backward.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}145\mbox{]} \mbox{[}Right velocity high byte\mbox{]} \mbox{[}Right velocity low byte\mbox{]} \mbox{[}Left velocity high byte\mbox{]} \mbox{[}Left velocity low byte\mbox{]}
+\item Available in modes\+: Safe or Full
+\item Changes mode to\+: No Change
+\item Right wheel velocity (-\/500 – 500 mm/s)
+\item Left wheel velocity (-\/500 – 500 mm/s) 
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E\+\_\+\+P\+W\+M@{R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E\+\_\+\+P\+W\+M}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E\+\_\+\+P\+W\+M@{R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E\+\_\+\+P\+W\+M}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a6c802b8d83b06edb676b7f777f4ebecc}{}R\+O\+O\+M\+B\+A\+\_\+\+D\+R\+I\+V\+E\+\_\+\+P\+W\+M\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a6c802b8d83b06edb676b7f777f4ebecc}
+}]Drive P\+W\+M Opcode\+: 146 Data Bytes\+: 4. This command lets you control the raw forward and backward motion of Roomba’s drive wheels independently. It takes four data bytes, which are interpreted as two 16-\/bit signed values using two’s complement. The first two bytes specify the P\+W\+M of the right wheel, with the high byte sent first. The next two bytes specify the P\+W\+M of the left wheel, in the same format. A positive P\+W\+M makes that wheel drive forward, while a negative P\+W\+M makes it drive backward.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}146\mbox{]} \mbox{[}Right P\+W\+M high byte\mbox{]} \mbox{[}Right P\+W\+M low byte\mbox{]} \mbox{[}Left P\+W\+M high byte\mbox{]} \mbox{[}Left P\+W\+M low byte\mbox{]}
+\item Available in modes\+: Safe or Full
+\item Changes mode to\+: No Change
+\item Right wheel P\+W\+M (-\/255 – 255)
+\item Left wheel P\+W\+M (-\/255 – 255) 
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+R\+E\+A\+M@{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+R\+E\+A\+M}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+R\+E\+A\+M@{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+R\+E\+A\+M}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ad81a1446d5956b6717c8a28ec74c2bf9}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+R\+E\+A\+M\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ad81a1446d5956b6717c8a28ec74c2bf9}
+}]Stream Opcode\+: 148 Data Bytes\+: N + 1, where N is the number of packets requested. This command starts a stream of data packets. The list of packets requested is sent every 15 ms, which is the rate Roomba uses to update data. This method of requesting sensor data is best if you are controlling Roomba over a wireless network (which has poor real-\/time characteristics) with software running on a desktop computer.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}148\mbox{]} \mbox{[}Number of packets\mbox{]} \mbox{[}Packet I\+D 1\mbox{]} \mbox{[}Packet I\+D 2\mbox{]} $\ast$ \mbox{[}Packet I\+D 3\mbox{]} etc.
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: No Change The format of the data returned is\+: \mbox{[}19\mbox{]}\mbox{[}N-\/bytes\mbox{]}\mbox{[}Packet I\+D 1\mbox{]}\mbox{[}Packet 1 data…\mbox{]}\mbox{[}Packet I\+D 2\mbox{]}\mbox{[}Packet 2 data…\mbox{]} \mbox{[}Checksum\mbox{]} N-\/bytes is the number of bytes between the n-\/bytes byte and the checksum. The checksum is a 1-\/byte value. It is the 8-\/bit complement of all of the bytes in the packet, excluding the checksum itself. That is, if you add all of the bytes in the packet, including the checksum, the low byte of the result will be 0. Example\+: To get data from Roomba\textquotesingle{}s left cliff signal (packet 29) and virtual wall sensor (packet 13), send the following command string to Roomba\+: \mbox{[}148\mbox{]} \mbox{[}2\mbox{]} \mbox{[}29\mbox{]} \mbox{[}13\mbox{]} \begin{DoxyNote}{Note}
+The left cliff signal is a 2-\/byte packet and the virtual wall is a 1-\/byte packet. Roomba starts streaming data that looks like this\+: 19 5 29 2 25 13 0 163 header n-\/bytes packet I\+D 1 Packet data 1 (2 bytes) packet I\+D 2 packet data 2 (1 byte) Checksum 
+
+Checksum computation\+: (19 + 5 + 29 + 2 + 25 + 13 + 0 + 163) = 256 and (256 \& 0x\+F\+F) = 0. In the above stream segment, Roomba’s left cliff signal value was 549 (0x0225) and there was no virtual wall signal. It is up to you not to request more data than can be sent at the current baud rate in the 15 ms time slot. For example, at 115200 baud, a maximum of 172 bytes can be sent in 15 ms\+: 15 ms / 10 bits (8 data + start + stop) $\ast$ 115200 = 172.\+8
+\end{DoxyNote}
+If more data is requested, the data stream will eventually become corrupted. This can be confirmed by checking the checksum. The header byte and checksum can be used to align your receiving program with the data. All data chunks start with 19 and end with the 1-\/byte checksum. 
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+Q\+U\+E\+R\+Y\+\_\+\+L\+I\+S\+T@{R\+O\+O\+M\+B\+A\+\_\+\+Q\+U\+E\+R\+Y\+\_\+\+L\+I\+S\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+Q\+U\+E\+R\+Y\+\_\+\+L\+I\+S\+T@{R\+O\+O\+M\+B\+A\+\_\+\+Q\+U\+E\+R\+Y\+\_\+\+L\+I\+S\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a0bf4541e5eb8a17aa5e6550ce5ca70e3}{}R\+O\+O\+M\+B\+A\+\_\+\+Q\+U\+E\+R\+Y\+\_\+\+L\+I\+S\+T\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a0bf4541e5eb8a17aa5e6550ce5ca70e3}
+}]Query List Opcode\+: 149 Data Bytes\+: N + 1, where N is the number of packets requested. This command lets you ask for a list of sensor packets. The result is returned once, as in the Sensors command. The robot returns the packets in the order you specify.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}149\mbox{]}\mbox{[}Number of Packets\mbox{]}\mbox{[}Packet I\+D 1\mbox{]} \mbox{[}Packet I\+D 2\mbox{]}...\mbox{[}Packet I\+D N\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes modes to\+: No Change Example\+: To get the state of the bumpers and the virtual wall sensor, send the following sequence\+: \mbox{[}149\mbox{]} \mbox{[}2\mbox{]} \mbox{[}7\mbox{]} \mbox{[}13\mbox{]} 
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+U\+S\+E\+\_\+\+R\+E\+S\+U\+M\+E\+\_\+\+S\+T\+R\+E\+A\+M@{R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+U\+S\+E\+\_\+\+R\+E\+S\+U\+M\+E\+\_\+\+S\+T\+R\+E\+A\+M}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+U\+S\+E\+\_\+\+R\+E\+S\+U\+M\+E\+\_\+\+S\+T\+R\+E\+A\+M@{R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+U\+S\+E\+\_\+\+R\+E\+S\+U\+M\+E\+\_\+\+S\+T\+R\+E\+A\+M}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ab58d7a4edc71f5877180d177bc7f83d0}{}R\+O\+O\+M\+B\+A\+\_\+\+P\+A\+U\+S\+E\+\_\+\+R\+E\+S\+U\+M\+E\+\_\+\+S\+T\+R\+E\+A\+M\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ab58d7a4edc71f5877180d177bc7f83d0}
+}]Pause/\+Resume Stream Opcode\+: 150 Data Bytes\+: 1. This command lets you stop and restart the steam without clearing the list of requested packets.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}150\mbox{]}\mbox{[}Stream State\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes modes to\+: No Change
+\item Range\+: 0-\/1 An argument of 0 stops the stream without clearing the list of requested packets. An argument of 1 starts the stream using the list of packets last requested. 
+\end{DoxyItemize}\index{S\+E\+N\+D\+\_\+\+I\+R@{S\+E\+N\+D\+\_\+\+I\+R}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!S\+E\+N\+D\+\_\+\+I\+R@{S\+E\+N\+D\+\_\+\+I\+R}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a9de59aa841a98e5e44796ea3cca14c79}{}S\+E\+N\+D\+\_\+\+I\+R\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a9de59aa841a98e5e44796ea3cca14c79}
+}]Send I\+R Opcode\+: 151 Data Bytes\+: 1. This command sends the requested byte out of low side driver 1 (pin 23 on the Cargo Bay Connector), using the format expected by i\+Robot Create’s I\+R receiver. You must use a preload resistor (suggested value\+: 100 ohms) in parallel with the I\+R L\+E\+D and its resistor in order turn it on.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}151\mbox{]}\mbox{[}Byte Value\mbox{]}
+\item Available in modes\+: Safe or Full
+\item Changes mode to\+: No Change
+\item Send I\+R data byte 1\+: Byte value to send (0 -\/ 255)
+\end{DoxyItemize}
+
+\begin{DoxyRefDesc}{Deprecated}
+\item[\hyperlink{deprecated__deprecated000003}{Deprecated}]\end{DoxyRefDesc}
+\index{S\+C\+R\+I\+P\+T@{S\+C\+R\+I\+P\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!S\+C\+R\+I\+P\+T@{S\+C\+R\+I\+P\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a65154c0ec97cb74cba7359ca02c4ab54}{}S\+C\+R\+I\+P\+T\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a65154c0ec97cb74cba7359ca02c4ab54}
+}]Script Opcode\+: 152 Data Bytes\+: N + 1 where N is the number of bytes in the script. This command specifies a script to be played later. A script consists of O\+I commands and can be up to 100 bytes long. There is no flow control, but “wait” commands (see below) cause Create to hold its current state until the specified event is detected.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}152\mbox{]} \mbox{[}Script Length\mbox{]} \mbox{[}Opcode 1\mbox{]} \mbox{[}Opcode 2\mbox{]} \mbox{[}Opcode 3\mbox{]} etc.
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: No Change
+\item Script data byte 1\+: Script Length (0 – 100) Specifies the length of the script in terms of the number of commands. Specify a length of 0 to clear the current script.
+\item Script data bytes 2 and above\+: Open Interface commands and data bytes
+\end{DoxyItemize}
+
+Tip\+: To make a script loop forever, use Play Script (153) as the last command. Example Scripts\+: Drive 40 cm and stop\+: 152 13 137 1 44 128 0 156 1 144 137 0 0 0 0 Toggle led on bump\+: 152 17 158 5 158 251 139 2 0 0 158 5 158 251 139 0 0 0 153 Drive in a square\+: 152 17 137 1 44 128 0 156 1 144 137 1 44 0 1 157 0 90 153
+
+\begin{DoxyRefDesc}{Deprecated}
+\item[\hyperlink{deprecated__deprecated000004}{Deprecated}]\end{DoxyRefDesc}
+\index{P\+L\+A\+Y\+\_\+\+S\+C\+R\+I\+P\+T@{P\+L\+A\+Y\+\_\+\+S\+C\+R\+I\+P\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!P\+L\+A\+Y\+\_\+\+S\+C\+R\+I\+P\+T@{P\+L\+A\+Y\+\_\+\+S\+C\+R\+I\+P\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a83540b81be6becb532a766b7dd3a5ade}{}P\+L\+A\+Y\+\_\+\+S\+C\+R\+I\+P\+T\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a83540b81be6becb532a766b7dd3a5ade}
+}]Play Script Opcode\+: 153 Data Bytes\+: 0. This command loads a previously defined O\+I script into the serial input queue for playback.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}153\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: No Change
+\end{DoxyItemize}
+
+\begin{DoxyRefDesc}{Deprecated}
+\item[\hyperlink{deprecated__deprecated000005}{Deprecated}]\end{DoxyRefDesc}
+\index{S\+H\+O\+W\+\_\+\+S\+C\+R\+I\+P\+T@{S\+H\+O\+W\+\_\+\+S\+C\+R\+I\+P\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!S\+H\+O\+W\+\_\+\+S\+C\+R\+I\+P\+T@{S\+H\+O\+W\+\_\+\+S\+C\+R\+I\+P\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a709160dfcdb78b233459a7c046b91b5c}{}S\+H\+O\+W\+\_\+\+S\+C\+R\+I\+P\+T\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a709160dfcdb78b233459a7c046b91b5c}
+}]Show Script Opcode\+: 154 Data Bytes\+: 0. This command returns the values of a previously stored script, starting with the number of bytes in the script and followed by the script’s commands and data bytes. It first halts the sensor stream, if one has been started with a Stream or Pause/\+Resume Stream command. To restart the stream, send Pause/\+Resume Stream (opcode 150). • Serial sequence\+: \mbox{[}154\mbox{]} • Available in modes\+: Passive, Safe, or Full • Changes mode to\+: No Change
+
+\paragraph*{Wait Commands}
+
+The following commands cause Create to wait for a specific time, distance, angle of rotation, or event to occur. While it is waiting, Create does not change its state, nor does it react to any inputs, serial or otherwise. These commands are intended for use in scripting only.
+
+\begin{DoxyRefDesc}{Deprecated}
+\item[\hyperlink{deprecated__deprecated000006}{Deprecated}]\end{DoxyRefDesc}
+\index{W\+A\+I\+T\+\_\+\+T\+I\+M\+E@{W\+A\+I\+T\+\_\+\+T\+I\+M\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!W\+A\+I\+T\+\_\+\+T\+I\+M\+E@{W\+A\+I\+T\+\_\+\+T\+I\+M\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a3dbca2a6576b16fc30af00cbf8ff3b6d}{}W\+A\+I\+T\+\_\+\+T\+I\+M\+E\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a3dbca2a6576b16fc30af00cbf8ff3b6d}
+}]Wait Time Opcode\+: 155 Data Bytes\+: 1. This command causes Create to wait for the specified time. During this time, Create’s state does not change, nor does it react to any inputs, serial or otherwise.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}155\mbox{]} \mbox{[}time\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: No Change
+\item Wait Time data byte 1\+: Time (0 -\/ 255) Specifies time to wait in tenths of a second with a resolution of 15 ms.
+\end{DoxyItemize}
+
+\begin{DoxyRefDesc}{Deprecated}
+\item[\hyperlink{deprecated__deprecated000007}{Deprecated}]\end{DoxyRefDesc}
+\index{W\+A\+I\+T\+\_\+\+D\+I\+S\+T\+A\+N\+C\+E@{W\+A\+I\+T\+\_\+\+D\+I\+S\+T\+A\+N\+C\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!W\+A\+I\+T\+\_\+\+D\+I\+S\+T\+A\+N\+C\+E@{W\+A\+I\+T\+\_\+\+D\+I\+S\+T\+A\+N\+C\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a35cc18edb14f8cc7586f8767d2a57585}{}W\+A\+I\+T\+\_\+\+D\+I\+S\+T\+A\+N\+C\+E\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a35cc18edb14f8cc7586f8767d2a57585}
+}]Wait Distance Opcode\+: 156 Data Bytes\+: 2. This command causes i\+Robot Create to wait until it has traveled the specified distance in mm. When Create travels forward, the distance is incremented. When Create travels backward, the distance is decremented. If the wheels are passively rotated in either direction, the distance is incremented. Until Create travels the specified distance, its state does not change, nor does it react to any inputs, serial or otherwise. \begin{DoxyNote}{Note}
+This command resets the distance variable that is returned in Sensors packets 19, 2 and 6.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}156\mbox{]} \mbox{[}Distance high byte\mbox{]} \mbox{[}Distance low byte\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: No Change
+\item Wait Distance data bytes 1-\/2\+: 16-\/bit signed distance in mm, high byte first (-\/32767 -\/32768)
+\end{DoxyItemize}
+\end{DoxyNote}
+\begin{DoxyRefDesc}{Deprecated}
+\item[\hyperlink{deprecated__deprecated000008}{Deprecated}]\end{DoxyRefDesc}
+\index{W\+A\+I\+T\+\_\+\+A\+N\+G\+L\+E@{W\+A\+I\+T\+\_\+\+A\+N\+G\+L\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!W\+A\+I\+T\+\_\+\+A\+N\+G\+L\+E@{W\+A\+I\+T\+\_\+\+A\+N\+G\+L\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24afe16224c28a9b186c8357e539358d96e}{}W\+A\+I\+T\+\_\+\+A\+N\+G\+L\+E\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24afe16224c28a9b186c8357e539358d96e}
+}]Wait Angle Opcode\+: 157 Data Bytes\+: 2. This command causes Create to wait until it has rotated through specified angle in degrees. When Create turns counterclockwise, the angle is incremented. When Create turns clockwise, the angle is decremented. Until Create turns through the specified angle, its state does not change, nor does it react to any inputs, serial or otherwise. \begin{DoxyNote}{Note}
+This command resets the angle variable that is returned in Sensors packets 20, 2 and 6.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}157\mbox{]} \mbox{[}Angle high byte\mbox{]} \mbox{[}Angle low byte\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: No Change
+\item Wait Angle data bytes 1-\/2\+: 16-\/bit signed angle in degrees, high byte first (-\/32767 -\/32768)
+\end{DoxyItemize}
+\end{DoxyNote}
+\begin{DoxyRefDesc}{Deprecated}
+\item[\hyperlink{deprecated__deprecated000009}{Deprecated}]\end{DoxyRefDesc}
+\index{W\+A\+I\+T\+\_\+\+E\+V\+E\+N\+T@{W\+A\+I\+T\+\_\+\+E\+V\+E\+N\+T}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!W\+A\+I\+T\+\_\+\+E\+V\+E\+N\+T@{W\+A\+I\+T\+\_\+\+E\+V\+E\+N\+T}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a4c81a6746d2eacab9a179c21531658fd}{}W\+A\+I\+T\+\_\+\+E\+V\+E\+N\+T\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a4c81a6746d2eacab9a179c21531658fd}
+}]Wait \hyperlink{structEvent}{Event} Opcode\+: 158 Data Bytes\+: 1 signed. This command causes Create to wait until it detects the specified event. Until the specified event is detected, Create’s state does not change, nor does it react to any inputs, serial or otherwise.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}158\mbox{]} \mbox{[}\hyperlink{structEvent}{Event} number\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: No Change
+\item Wait \hyperlink{structEvent}{Event} data byte 1\+: Signed event number (1 to 20 and -\/1 to -\/20)
+\end{DoxyItemize}
+
+To wait for the inverse of an event, send the negative of its number using two’s complement notation. For example, to wait for no bumps, send the serial byte sequence \mbox{[}158\mbox{]} \mbox{[}-\/5\mbox{]}, which is equivalent to \mbox{[}158\mbox{]} \mbox{[}251\mbox{]}.
+
+Wait \hyperlink{structEvent}{Event}\+: Unsigned Equivalent of Inverse \begin{TabularC}{3}
+\hline
+\rowcolor{lightgray}{\bf \hyperlink{structEvent}{Event} }&{\bf Number }&{\bf Unsigned Equivalent of Inverse  }\\\cline{1-3}
+Wheel Drop &1 &255 \\\cline{1-3}
+Front Wheel Drop &2 &254 \\\cline{1-3}
+Left Wheel Drop &3 &253 \\\cline{1-3}
+Right Wheel Drop &4 &252 \\\cline{1-3}
+Bump &5 &251 \\\cline{1-3}
+Left Bump &6 &250 \\\cline{1-3}
+Right Bump &7 &249 \\\cline{1-3}
+Virtual Wall &8 &248 \\\cline{1-3}
+Wall &9 &247 \\\cline{1-3}
+Cliff &10 &246 \\\cline{1-3}
+Left Cliff &11 &245 \\\cline{1-3}
+Front Left Cliff &12 &244 \\\cline{1-3}
+Front Right Cliff &13 &243 \\\cline{1-3}
+Right Cliff &14 &242 \\\cline{1-3}
+Home Base &15 &241 \\\cline{1-3}
+Advance Button &16 &240 \\\cline{1-3}
+Play Button &17 &239 \\\cline{1-3}
+Digital Input 0 &18 &238 \\\cline{1-3}
+Digital Input 1 &19 &237 \\\cline{1-3}
+Digital Input 2 &20 &236 \\\cline{1-3}
+Digital Input 3 &21 &235 \\\cline{1-3}
+O\+I Mode = Passive &22 &234 \\\cline{1-3}
+\end{TabularC}
+\begin{DoxyRefDesc}{Deprecated}
+\item[\hyperlink{deprecated__deprecated000010}{Deprecated}]\end{DoxyRefDesc}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+S\+C\+H\+E\+D\+U\+L\+I\+N\+G\+\_\+\+L\+E\+D\+S@{R\+O\+O\+M\+B\+A\+\_\+\+S\+C\+H\+E\+D\+U\+L\+I\+N\+G\+\_\+\+L\+E\+D\+S}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+C\+H\+E\+D\+U\+L\+I\+N\+G\+\_\+\+L\+E\+D\+S@{R\+O\+O\+M\+B\+A\+\_\+\+S\+C\+H\+E\+D\+U\+L\+I\+N\+G\+\_\+\+L\+E\+D\+S}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a86faa808c27ddad1404fa882193f0db7}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+C\+H\+E\+D\+U\+L\+I\+N\+G\+\_\+\+L\+E\+D\+S\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a86faa808c27ddad1404fa882193f0db7}
+}]Scheduling L\+E\+D\+S Opcode\+: 162 Data Bytes\+: 2. This command controls the state of the scheduling L\+E\+Ds present on the Roomba 560 and 570.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}162\mbox{]} \mbox{[}Weekday L\+E\+D Bits\mbox{]}\mbox{[}Scheduling L\+E\+D Bits\mbox{]}
+\item Available in modes\+: Safe or Full
+\item Changes mode to\+: No Change
+\item Weekday L\+E\+D Bits (0 – 255)
+\item Scheduling L\+E\+D Bits (0 – 255)
+\item All use red L\+E\+Ds\+: 0 = off, 1 = on
+\end{DoxyItemize}
+
+\paragraph*{Weekday L\+E\+D Bits}
+
+\begin{TabularC}{9}
+\hline
+\rowcolor{lightgray}{\bf Bit }&{\bf 7 }&{\bf 6 }&{\bf 5 }&{\bf 4 }&{\bf 3 }&{\bf 2 }&{\bf 1 }&{\bf 0  }\\\cline{1-9}
+Value &Reserved &Sat &Fri &Thu &Wed &Tue &Mon &Sun \\\cline{1-9}
+\end{TabularC}
+\paragraph*{Scheduling L\+E\+D Bits}
+
+\begin{TabularC}{9}
+\hline
+\rowcolor{lightgray}{\bf Bit }&{\bf 7 }&{\bf 6 }&{\bf 5 }&{\bf 4 }&{\bf 3 }&{\bf 2 }&{\bf 1 }&{\bf 0  }\\\cline{1-9}
+Value &Reserved &Schedule &Clock &A\+M &P\+M &Colon (\+:) &&\\\cline{1-9}
+\end{TabularC}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+G\+I\+T\+\_\+\+L\+E\+D\+S\+\_\+\+R\+A\+W@{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+G\+I\+T\+\_\+\+L\+E\+D\+S\+\_\+\+R\+A\+W}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+G\+I\+T\+\_\+\+L\+E\+D\+S\+\_\+\+R\+A\+W@{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+G\+I\+T\+\_\+\+L\+E\+D\+S\+\_\+\+R\+A\+W}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24acd27e02da97cb9cc482177a27e135c45}{}R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+G\+I\+T\+\_\+\+L\+E\+D\+S\+\_\+\+R\+A\+W\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24acd27e02da97cb9cc482177a27e135c45}
+}]Digit L\+E\+Ds Raw Opcode\+: 163 Data Bytes\+: 4. This command controls the four 7 segment displays on the Roomba 560 and 570.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}163\mbox{]} \mbox{[}Digit 3 Bits\mbox{]} \mbox{[}Digit 2 Bits\mbox{]} \mbox{[}Digit 1 Bits\mbox{]} \mbox{[}Digit 0 Bits\mbox{]}
+\item Available in modes\+: Safe or Full
+\item Changes mode to\+: No Change
+\item Digit N Bits (0 – 255)
+\item All use red L\+E\+Ds\+: 0 = off, 1 = on. Digits are ordered from left to right on the robot 3,2,1,0.
+\end{DoxyItemize}
+
+Digit N Bits \begin{TabularC}{9}
+\hline
+\rowcolor{lightgray}{\bf Bit }&{\bf 7 }&{\bf 6 }&{\bf 5 }&{\bf 4 }&{\bf 3 }&{\bf 2 }&{\bf 1 }&{\bf 0  }\\\cline{1-9}
+Value &Reserved &G &F &E &D &C &B &A \\\cline{1-9}
+\end{TabularC}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+G\+I\+T\+\_\+\+L\+E\+D\+S\+\_\+\+A\+S\+C\+I\+I@{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+G\+I\+T\+\_\+\+L\+E\+D\+S\+\_\+\+A\+S\+C\+I\+I}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+G\+I\+T\+\_\+\+L\+E\+D\+S\+\_\+\+A\+S\+C\+I\+I@{R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+G\+I\+T\+\_\+\+L\+E\+D\+S\+\_\+\+A\+S\+C\+I\+I}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a094d22b24aae1379b33389cf701b5356}{}R\+O\+O\+M\+B\+A\+\_\+\+D\+I\+G\+I\+T\+\_\+\+L\+E\+D\+S\+\_\+\+A\+S\+C\+I\+I\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a094d22b24aae1379b33389cf701b5356}
+}]Digit L\+E\+Ds A\+S\+C\+I\+I Opcode\+: 164 Data Bytes\+: 4. This command controls the four 7 segment displays on the Roomba 560 and 570 using A\+S\+C\+I\+I character codes. Because a 7 segment display is not sufficient to display alphabetic characters properly, all characters are an approximation, and not all A\+S\+C\+I\+I codes are implemented.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}164\mbox{]} \mbox{[}Digit 3 A\+S\+C\+I\+I\mbox{]} \mbox{[}Digit 2 A\+S\+C\+I\+I\mbox{]} \mbox{[}Digit 1 A\+S\+C\+I\+I\mbox{]} \mbox{[}Digit 0 A\+S\+C\+I\+I\mbox{]}
+\item Available in modes\+: Safe or Full
+\item Changes mode to\+: No Change
+\item Digit N A\+S\+C\+I\+I (32 – 126)
+\item All use red L\+E\+Ds. Digits are ordered from left to right on the robot 3,2,1,0. Example\+: To write A\+B\+C\+D to the display, send the serial byte sequence\+: \mbox{[}164\mbox{]} \mbox{[}65\mbox{]} \mbox{[}66\mbox{]} \mbox{[}67\mbox{]} \mbox{[}68\mbox{]}
+\end{DoxyItemize}
+
+Table of A\+S\+C\+I\+I codes\+: \begin{TabularC}{8}
+\hline
+\rowcolor{lightgray}{\bf Code }&{\bf Display }&{\bf Code }&{\bf Display }&{\bf Code }&{\bf Display }&{\bf Code }&{\bf Display  }\\\cline{1-8}
+32 &&53 &5 &70,102 &F &86,118 &V \\\cline{1-8}
+33 &! &54 &6 &71,103 &G &87,119 &W \\\cline{1-8}
+34 &” &55 &7 &72,104 &H &88,120 &X \\\cline{1-8}
+35 &\# &56 &8 &73,105 &I &89,121 &Y \\\cline{1-8}
+37 &\% &57 &9 &74,106 &J &90,122 &Z \\\cline{1-8}
+38 &\& &58 &\+: &75,107 &K &91,40 &\mbox{[} \\\cline{1-8}
+39 &’ &59 &; &76,108 &L &92 &\textbackslash{} \\\cline{1-8}
+44 &, &60 &¡ &77,109 &M &93,41 &\mbox{]} \\\cline{1-8}
+45 &-\/ &61 &= &78,110 &N &94 &∧ \\\cline{1-8}
+46 &. &62 &¿ &79,111 &O &95 &\\\cline{1-8}
+47 &/ &63 &? &80,112 &P &96 &‘ \\\cline{1-8}
+48 &0 &65,97 &A &81,113 &Q &123 &\{ \\\cline{1-8}
+49 &1 &66,98 &B &82,114 &R &124 &— \\\cline{1-8}
+50 &2 &67,99 &C &83,36,115 &S &125 &\} \\\cline{1-8}
+51 &3 &68,100 &D &84,116 &T &126 &∼ \\\cline{1-8}
+52 &4 &69,101 &E &85,117 &U &&\\\cline{1-8}
+\end{TabularC}
+\index{R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+T\+T\+O\+N\+S\+\_\+\+C\+M\+D@{R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+T\+T\+O\+N\+S\+\_\+\+C\+M\+D}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+T\+T\+O\+N\+S\+\_\+\+C\+M\+D@{R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+T\+T\+O\+N\+S\+\_\+\+C\+M\+D}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ab369d673cdfb4414fb307ddaef5288dd}{}R\+O\+O\+M\+B\+A\+\_\+\+B\+U\+T\+T\+O\+N\+S\+\_\+\+C\+M\+D\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ab369d673cdfb4414fb307ddaef5288dd}
+}]Buttons Opcode\+: 165 Data Bytes\+: 1. This command lets you push Roomba’s buttons. The buttons will automatically release after 1/6th of a second.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}165\mbox{]} \mbox{[}Buttons\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: No Change
+\item Buttons (0-\/255) 1 = Push Button, 0 = Release Button Buttons \begin{TabularC}{9}
+\hline
+\rowcolor{lightgray}{\bf Bit }&{\bf 7 }&{\bf 6 }&{\bf 5 }&{\bf 4 }&{\bf 3 }&{\bf 2 }&{\bf 1 }&{\bf 0  }\\\cline{1-9}
+Value &Clock &Schedule &Day &Hour &Minute &Dock &Spot &Clean \\\cline{1-9}
+\end{TabularC}
+
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+S\+C\+H\+E\+D\+U\+L\+E@{R\+O\+O\+M\+B\+A\+\_\+\+S\+C\+H\+E\+D\+U\+L\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+C\+H\+E\+D\+U\+L\+E@{R\+O\+O\+M\+B\+A\+\_\+\+S\+C\+H\+E\+D\+U\+L\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ac4b9ca54bc982f8b9b565c72cb642ccc}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+C\+H\+E\+D\+U\+L\+E\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ac4b9ca54bc982f8b9b565c72cb642ccc}
+}]This command sends Roomba a new schedule. To disable scheduled cleaning, send all 0s.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}167\mbox{]} \mbox{[}Days\mbox{]} \mbox{[}Sun Hour\mbox{]} \mbox{[}Sun Minute\mbox{]} \mbox{[}Mon Hour\mbox{]} \mbox{[}Mon Minute\mbox{]} \mbox{[}Tue Hour\mbox{]} \mbox{[}Tue Minute\mbox{]} \mbox{[}Wed Hour\mbox{]} \mbox{[}Wed Minute\mbox{]} \mbox{[}Thu Hour\mbox{]} \mbox{[}Thu Minute\mbox{]} \mbox{[}Fri Hour\mbox{]} \mbox{[}Fri Minute\mbox{]} \mbox{[}Sat Hour\mbox{]} \mbox{[}Sat Minute\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full.
+\item If Roomba’s schedule or clock button is pressed, this command will be ignored.
+\item Changes mode to\+: No change
+\item Times are sent in 24 hour format. Hour (0-\/23) Minute (0-\/59) Days Bit 7 6 5 4 3 2 1 0 Value Reserved Sat Fri Thu Wed Tue Mon Sun Example\+: To schedule the robot to clean at 3\+:00 P\+M on Wednesdays and 10\+:36 A\+M on Fridays, send\+: \mbox{[}167\mbox{]} \mbox{[}40\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}15\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}10\mbox{]} \mbox{[}36\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} To disable scheduled cleaning, send\+: \mbox{[}167\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} \mbox{[}0\mbox{]} 
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+T\+\_\+\+D\+A\+Y\+\_\+\+T\+I\+M\+E@{R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+T\+\_\+\+D\+A\+Y\+\_\+\+T\+I\+M\+E}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+T\+\_\+\+D\+A\+Y\+\_\+\+T\+I\+M\+E@{R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+T\+\_\+\+D\+A\+Y\+\_\+\+T\+I\+M\+E}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a17519d3bc7b9e8c70af28afe85d92229}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+E\+T\+\_\+\+D\+A\+Y\+\_\+\+T\+I\+M\+E\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a17519d3bc7b9e8c70af28afe85d92229}
+}]Set Day/\+Time Opcode\+: 168 Data Bytes\+: 3. This command sets Roomba’s clock.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}168\mbox{]} \mbox{[}Day\mbox{]} \mbox{[}Hour\mbox{]} \mbox{[}Minute\mbox{]}
+\item Available in modes\+: Passive, Safe, or Full.
+\item If Roomba’s schedule or clock button is pressed, this command will be ignored.
+\item Changes mode to\+: No change
+\item Time is sent in 24 hour format. Hour (0-\/23) Minute (0-\/59) \begin{TabularC}{2}
+\hline
+\rowcolor{lightgray}{\bf Code }&{\bf Day  }\\\cline{1-2}
+0 &Sunday \\\cline{1-2}
+1 &Monday \\\cline{1-2}
+2 &Tuesday \\\cline{1-2}
+3 &Wednesday \\\cline{1-2}
+4 &Thursday \\\cline{1-2}
+5 &Friday \\\cline{1-2}
+6 &Saturday \\\cline{1-2}
+\end{TabularC}
+
+\end{DoxyItemize}\index{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+O\+P@{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+O\+P}!Roomba Library@{Roomba Library}}\index{Roomba Library@{Roomba Library}!R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+O\+P@{R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+O\+P}}\item[{\em 
+\hypertarget{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a4c60272718e8bd851c58e6a9545f0d9f}{}R\+O\+O\+M\+B\+A\+\_\+\+S\+T\+O\+P\label{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a4c60272718e8bd851c58e6a9545f0d9f}
+}]Stop Opcode\+: 173 Data Bytes\+: 0. This command stops the O\+I. All streams will stop and the robot will no longer respond to commands. Use this command when you are finished working with the robot.
+\begin{DoxyItemize}
+\item Serial sequence\+: \mbox{[}173\mbox{]}.
+\item Available in modes\+: Passive, Safe, or Full
+\item Changes mode to\+: Off. Roomba plays a song to acknowledge it is exiting the O\+I. 
+\end{DoxyItemize}\end{description}
+\end{Desc}
+
+\begin{DoxyCode}
+76                              \{
+91   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a42d615c28dbc113dcc6d742efe148eb6}{ROOMBA\_RESET} = 7,
+92 
+107   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a2a01acef0ce68b399d3d0ff55e2c9439}{ROOMBA\_START} = 128,
+108 
+145   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a2461f308d895f39a96b6002f55753b6e}{ROOMBA\_BAUD} = 129,
+146 
+162   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24afc1db2d92cee63105d5591b7c033b65e}{ROOMBA\_CONTROL} = 130,
+163 
+181   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ae30c6c0f4e9ea706fea43c6098f35cec}{ROOMBA\_SAFE} = 131,
+182 
+201   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a7ec5893abd5169837596b51b7a85c489}{ROOMBA\_FULL} = 132,
+202 
+216   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a5f448683aabbaddfd5a6f82e2e03a571}{ROOMBA\_POWER} = 133,
+217 
+232   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a51432a5c7706ae489570eca7ba0a55b8}{ROOMBA\_SPOT} = 134,
+233 
+234 \textcolor{preprocessor}{  #if ROOMBA\_INTERFACE\_VERSION==1}
+235 
+246   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24abfb77b700185666cad669081837c6bff}{ROOMBA\_COVER} = 135,
+247 
+248 \textcolor{preprocessor}{  #elif ROOMBA\_INTERFACE\_VERSION==2}
+249 
+262   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24abed3f4709f037352df127ea6b5e45acd}{ROOMBA\_CLEAN} = 135,
+263 
+264 \textcolor{preprocessor}{  #endif}
+265 
+266 \textcolor{preprocessor}{  #if ROOMBA\_INTERFACE\_VERSION==1}
+267 
+336   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a4009137101f5f5008ebb98e6bb7c3436}{ROOMBA\_DEMO} = 136,
+337 
+338 \textcolor{preprocessor}{  #elif ROOMBA\_INTERFACE\_VERSION==2}
+339 
+352   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a8dbcf646bf6f314d1d9109cb233e9768}{ROOMBA\_MAX} = 136,
+353 
+354 \textcolor{preprocessor}{  #endif}
+355 
+397   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24aaf858c1a076d79bae24353fe65a5f1ae}{ROOMBA\_DRIVE} = 137,
+398 
+424   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a7afe27d88fb8c345d23402faff25a6e3}{ROOMBA\_MOTORS} = 138,
+425 
+463   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ae4122f32b1c10a1b6f8606da15522599}{ROOMBA\_LEDS} = 139,
+464 
+531   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a81a248bb3504b8d3b302aa6037f2df7b}{ROOMBA\_SONG} = 140,
+532 
+548   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24adfc5020e343dfdc400651002301374b2}{ROOMBA\_PLAY} = 141,
+549 
+567   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a301ea9dba750cbbe96f96545436b659a}{ROOMBA\_SENSORS} = 142,
+568 
+581   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24aaadf37ce35045bca639aeb6cd10ff6bf}{ROOMBA\_SEEK\_DOCK} = 143,
+582 
+603   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ab1891f6f7f69dc7936ca25751b7dfd8f}{ROOMBA\_PWM\_MOTORS} = 144,
+604 
+626   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a16a8f754217439e90a92a47d5e19c605}{ROOMBA\_DRIVE\_DIRECT} = 145,
+627 
+647   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a6c802b8d83b06edb676b7f777f4ebecc}{ROOMBA\_DRIVE\_PWM} = 146,
+648 
+649 \textcolor{preprocessor}{  #if ROOMBA\_INTERFACE\_VERSION==1}
+650 
+654   DIGITAL\_OUTPUTS = 147,
+655 
+656 \textcolor{preprocessor}{  #endif}
+657 
+706   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ad81a1446d5956b6717c8a28ec74c2bf9}{ROOMBA\_STREAM} = 148,
+707 
+724   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a0bf4541e5eb8a17aa5e6550ce5ca70e3}{ROOMBA\_QUERY\_LIST} = 149,
+725 
+741   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ab58d7a4edc71f5877180d177bc7f83d0}{ROOMBA\_PAUSE\_RESUME\_STREAM} = 150,
+742 
+743 
+744 
+745 \textcolor{preprocessor}{  #if ROOMBA\_INTERFACE\_VERSION==1}
+746 
+763   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a9de59aa841a98e5e44796ea3cca14c79}{SEND\_IR} = 151,
+764 
+797   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a65154c0ec97cb74cba7359ca02c4ab54}{SCRIPT} = 152,
+798 
+812   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a83540b81be6becb532a766b7dd3a5ade}{PLAY\_SCRIPT} = 153,
+813 
+836   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a709160dfcdb78b233459a7c046b91b5c}{SHOW\_SCRIPT} = 154,
+837 
+854   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a3dbca2a6576b16fc30af00cbf8ff3b6d}{WAIT\_TIME} = 155,
+855 
+877   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a35cc18edb14f8cc7586f8767d2a57585}{WAIT\_DISTANCE} = 156,
+878 
+899   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24afe16224c28a9b186c8357e539358d96e}{WAIT\_ANGLE} = 157,
+900 
+946   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a4c81a6746d2eacab9a179c21531658fd}{WAIT\_EVENT} = 158,
+947 
+948 \textcolor{preprocessor}{  #endif}
+949 \textcolor{preprocessor}{  #if ROOMBA\_INTERFACE\_VERSION==2}
+950 
+974   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a86faa808c27ddad1404fa882193f0db7}{ROOMBA\_SCHEDULING\_LEDS} = 162,
+975 
+996   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24acd27e02da97cb9cc482177a27e135c45}{ROOMBA\_DIGIT\_LEDS\_RAW} = 163,
+997 
+1038   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a094d22b24aae1379b33389cf701b5356}{ROOMBA\_DIGIT\_LEDS\_ASCII} = 164,
+1039 
+1056   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ab369d673cdfb4414fb307ddaef5288dd}{ROOMBA\_BUTTONS\_CMD} = 165,
+1057 
+1076   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24ac4b9ca54bc982f8b9b565c72cb642ccc}{ROOMBA\_SCHEDULE} = 167,
+1077 
+1100   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a17519d3bc7b9e8c70af28afe85d92229}{ROOMBA\_SET\_DAY\_TIME} = 168,
+1101 
+1115   \hyperlink{group__roomba-lib_gga305e17dfb7050ad83ea49ded2e6a2e24a4c60272718e8bd851c58e6a9545f0d9f}{ROOMBA\_STOP} = 173,
+1116 \textcolor{preprocessor}{  #endif}
+1117 
+1118 \} \hyperlink{group__roomba-lib_gaa48d04e007e0ae60ee9bc055a5a159fe}{ROOMBA\_OP\_CODE};
+\end{DoxyCode}

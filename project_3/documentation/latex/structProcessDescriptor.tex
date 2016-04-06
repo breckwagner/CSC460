@@ -1,0 +1,75 @@
+\hypertarget{structProcessDescriptor}{}\section{Process\+Descriptor Struct Reference}
+\label{structProcessDescriptor}\index{Process\+Descriptor@{Process\+Descriptor}}
+
+
+Each task is represented by a process descriptor, which contains all relevant information about this task.  
+
+
+
+
+{\ttfamily \#include $<$os.\+h$>$}
+
+\subsection*{Data Fields}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{structProcessDescriptor_aee4a91bb7cc21ee5a0d58f7cac98a6f9}{}P\+I\+D {\bfseries p}\label{structProcessDescriptor_aee4a91bb7cc21ee5a0d58f7cac98a6f9}
+
+\item 
+\hypertarget{structProcessDescriptor_abc44319d5a3c44b286df35802151f44b}{}unsigned char $\ast$ {\bfseries sp}\label{structProcessDescriptor_abc44319d5a3c44b286df35802151f44b}
+
+\item 
+\hypertarget{structProcessDescriptor_a0a81ca22e5c459395646b76e87c5f30f}{}unsigned char {\bfseries work\+Space} \mbox{[}W\+O\+R\+K\+S\+P\+A\+C\+E\mbox{]}\label{structProcessDescriptor_a0a81ca22e5c459395646b76e87c5f30f}
+
+\item 
+\hypertarget{structProcessDescriptor_a71624b9d00014f6d4083cca664e95ff6}{}P\+R\+O\+C\+E\+S\+S\+\_\+\+S\+T\+A\+T\+E\+S {\bfseries state}\label{structProcessDescriptor_a71624b9d00014f6d4083cca664e95ff6}
+
+\item 
+\hypertarget{structProcessDescriptor_a2401cd30bb7e3958b1933cc187023810}{}P\+R\+I\+O\+R\+I\+T\+Y {\bfseries py}\label{structProcessDescriptor_a2401cd30bb7e3958b1933cc187023810}
+
+\item 
+\hypertarget{structProcessDescriptor_a48ce1a325fc6c4167b1b2a37de9a7c00}{}P\+R\+I\+O\+R\+I\+T\+Y {\bfseries inherited\+Py}\label{structProcessDescriptor_a48ce1a325fc6c4167b1b2a37de9a7c00}
+
+\item 
+\hypertarget{structProcessDescriptor_aaa33dc59470fc5df86bfa102044042fa}{}int {\bfseries arg}\label{structProcessDescriptor_aaa33dc59470fc5df86bfa102044042fa}
+
+\item 
+\hypertarget{structProcessDescriptor_acdcf9204e8df1647c2b6dde677c95621}{}voidfuncptr {\bfseries code}\label{structProcessDescriptor_acdcf9204e8df1647c2b6dde677c95621}
+
+\item 
+\hypertarget{structProcessDescriptor_a3ced3dc610a266bbc56e0b8bc82e2b1b}{}K\+E\+R\+N\+E\+L\+\_\+\+R\+E\+Q\+U\+E\+S\+T\+\_\+\+T\+Y\+P\+E {\bfseries request}\label{structProcessDescriptor_a3ced3dc610a266bbc56e0b8bc82e2b1b}
+
+\item 
+\hypertarget{structProcessDescriptor_ad657a64829fc30add6c690f8120ab28d}{}unsigned int {\bfseries response}\label{structProcessDescriptor_ad657a64829fc30add6c690f8120ab28d}
+
+\item 
+\hypertarget{structProcessDescriptor_aaabd3a3def6f4322a97b6cba6cd80b1f}{}T\+I\+C\+K {\bfseries wake\+Tick\+Overflow}\label{structProcessDescriptor_aaabd3a3def6f4322a97b6cba6cd80b1f}
+
+\item 
+\hypertarget{structProcessDescriptor_a475e0ad2284dfeaff5a4cc323567828b}{}T\+I\+C\+K {\bfseries wake\+Tick}\label{structProcessDescriptor_a475e0ad2284dfeaff5a4cc323567828b}
+
+\item 
+\hypertarget{structProcessDescriptor_a5764dfb5ff727aa0020707dfbdd1f545}{}M\+U\+T\+E\+X {\bfseries m}\label{structProcessDescriptor_a5764dfb5ff727aa0020707dfbdd1f545}
+
+\item 
+\hypertarget{structProcessDescriptor_a696486073de18e9db0e8abc4e74c938b}{}E\+V\+E\+N\+T {\bfseries e\+Wait}\label{structProcessDescriptor_a696486073de18e9db0e8abc4e74c938b}
+
+\item 
+\hypertarget{structProcessDescriptor_ac7549b9f2e6f3867614f5c0e1fcdd16b}{}E\+V\+E\+N\+T {\bfseries e\+Send}\label{structProcessDescriptor_ac7549b9f2e6f3867614f5c0e1fcdd16b}
+
+\item 
+\hypertarget{structProcessDescriptor_a3a64f801dab103a8ac70504b30a35d7c}{}unsigned int {\bfseries suspended}\label{structProcessDescriptor_a3a64f801dab103a8ac70504b30a35d7c}
+
+\item 
+\hypertarget{structProcessDescriptor_ab2d85effbfe41ed6abf373533eb3fc24}{}P\+I\+D {\bfseries pid\+Action}\label{structProcessDescriptor_ab2d85effbfe41ed6abf373533eb3fc24}
+
+\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Each task is represented by a process descriptor, which contains all relevant information about this task. 
+
+For convenience, we also store the task\textquotesingle{}s stack, i.\+e., its workspace, in here. 
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+lib/rtos/os.\+h\end{DoxyCompactItemize}

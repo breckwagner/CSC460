@@ -1,0 +1,899 @@
+\hypertarget{group__avr-uart}{}\section{U\+A\+R\+T Library}
+\label{group__avr-uart}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+
+
+Interrupt U\+A\+R\+T library using the built-\/in U\+A\+R\+T with transmit and receive circular buffers.  
+
+
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{group__avr-uart_ga51de0a3b835652d285f354c078669e75}{uart0\+\_\+init} (uint16\+\_\+t baudrate)
+\begin{DoxyCompactList}\small\item\em Initialize U\+A\+R\+T and set baudrate. \end{DoxyCompactList}\item 
+uint16\+\_\+t \hyperlink{group__avr-uart_ga35407e8f77fa39c1a6b8504707b13dd2}{uart0\+\_\+getc} (void)
+\begin{DoxyCompactList}\small\item\em Get received byte from ringbuffer. \end{DoxyCompactList}\item 
+uint16\+\_\+t \hyperlink{group__avr-uart_ga7f0372a14af24f02f5c6615afd6671a0}{uart0\+\_\+peek} (void)
+\begin{DoxyCompactList}\small\item\em Peek at next byte in ringbuffer. \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_gaf52cb65e977992c01d1f2b7220243f94}{uart0\+\_\+putc} (uint8\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em Put byte to ringbuffer for transmitting via U\+A\+R\+T. \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_gaeff5f5ff60334be95f0b895f96c10998}{uart0\+\_\+puts} (const char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Put string to ringbuffer for transmitting via U\+A\+R\+T. \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_gad55b367ecb822ff1c172c78af6013fe5}{uart0\+\_\+puts\+\_\+p} (const char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Put string from program memory to ringbuffer for transmitting via U\+A\+R\+T. \end{DoxyCompactList}\item 
+uint16\+\_\+t \hyperlink{group__avr-uart_gac369ee64442157556e517078029e9aab}{uart0\+\_\+available} (void)
+\begin{DoxyCompactList}\small\item\em Return number of bytes waiting in the receive buffer. \end{DoxyCompactList}\item 
+\hypertarget{group__avr-uart_gab3e2b412a31f1d05a9a5be70f4b01109}{}void \hyperlink{group__avr-uart_gab3e2b412a31f1d05a9a5be70f4b01109}{uart0\+\_\+flush} (void)\label{group__avr-uart_gab3e2b412a31f1d05a9a5be70f4b01109}
+
+\begin{DoxyCompactList}\small\item\em Flush bytes waiting in receive buffer. \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_ga31993c01ca0007ecddd47f19e239afe5}{uart1\+\_\+init} (uint16\+\_\+t baudrate)
+\begin{DoxyCompactList}\small\item\em Initialize U\+S\+A\+R\+T1 (only available on selected A\+Tmegas) \end{DoxyCompactList}\item 
+uint16\+\_\+t \hyperlink{group__avr-uart_ga07e1276e06323b0193b9e011012d9413}{uart1\+\_\+getc} (void)
+\begin{DoxyCompactList}\small\item\em Get received byte of U\+S\+A\+R\+T1 from ringbuffer. \end{DoxyCompactList}\item 
+\hypertarget{group__avr-uart_ga8b9dbcaa3571f021473f0cae243ad3b2}{}uint16\+\_\+t \hyperlink{group__avr-uart_ga8b9dbcaa3571f021473f0cae243ad3b2}{uart1\+\_\+peek} (void)\label{group__avr-uart_ga8b9dbcaa3571f021473f0cae243ad3b2}
+
+\begin{DoxyCompactList}\small\item\em Peek at next byte in U\+S\+A\+R\+T1 ringbuffer. \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_ga62da878e3872406cf82fda510487b83f}{uart1\+\_\+putc} (uint8\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em Put byte to ringbuffer for transmitting via U\+S\+A\+R\+T1 (only available on selected A\+Tmega) \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_ga5568f8f3913b218fd4d0346af78831b2}{uart1\+\_\+puts} (const char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Put string to ringbuffer for transmitting via U\+S\+A\+R\+T1 (only available on selected A\+Tmega) \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_ga1e8074d0a2d5922601c5db2f9777ba79}{uart1\+\_\+puts\+\_\+p} (const char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Put string from program memory to ringbuffer for transmitting via U\+S\+A\+R\+T1 (only available on selected A\+Tmega) \end{DoxyCompactList}\item 
+\hypertarget{group__avr-uart_ga7529b13068cd91acfb2fdd0205dc5188}{}uint16\+\_\+t \hyperlink{group__avr-uart_ga7529b13068cd91acfb2fdd0205dc5188}{uart1\+\_\+available} (void)\label{group__avr-uart_ga7529b13068cd91acfb2fdd0205dc5188}
+
+\begin{DoxyCompactList}\small\item\em Return number of bytes waiting in the receive buffer. \end{DoxyCompactList}\item 
+\hypertarget{group__avr-uart_ga07f72e8f865f43b2d0725d19ecd5fb55}{}void \hyperlink{group__avr-uart_ga07f72e8f865f43b2d0725d19ecd5fb55}{uart1\+\_\+flush} (void)\label{group__avr-uart_ga07f72e8f865f43b2d0725d19ecd5fb55}
+
+\begin{DoxyCompactList}\small\item\em Flush bytes waiting in receive buffer. \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_gae2a543d34d454fb4f41fe80fee0ae0bb}{uart2\+\_\+init} (uint16\+\_\+t baudrate)
+\begin{DoxyCompactList}\small\item\em Initialize U\+S\+A\+R\+T2 (only available on selected A\+Tmegas) \end{DoxyCompactList}\item 
+uint16\+\_\+t \hyperlink{group__avr-uart_gafcfa52b819c52e3a8b4cfdc74fe9efb3}{uart2\+\_\+getc} (void)
+\begin{DoxyCompactList}\small\item\em Get received byte of U\+S\+A\+R\+T2 from ringbuffer. \end{DoxyCompactList}\item 
+\hypertarget{group__avr-uart_gaccc2bf6c89f4d38149144056e6a4d64e}{}uint16\+\_\+t \hyperlink{group__avr-uart_gaccc2bf6c89f4d38149144056e6a4d64e}{uart2\+\_\+peek} (void)\label{group__avr-uart_gaccc2bf6c89f4d38149144056e6a4d64e}
+
+\begin{DoxyCompactList}\small\item\em Peek at next byte in U\+S\+A\+R\+T2 ringbuffer. \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_gab16a85e4f634fd77fb43ed8747ed119c}{uart2\+\_\+putc} (uint8\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em Put byte to ringbuffer for transmitting via U\+S\+A\+R\+T2 (only available on selected A\+Tmega) \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_ga2bd69cbc0e1c8b8343ceae0466889218}{uart2\+\_\+puts} (const char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Put string to ringbuffer for transmitting via U\+S\+A\+R\+T2 (only available on selected A\+Tmega) \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_ga827c36b80bba4bee87fdda34efa327b8}{uart2\+\_\+puts\+\_\+p} (const char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Put string from program memory to ringbuffer for transmitting via U\+S\+A\+R\+T2 (only available on selected A\+Tmega) \end{DoxyCompactList}\item 
+\hypertarget{group__avr-uart_ga07c846344e698ef12323da238152990b}{}uint16\+\_\+t \hyperlink{group__avr-uart_ga07c846344e698ef12323da238152990b}{uart2\+\_\+available} (void)\label{group__avr-uart_ga07c846344e698ef12323da238152990b}
+
+\begin{DoxyCompactList}\small\item\em Return number of bytes waiting in the receive buffer. \end{DoxyCompactList}\item 
+\hypertarget{group__avr-uart_gade8eed43df7ad1387c4bfa916c972abd}{}void \hyperlink{group__avr-uart_gade8eed43df7ad1387c4bfa916c972abd}{uart2\+\_\+flush} (void)\label{group__avr-uart_gade8eed43df7ad1387c4bfa916c972abd}
+
+\begin{DoxyCompactList}\small\item\em Flush bytes waiting in receive buffer. \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_ga62087cd1974706879fd603f8e802c674}{uart3\+\_\+init} (uint16\+\_\+t baudrate)
+\begin{DoxyCompactList}\small\item\em Initialize U\+S\+A\+R\+T3 (only available on selected A\+Tmegas) \end{DoxyCompactList}\item 
+uint16\+\_\+t \hyperlink{group__avr-uart_ga8ac0106d2083bdd4ee9b1d80fae1b305}{uart3\+\_\+getc} (void)
+\begin{DoxyCompactList}\small\item\em Get received byte of U\+S\+A\+R\+T3 from ringbuffer. \end{DoxyCompactList}\item 
+\hypertarget{group__avr-uart_gaf022a2762a5237c23734d2433fb4a8dc}{}uint16\+\_\+t \hyperlink{group__avr-uart_gaf022a2762a5237c23734d2433fb4a8dc}{uart3\+\_\+peek} (void)\label{group__avr-uart_gaf022a2762a5237c23734d2433fb4a8dc}
+
+\begin{DoxyCompactList}\small\item\em Peek at next byte in U\+S\+A\+R\+T3 ringbuffer. \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_gaedb6deebd5dc189b7ab7a49b655eedd7}{uart3\+\_\+putc} (uint8\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em Put byte to ringbuffer for transmitting via U\+S\+A\+R\+T3 (only available on selected A\+Tmega) \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_gaa7ea14ab43946a921d0da142d005ed56}{uart3\+\_\+puts} (const char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Put string to ringbuffer for transmitting via U\+S\+A\+R\+T3 (only available on selected A\+Tmega) \end{DoxyCompactList}\item 
+void \hyperlink{group__avr-uart_gad7d9650ed5fa2929e840aace337a3476}{uart3\+\_\+puts\+\_\+p} (const char $\ast$s)
+\begin{DoxyCompactList}\small\item\em Put string from program memory to ringbuffer for transmitting via U\+S\+A\+R\+T3 (only available on selected A\+Tmega) \end{DoxyCompactList}\item 
+\hypertarget{group__avr-uart_ga66823fdca13c3b045bbfc4d61aa1225c}{}uint16\+\_\+t \hyperlink{group__avr-uart_ga66823fdca13c3b045bbfc4d61aa1225c}{uart3\+\_\+available} (void)\label{group__avr-uart_ga66823fdca13c3b045bbfc4d61aa1225c}
+
+\begin{DoxyCompactList}\small\item\em Return number of bytes waiting in the receive buffer. \end{DoxyCompactList}\item 
+\hypertarget{group__avr-uart_gab0acffb07262f22021d7067471df5040}{}void \hyperlink{group__avr-uart_gab0acffb07262f22021d7067471df5040}{uart3\+\_\+flush} (void)\label{group__avr-uart_gab0acffb07262f22021d7067471df5040}
+
+\begin{DoxyCompactList}\small\item\em Flush bytes waiting in receive buffer. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+Interrupt U\+A\+R\+T library using the built-\/in U\+A\+R\+T with transmit and receive circular buffers. 
+
+
+\begin{DoxyCode}
+\textcolor{preprocessor}{#include <uart.h>} 
+\end{DoxyCode}
+
+
+This library can be used to transmit and receive data through the built in U\+A\+R\+T.
+
+An interrupt is generated when the U\+A\+R\+T has finished transmitting or receiving a byte. The interrupt handling routines use circular buffers for buffering received and transmitted data.
+
+The U\+A\+R\+T\+\_\+\+R\+Xn\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E and U\+A\+R\+T\+\_\+\+T\+Xn\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+S\+I\+Z\+E constants define the size of the circular buffers in bytes. Note that these constants must be a power of 2.
+
+You need to define these buffer sizes in \hyperlink{uart_8h_source}{uart.\+h}
+
+\begin{DoxyNote}{Note}
+Based on Atmel Application Note A\+V\+R306 
+\end{DoxyNote}
+\begin{DoxyAuthor}{Author}
+Andy Gock \href{mailto:andy@gock.net}{\tt andy@gock.\+net} 
+\end{DoxyAuthor}
+\begin{DoxyNote}{Note}
+Based on original library by Peter Fleury and Tim Sharpe. 
+\end{DoxyNote}
+
+
+\subsection{Function Documentation}
+\hypertarget{group__avr-uart_gac369ee64442157556e517078029e9aab}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart0\+\_\+available@{uart0\+\_\+available}}
+\index{uart0\+\_\+available@{uart0\+\_\+available}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart0\+\_\+available}]{\setlength{\rightskip}{0pt plus 5cm}uint16\+\_\+t uart0\+\_\+available (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_gac369ee64442157556e517078029e9aab}
+
+
+Return number of bytes waiting in the receive buffer. 
+
+\begin{DoxyReturn}{Returns}
+bytes waiting in the receive buffer 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+742 \{
+743     \textcolor{keywordflow}{return} (UART\_RX0\_BUFFER\_SIZE + UART\_RxHead - UART\_RxTail) & UART\_RX0\_BUFFER\_MASK;
+744 \} \textcolor{comment}{/* uart0\_available */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_ga35407e8f77fa39c1a6b8504707b13dd2}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart0\+\_\+getc@{uart0\+\_\+getc}}
+\index{uart0\+\_\+getc@{uart0\+\_\+getc}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart0\+\_\+getc}]{\setlength{\rightskip}{0pt plus 5cm}uint16\+\_\+t uart0\+\_\+getc (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_ga35407e8f77fa39c1a6b8504707b13dd2}
+
+
+Get received byte from ringbuffer. 
+
+Returns in the lower byte the received character and in the higher byte the last receive error. U\+A\+R\+T\+\_\+\+N\+O\+\_\+\+D\+A\+T\+A is returned when no data is available.
+
+\begin{DoxyReturn}{Returns}
+lower byte\+: received byte from ringbuffer 
+
+higher byte\+: last receive status
+\begin{DoxyItemize}
+\item {\bfseries 0} successfully received data from U\+A\+R\+T
+\item {\bfseries U\+A\+R\+T\+\_\+\+N\+O\+\_\+\+D\+A\+T\+A} ~\newline
+no receive data available
+\item {\bfseries U\+A\+R\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+O\+V\+E\+R\+F\+L\+O\+W} ~\newline
+Receive ringbuffer overflow. We are not reading the receive buffer fast enough, one or more received character have been dropped
+\item {\bfseries U\+A\+R\+T\+\_\+\+O\+V\+E\+R\+R\+U\+N\+\_\+\+E\+R\+R\+O\+R} ~\newline
+Overrun condition by U\+A\+R\+T. A character already present in the U\+A\+R\+T U\+D\+R register was not read by the interrupt handler before the next character arrived, one or more received characters have been dropped.
+\item {\bfseries U\+A\+R\+T\+\_\+\+F\+R\+A\+M\+E\+\_\+\+E\+R\+R\+O\+R} ~\newline
+Framing Error by U\+A\+R\+T 
+\end{DoxyItemize}
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+631 \{
+632     uint16\_t tmptail;
+633     uint8\_t data;
+634 
+635     \textcolor{keywordflow}{if} ( UART\_RxHead == UART\_RxTail ) \{
+636         \textcolor{keywordflow}{return} UART\_NO\_DATA;   \textcolor{comment}{/* no data available */}
+637     \}
+638 
+639     \textcolor{comment}{/* calculate /store buffer index */}
+640     tmptail = (UART\_RxTail + 1) & UART\_RX0\_BUFFER\_MASK;
+641     UART\_RxTail = tmptail;
+642 
+643     \textcolor{comment}{/* get data from receive buffer */}
+644     data = UART\_RxBuf[tmptail];
+645 
+646     \textcolor{keywordflow}{return} (UART\_LastRxError << 8) + data;
+647 
+648 \} \textcolor{comment}{/* uart0\_getc */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_ga51de0a3b835652d285f354c078669e75}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart0\+\_\+init@{uart0\+\_\+init}}
+\index{uart0\+\_\+init@{uart0\+\_\+init}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart0\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}void uart0\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{uint16\+\_\+t}]{baudrate}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_ga51de0a3b835652d285f354c078669e75}
+
+
+Initialize U\+A\+R\+T and set baudrate. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em baudrate} & Specify baudrate using macro U\+A\+R\+T\+\_\+\+B\+A\+U\+D\+\_\+\+S\+E\+L\+E\+C\+T() \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+none 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+556 \{
+557     UART\_TxHead = 0;
+558     UART\_TxTail = 0;
+559     UART\_RxHead = 0;
+560     UART\_RxTail = 0;
+561 
+562 \textcolor{preprocessor}{#if defined( AT90\_UART )}
+563     \textcolor{comment}{/* set baud rate */}
+564     UBRR = (uint8\_t)baudrate;
+565 
+566     \textcolor{comment}{/* enable UART receiver and transmitter and receive complete interrupt */}
+567     UART0\_CONTROL = \_BV(RXCIE)|\_BV(RXEN)|\_BV(TXEN);
+568 
+569 \textcolor{preprocessor}{#elif defined (ATMEGA\_USART)}
+570     \textcolor{comment}{/* Set baud rate */}
+571     \textcolor{keywordflow}{if} ( baudrate & 0x8000 ) \{
+572         UART0\_STATUS = (1<<U2X);  \textcolor{comment}{//Enable 2x speed}
+573         baudrate &= ~0x8000;
+574     \}
+575     UBRRH = (uint8\_t)(baudrate>>8);
+576     UBRRL = (uint8\_t) baudrate;
+577 
+578     \textcolor{comment}{/* Enable USART receiver and transmitter and receive complete interrupt */}
+579     UART0\_CONTROL = \_BV(RXCIE)|(1<<RXEN)|(1<<TXEN);
+580 
+581     \textcolor{comment}{/* Set frame format: asynchronous, 8data, no parity, 1stop bit */}
+582 \textcolor{preprocessor}{#ifdef URSEL}
+583     UCSRC = (1<<URSEL)|(3<<UCSZ0);
+584 \textcolor{preprocessor}{#else}
+585     UCSRC = (3<<UCSZ0);
+586 \textcolor{preprocessor}{#endif}
+587 
+588 \textcolor{preprocessor}{#elif defined ( ATMEGA\_USART0 )}
+589     \textcolor{comment}{/* Set baud rate */}
+590     \textcolor{keywordflow}{if} ( baudrate & 0x8000 ) \{
+591         UART0\_STATUS = (1<<U2X0);  \textcolor{comment}{//Enable 2x speed}
+592         baudrate &= ~0x8000;
+593     \}
+594     UBRR0H = (uint8\_t)(baudrate>>8);
+595     UBRR0L = (uint8\_t) baudrate;
+596 
+597     \textcolor{comment}{/* Enable USART receiver and transmitter and receive complete interrupt */}
+598     UART0\_CONTROL = \_BV(RXCIE0)|(1<<RXEN0)|(1<<TXEN0);
+599 
+600     \textcolor{comment}{/* Set frame format: asynchronous, 8data, no parity, 1stop bit */}
+601 \textcolor{preprocessor}{#ifdef URSEL0}
+602     UCSR0C = (1<<URSEL0)|(3<<UCSZ00);
+603 \textcolor{preprocessor}{#else}
+604     UCSR0C = (3<<UCSZ00);
+605 \textcolor{preprocessor}{#endif}
+606 
+607 \textcolor{preprocessor}{#elif defined ( ATMEGA\_UART )}
+608     \textcolor{comment}{/* set baud rate */}
+609     \textcolor{keywordflow}{if} ( baudrate & 0x8000 ) \{
+610         UART0\_STATUS = (1<<U2X);  \textcolor{comment}{//Enable 2x speed}
+611         baudrate &= ~0x8000;
+612     \}
+613     UBRRHI = (uint8\_t)(baudrate>>8);
+614     UBRR   = (uint8\_t) baudrate;
+615 
+616     \textcolor{comment}{/* Enable UART receiver and transmitter and receive complete interrupt */}
+617     UART0\_CONTROL = \_BV(RXCIE)|(1<<RXEN)|(1<<TXEN);
+618 
+619 \textcolor{preprocessor}{#endif}
+620 
+621 \} \textcolor{comment}{/* uart0\_init */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_ga7f0372a14af24f02f5c6615afd6671a0}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart0\+\_\+peek@{uart0\+\_\+peek}}
+\index{uart0\+\_\+peek@{uart0\+\_\+peek}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart0\+\_\+peek}]{\setlength{\rightskip}{0pt plus 5cm}uint16\+\_\+t uart0\+\_\+peek (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_ga7f0372a14af24f02f5c6615afd6671a0}
+
+
+Peek at next byte in ringbuffer. 
+
+Returns the next byte (character) of incoming U\+A\+R\+T data without removing it from the internal ring buffer. That is, successive calls to uart\+N\+\_\+peek() will return the same character, as will the next call to uart\+N\+\_\+getc().
+
+U\+A\+R\+T\+\_\+\+N\+O\+\_\+\+D\+A\+T\+A is returned when no data is available.
+
+\begin{DoxyReturn}{Returns}
+lower byte\+: next byte in ringbuffer 
+
+higher byte\+: last receive status
+\begin{DoxyItemize}
+\item {\bfseries 0} successfully received data from U\+A\+R\+T
+\item {\bfseries U\+A\+R\+T\+\_\+\+N\+O\+\_\+\+D\+A\+T\+A} ~\newline
+no receive data available
+\item {\bfseries U\+A\+R\+T\+\_\+\+B\+U\+F\+F\+E\+R\+\_\+\+O\+V\+E\+R\+F\+L\+O\+W} ~\newline
+Receive ringbuffer overflow. We are not reading the receive buffer fast enough, one or more received character have been dropped
+\item {\bfseries U\+A\+R\+T\+\_\+\+O\+V\+E\+R\+R\+U\+N\+\_\+\+E\+R\+R\+O\+R} ~\newline
+Overrun condition by U\+A\+R\+T. A character already present in the U\+A\+R\+T U\+D\+R register was not read by the interrupt handler before the next character arrived, one or more received characters have been dropped.
+\item {\bfseries U\+A\+R\+T\+\_\+\+F\+R\+A\+M\+E\+\_\+\+E\+R\+R\+O\+R} ~\newline
+Framing Error by U\+A\+R\+T 
+\end{DoxyItemize}
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+660 \{
+661     uint16\_t tmptail;
+662     uint8\_t data;
+663 
+664     \textcolor{keywordflow}{if} ( UART\_RxHead == UART\_RxTail ) \{
+665         \textcolor{keywordflow}{return} UART\_NO\_DATA;   \textcolor{comment}{/* no data available */}
+666     \}
+667 
+668     tmptail = (UART\_RxTail + 1) & UART\_RX0\_BUFFER\_MASK;
+669 
+670     \textcolor{comment}{/* get data from receive buffer */}
+671     data = UART\_RxBuf[tmptail];
+672 
+673     \textcolor{keywordflow}{return} (UART\_LastRxError << 8) + data;
+674 
+675 \} \textcolor{comment}{/* uart0\_peek */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_gaf52cb65e977992c01d1f2b7220243f94}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart0\+\_\+putc@{uart0\+\_\+putc}}
+\index{uart0\+\_\+putc@{uart0\+\_\+putc}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart0\+\_\+putc}]{\setlength{\rightskip}{0pt plus 5cm}void uart0\+\_\+putc (
+\begin{DoxyParamCaption}
+\item[{uint8\+\_\+t}]{data}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_gaf52cb65e977992c01d1f2b7220243f94}
+
+
+Put byte to ringbuffer for transmitting via U\+A\+R\+T. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em data} & byte to be transmitted \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+none 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+684 \{
+685     uint16\_t tmphead;
+686 
+687     tmphead  = (UART\_TxHead + 1) & UART\_TX0\_BUFFER\_MASK;
+688 
+689     \textcolor{keywordflow}{while} ( tmphead == UART\_TxTail ) \{
+690         ;\textcolor{comment}{/* wait for free space in buffer */}
+691     \}
+692 
+693     UART\_TxBuf[tmphead] = data;
+694     UART\_TxHead = tmphead;
+695 
+696     \textcolor{comment}{/* enable UDRE interrupt */}
+697     UART0\_CONTROL    |= \_BV(UART0\_UDRIE);
+698 
+699 \} \textcolor{comment}{/* uart0\_putc */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_gaeff5f5ff60334be95f0b895f96c10998}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart0\+\_\+puts@{uart0\+\_\+puts}}
+\index{uart0\+\_\+puts@{uart0\+\_\+puts}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart0\+\_\+puts}]{\setlength{\rightskip}{0pt plus 5cm}void uart0\+\_\+puts (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{s}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_gaeff5f5ff60334be95f0b895f96c10998}
+
+
+Put string to ringbuffer for transmitting via U\+A\+R\+T. 
+
+The string is buffered by the uart library in a circular buffer and one character at a time is transmitted to the U\+A\+R\+T using interrupts. Blocks if it can not write the whole string into the circular buffer.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & string to be transmitted \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+none 
+\end{DoxyReturn}
+
+\begin{DoxyCode}
+709 \{
+710     \textcolor{keywordflow}{while} (*s) \{
+711         \hyperlink{group__avr-uart_gaf52cb65e977992c01d1f2b7220243f94}{uart0\_putc}(*s++);
+712     \}
+713 
+714 \} \textcolor{comment}{/* uart0\_puts */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_gad55b367ecb822ff1c172c78af6013fe5}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart0\+\_\+puts\+\_\+p@{uart0\+\_\+puts\+\_\+p}}
+\index{uart0\+\_\+puts\+\_\+p@{uart0\+\_\+puts\+\_\+p}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart0\+\_\+puts\+\_\+p}]{\setlength{\rightskip}{0pt plus 5cm}void uart0\+\_\+puts\+\_\+p (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{s}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_gad55b367ecb822ff1c172c78af6013fe5}
+
+
+Put string from program memory to ringbuffer for transmitting via U\+A\+R\+T. 
+
+The string is buffered by the uart library in a circular buffer and one character at a time is transmitted to the U\+A\+R\+T using interrupts. Blocks if it can not write the whole string into the circular buffer.
+
+
+\begin{DoxyParams}{Parameters}
+{\em s} & program memory string to be transmitted \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+none 
+\end{DoxyReturn}
+\begin{DoxySeeAlso}{See also}
+uart0\+\_\+puts\+\_\+\+P 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+724 \{
+725     \textcolor{keyword}{register} \textcolor{keywordtype}{char} c;
+726 
+727     \textcolor{keywordflow}{while} ( (c = pgm\_read\_byte(progmem\_s++)) ) \{
+728         \hyperlink{group__avr-uart_gaf52cb65e977992c01d1f2b7220243f94}{uart0\_putc}(c);
+729     \}
+730 
+731 \} \textcolor{comment}{/* uart0\_puts\_p */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_ga07e1276e06323b0193b9e011012d9413}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart1\+\_\+getc@{uart1\+\_\+getc}}
+\index{uart1\+\_\+getc@{uart1\+\_\+getc}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart1\+\_\+getc}]{\setlength{\rightskip}{0pt plus 5cm}uint16\+\_\+t uart1\+\_\+getc (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_ga07e1276e06323b0193b9e011012d9413}
+
+
+Get received byte of U\+S\+A\+R\+T1 from ringbuffer. 
+
+(only available on selected A\+Tmega) \begin{DoxySeeAlso}{See also}
+uart\+\_\+getc 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+861 \{
+862     uint16\_t tmptail;
+863     uint8\_t data;
+864 
+865     \textcolor{keywordflow}{if} ( UART1\_RxHead == UART1\_RxTail ) \{
+866         \textcolor{keywordflow}{return} UART\_NO\_DATA;   \textcolor{comment}{/* no data available */}
+867     \}
+868 
+869     \textcolor{comment}{/* calculate /store buffer index */}
+870     tmptail = (UART1\_RxTail + 1) & UART\_RX1\_BUFFER\_MASK;
+871     UART1\_RxTail = tmptail;
+872 
+873     \textcolor{comment}{/* get data from receive buffer */}
+874     data = UART1\_RxBuf[tmptail];
+875 
+876     \textcolor{keywordflow}{return} (UART1\_LastRxError << 8) + data;
+877 
+878 \} \textcolor{comment}{/* uart1\_getc */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_ga31993c01ca0007ecddd47f19e239afe5}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart1\+\_\+init@{uart1\+\_\+init}}
+\index{uart1\+\_\+init@{uart1\+\_\+init}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart1\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}void uart1\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{uint16\+\_\+t}]{baudrate}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_ga31993c01ca0007ecddd47f19e239afe5}
+
+
+Initialize U\+S\+A\+R\+T1 (only available on selected A\+Tmegas) 
+
+\begin{DoxySeeAlso}{See also}
+uart\+\_\+init 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+828 \{
+829     UART1\_TxHead = 0;
+830     UART1\_TxTail = 0;
+831     UART1\_RxHead = 0;
+832     UART1\_RxTail = 0;
+833 
+834     \textcolor{comment}{/* Set baud rate */}
+835     \textcolor{keywordflow}{if} ( baudrate & 0x8000 ) \{
+836         UART1\_STATUS = (1<<U2X1);  \textcolor{comment}{//Enable 2x speed}
+837         baudrate &= ~0x8000;
+838     \}
+839     UBRR1H = (uint8\_t)(baudrate>>8);
+840     UBRR1L = (uint8\_t) baudrate;
+841 
+842     \textcolor{comment}{/* Enable USART receiver and transmitter and receive complete interrupt */}
+843     UART1\_CONTROL = \_BV(RXCIE1)|(1<<RXEN1)|(1<<TXEN1);
+844 
+845     \textcolor{comment}{/* Set frame format: asynchronous, 8data, no parity, 1stop bit */}
+846 \textcolor{preprocessor}{#ifdef URSEL1}
+847     UCSR1C = (1<<URSEL1)|(3<<UCSZ10);
+848 \textcolor{preprocessor}{#else}
+849     UCSR1C = (3<<UCSZ10);
+850 \textcolor{preprocessor}{#endif}
+851 \} \textcolor{comment}{/* uart\_init */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_ga62da878e3872406cf82fda510487b83f}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart1\+\_\+putc@{uart1\+\_\+putc}}
+\index{uart1\+\_\+putc@{uart1\+\_\+putc}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart1\+\_\+putc}]{\setlength{\rightskip}{0pt plus 5cm}void uart1\+\_\+putc (
+\begin{DoxyParamCaption}
+\item[{uint8\+\_\+t}]{data}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_ga62da878e3872406cf82fda510487b83f}
+
+
+Put byte to ringbuffer for transmitting via U\+S\+A\+R\+T1 (only available on selected A\+Tmega) 
+
+\begin{DoxySeeAlso}{See also}
+uart\+\_\+putc 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+914 \{
+915     uint16\_t tmphead;
+916 
+917     tmphead  = (UART1\_TxHead + 1) & UART\_TX1\_BUFFER\_MASK;
+918 
+919     \textcolor{keywordflow}{while} ( tmphead == UART1\_TxTail ) \{
+920         ;\textcolor{comment}{/* wait for free space in buffer */}
+921     \}
+922 
+923     UART1\_TxBuf[tmphead] = data;
+924     UART1\_TxHead = tmphead;
+925 
+926     \textcolor{comment}{/* enable UDRE interrupt */}
+927     UART1\_CONTROL    |= \_BV(UART1\_UDRIE);
+928 
+929 \} \textcolor{comment}{/* uart1\_putc */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_ga5568f8f3913b218fd4d0346af78831b2}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart1\+\_\+puts@{uart1\+\_\+puts}}
+\index{uart1\+\_\+puts@{uart1\+\_\+puts}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart1\+\_\+puts}]{\setlength{\rightskip}{0pt plus 5cm}void uart1\+\_\+puts (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{s}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_ga5568f8f3913b218fd4d0346af78831b2}
+
+
+Put string to ringbuffer for transmitting via U\+S\+A\+R\+T1 (only available on selected A\+Tmega) 
+
+\begin{DoxySeeAlso}{See also}
+uart\+\_\+puts 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+939 \{
+940     \textcolor{keywordflow}{while} (*s) \{
+941         \hyperlink{group__avr-uart_ga62da878e3872406cf82fda510487b83f}{uart1\_putc}(*s++);
+942     \}
+943 
+944 \} \textcolor{comment}{/* uart1\_puts */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_ga1e8074d0a2d5922601c5db2f9777ba79}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart1\+\_\+puts\+\_\+p@{uart1\+\_\+puts\+\_\+p}}
+\index{uart1\+\_\+puts\+\_\+p@{uart1\+\_\+puts\+\_\+p}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart1\+\_\+puts\+\_\+p}]{\setlength{\rightskip}{0pt plus 5cm}void uart1\+\_\+puts\+\_\+p (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{s}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_ga1e8074d0a2d5922601c5db2f9777ba79}
+
+
+Put string from program memory to ringbuffer for transmitting via U\+S\+A\+R\+T1 (only available on selected A\+Tmega) 
+
+\begin{DoxySeeAlso}{See also}
+uart\+\_\+puts\+\_\+p 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+954 \{
+955     \textcolor{keyword}{register} \textcolor{keywordtype}{char} c;
+956 
+957     \textcolor{keywordflow}{while} ( (c = pgm\_read\_byte(progmem\_s++)) ) \{
+958         \hyperlink{group__avr-uart_ga62da878e3872406cf82fda510487b83f}{uart1\_putc}(c);
+959     \}
+960 
+961 \} \textcolor{comment}{/* uart1\_puts\_p */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_gafcfa52b819c52e3a8b4cfdc74fe9efb3}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart2\+\_\+getc@{uart2\+\_\+getc}}
+\index{uart2\+\_\+getc@{uart2\+\_\+getc}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart2\+\_\+getc}]{\setlength{\rightskip}{0pt plus 5cm}uint16\+\_\+t uart2\+\_\+getc (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_gafcfa52b819c52e3a8b4cfdc74fe9efb3}
+
+
+Get received byte of U\+S\+A\+R\+T2 from ringbuffer. 
+
+(only available on selected A\+Tmega) \begin{DoxySeeAlso}{See also}
+uart\+\_\+getc 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+1098 \{
+1099     uint16\_t tmptail;
+1100     uint8\_t data;
+1101 
+1102     \textcolor{keywordflow}{if} ( UART2\_RxHead == UART2\_RxTail ) \{
+1103         \textcolor{keywordflow}{return} UART\_NO\_DATA;   \textcolor{comment}{/* no data available */}
+1104     \}
+1105 
+1106     \textcolor{comment}{/* calculate /store buffer index */}
+1107     tmptail = (UART2\_RxTail + 1) & UART\_RX2\_BUFFER\_MASK;
+1108     UART2\_RxTail = tmptail;
+1109 
+1110     \textcolor{comment}{/* get data from receive buffer */}
+1111     data = UART2\_RxBuf[tmptail];
+1112 
+1113     \textcolor{keywordflow}{return} (UART2\_LastRxError << 8) + data;
+1114 
+1115 \} \textcolor{comment}{/* uart2\_getc */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_gae2a543d34d454fb4f41fe80fee0ae0bb}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart2\+\_\+init@{uart2\+\_\+init}}
+\index{uart2\+\_\+init@{uart2\+\_\+init}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart2\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}void uart2\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{uint16\+\_\+t}]{baudrate}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_gae2a543d34d454fb4f41fe80fee0ae0bb}
+
+
+Initialize U\+S\+A\+R\+T2 (only available on selected A\+Tmegas) 
+
+\begin{DoxySeeAlso}{See also}
+uart\+\_\+init 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+1064 \{
+1065     UART2\_TxHead = 0;
+1066     UART2\_TxTail = 0;
+1067     UART2\_RxHead = 0;
+1068     UART2\_RxTail = 0;
+1069 
+1070 
+1071     \textcolor{comment}{/* Set baud rate */}
+1072     \textcolor{keywordflow}{if} ( baudrate & 0x8000 ) \{
+1073         UART2\_STATUS = (1<<U2X2);  \textcolor{comment}{//Enable 2x speed}
+1074         baudrate &= ~0x8000;
+1075     \}
+1076     UBRR2H = (uint8\_t)(baudrate>>8);
+1077     UBRR2L = (uint8\_t) baudrate;
+1078 
+1079     \textcolor{comment}{/* Enable USART receiver and transmitter and receive complete interrupt */}
+1080     UART2\_CONTROL = \_BV(RXCIE2)|(1<<RXEN2)|(1<<TXEN2);
+1081 
+1082     \textcolor{comment}{/* Set frame format: asynchronous, 8data, no parity, 1stop bit */}
+1083 \textcolor{preprocessor}{#ifdef URSEL2}
+1084     UCSR2C = (1<<URSEL2)|(3<<UCSZ20);
+1085 \textcolor{preprocessor}{#else}
+1086     UCSR2C = (3<<UCSZ20);
+1087 \textcolor{preprocessor}{#endif}
+1088 \} \textcolor{comment}{/* uart\_init */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_gab16a85e4f634fd77fb43ed8747ed119c}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart2\+\_\+putc@{uart2\+\_\+putc}}
+\index{uart2\+\_\+putc@{uart2\+\_\+putc}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart2\+\_\+putc}]{\setlength{\rightskip}{0pt plus 5cm}void uart2\+\_\+putc (
+\begin{DoxyParamCaption}
+\item[{uint8\+\_\+t}]{data}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_gab16a85e4f634fd77fb43ed8747ed119c}
+
+
+Put byte to ringbuffer for transmitting via U\+S\+A\+R\+T2 (only available on selected A\+Tmega) 
+
+\begin{DoxySeeAlso}{See also}
+uart\+\_\+putc 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+1152 \{
+1153     uint16\_t tmphead;
+1154 
+1155 
+1156     tmphead  = (UART2\_TxHead + 1) & UART\_TX2\_BUFFER\_MASK;
+1157 
+1158     \textcolor{keywordflow}{while} ( tmphead == UART2\_TxTail ) \{
+1159         ;\textcolor{comment}{/* wait for free space in buffer */}
+1160     \}
+1161 
+1162     UART2\_TxBuf[tmphead] = data;
+1163     UART2\_TxHead = tmphead;
+1164 
+1165     \textcolor{comment}{/* enable UDRE interrupt */}
+1166     UART2\_CONTROL    |= \_BV(UART2\_UDRIE);
+1167 
+1168 \} \textcolor{comment}{/* uart2\_putc */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_ga2bd69cbc0e1c8b8343ceae0466889218}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart2\+\_\+puts@{uart2\+\_\+puts}}
+\index{uart2\+\_\+puts@{uart2\+\_\+puts}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart2\+\_\+puts}]{\setlength{\rightskip}{0pt plus 5cm}void uart2\+\_\+puts (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{s}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_ga2bd69cbc0e1c8b8343ceae0466889218}
+
+
+Put string to ringbuffer for transmitting via U\+S\+A\+R\+T2 (only available on selected A\+Tmega) 
+
+\begin{DoxySeeAlso}{See also}
+uart\+\_\+puts 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+1178 \{
+1179     \textcolor{keywordflow}{while} (*s)
+1180         \hyperlink{group__avr-uart_gab16a85e4f634fd77fb43ed8747ed119c}{uart2\_putc}(*s++);
+1181 
+1182 \} \textcolor{comment}{/* uart2\_puts */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_ga827c36b80bba4bee87fdda34efa327b8}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart2\+\_\+puts\+\_\+p@{uart2\+\_\+puts\+\_\+p}}
+\index{uart2\+\_\+puts\+\_\+p@{uart2\+\_\+puts\+\_\+p}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart2\+\_\+puts\+\_\+p}]{\setlength{\rightskip}{0pt plus 5cm}void uart2\+\_\+puts\+\_\+p (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{s}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_ga827c36b80bba4bee87fdda34efa327b8}
+
+
+Put string from program memory to ringbuffer for transmitting via U\+S\+A\+R\+T2 (only available on selected A\+Tmega) 
+
+\begin{DoxySeeAlso}{See also}
+uart\+\_\+puts\+\_\+p 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+1192 \{
+1193     \textcolor{keyword}{register} \textcolor{keywordtype}{char} c;
+1194 
+1195     \textcolor{keywordflow}{while} ( (c = pgm\_read\_byte(progmem\_s++)) ) \{
+1196         \hyperlink{group__avr-uart_gab16a85e4f634fd77fb43ed8747ed119c}{uart2\_putc}(c);
+1197     \}
+1198 
+1199 \} \textcolor{comment}{/* uart2\_puts\_p */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_ga8ac0106d2083bdd4ee9b1d80fae1b305}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart3\+\_\+getc@{uart3\+\_\+getc}}
+\index{uart3\+\_\+getc@{uart3\+\_\+getc}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart3\+\_\+getc}]{\setlength{\rightskip}{0pt plus 5cm}uint16\+\_\+t uart3\+\_\+getc (
+\begin{DoxyParamCaption}
+\item[{void}]{}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_ga8ac0106d2083bdd4ee9b1d80fae1b305}
+
+
+Get received byte of U\+S\+A\+R\+T3 from ringbuffer. 
+
+(only available on selected A\+Tmega) \begin{DoxySeeAlso}{See also}
+uart\+\_\+getc 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+1335 \{
+1336     uint16\_t tmptail;
+1337     uint8\_t data;
+1338 
+1339     \textcolor{keywordflow}{if} ( UART3\_RxHead == UART3\_RxTail ) \{
+1340         \textcolor{keywordflow}{return} UART\_NO\_DATA;   \textcolor{comment}{/* no data available */}
+1341     \}
+1342 
+1343     \textcolor{comment}{/* calculate /store buffer index */}
+1344     tmptail = (UART3\_RxTail + 1) & UART\_RX3\_BUFFER\_MASK;
+1345     UART3\_RxTail = tmptail;
+1346 
+1347     \textcolor{comment}{/* get data from receive buffer */}
+1348     data = UART3\_RxBuf[tmptail];
+1349 
+1350     \textcolor{keywordflow}{return} (UART3\_LastRxError << 8) + data;
+1351 
+1352 \} \textcolor{comment}{/* uart3\_getc */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_ga62087cd1974706879fd603f8e802c674}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart3\+\_\+init@{uart3\+\_\+init}}
+\index{uart3\+\_\+init@{uart3\+\_\+init}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart3\+\_\+init}]{\setlength{\rightskip}{0pt plus 5cm}void uart3\+\_\+init (
+\begin{DoxyParamCaption}
+\item[{uint16\+\_\+t}]{baudrate}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_ga62087cd1974706879fd603f8e802c674}
+
+
+Initialize U\+S\+A\+R\+T3 (only available on selected A\+Tmegas) 
+
+\begin{DoxySeeAlso}{See also}
+uart\+\_\+init 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+1302 \{
+1303     UART3\_TxHead = 0;
+1304     UART3\_TxTail = 0;
+1305     UART3\_RxHead = 0;
+1306     UART3\_RxTail = 0;
+1307 
+1308     \textcolor{comment}{/* Set baud rate */}
+1309     \textcolor{keywordflow}{if} ( baudrate & 0x8000 ) \{
+1310         UART3\_STATUS = (1<<U2X3);  \textcolor{comment}{//Enable 2x speed}
+1311         baudrate &= ~0x8000;
+1312     \}
+1313     UBRR3H = (uint8\_t)(baudrate>>8);
+1314     UBRR3L = (uint8\_t) baudrate;
+1315 
+1316     \textcolor{comment}{/* Enable USART receiver and transmitter and receive complete interrupt */}
+1317     UART3\_CONTROL = \_BV(RXCIE3)|(1<<RXEN3)|(1<<TXEN3);
+1318 
+1319     \textcolor{comment}{/* Set frame format: asynchronous, 8data, no parity, 1stop bit */}
+1320 \textcolor{preprocessor}{#ifdef URSEL3}
+1321     UCSR3C = (1<<URSEL3)|(3<<UCSZ30);
+1322 \textcolor{preprocessor}{#else}
+1323     UCSR3C = (3<<UCSZ30);
+1324 \textcolor{preprocessor}{#endif}
+1325 \} \textcolor{comment}{/* uart\_init */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_gaedb6deebd5dc189b7ab7a49b655eedd7}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart3\+\_\+putc@{uart3\+\_\+putc}}
+\index{uart3\+\_\+putc@{uart3\+\_\+putc}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart3\+\_\+putc}]{\setlength{\rightskip}{0pt plus 5cm}void uart3\+\_\+putc (
+\begin{DoxyParamCaption}
+\item[{uint8\+\_\+t}]{data}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_gaedb6deebd5dc189b7ab7a49b655eedd7}
+
+
+Put byte to ringbuffer for transmitting via U\+S\+A\+R\+T3 (only available on selected A\+Tmega) 
+
+\begin{DoxySeeAlso}{See also}
+uart\+\_\+putc 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+1388 \{
+1389     uint16\_t tmphead;
+1390 
+1391 
+1392     tmphead  = (UART3\_TxHead + 1) & UART\_TX3\_BUFFER\_MASK;
+1393 
+1394     \textcolor{keywordflow}{while} ( tmphead == UART3\_TxTail ) \{
+1395         ;\textcolor{comment}{/* wait for free space in buffer */}
+1396     \}
+1397 
+1398     UART3\_TxBuf[tmphead] = data;
+1399     UART3\_TxHead = tmphead;
+1400 
+1401     \textcolor{comment}{/* enable UDRE interrupt */}
+1402     UART3\_CONTROL    |= \_BV(UART3\_UDRIE);
+1403 
+1404 \} \textcolor{comment}{/* uart3\_putc */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_gaa7ea14ab43946a921d0da142d005ed56}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart3\+\_\+puts@{uart3\+\_\+puts}}
+\index{uart3\+\_\+puts@{uart3\+\_\+puts}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart3\+\_\+puts}]{\setlength{\rightskip}{0pt plus 5cm}void uart3\+\_\+puts (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{s}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_gaa7ea14ab43946a921d0da142d005ed56}
+
+
+Put string to ringbuffer for transmitting via U\+S\+A\+R\+T3 (only available on selected A\+Tmega) 
+
+\begin{DoxySeeAlso}{See also}
+uart\+\_\+puts 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+1414 \{
+1415     \textcolor{keywordflow}{while} (*s) \{
+1416         \hyperlink{group__avr-uart_gaedb6deebd5dc189b7ab7a49b655eedd7}{uart3\_putc}(*s++);
+1417     \}
+1418 
+1419 \} \textcolor{comment}{/* uart3\_puts */}
+\end{DoxyCode}
+\hypertarget{group__avr-uart_gad7d9650ed5fa2929e840aace337a3476}{}\index{U\+A\+R\+T Library@{U\+A\+R\+T Library}!uart3\+\_\+puts\+\_\+p@{uart3\+\_\+puts\+\_\+p}}
+\index{uart3\+\_\+puts\+\_\+p@{uart3\+\_\+puts\+\_\+p}!U\+A\+R\+T Library@{U\+A\+R\+T Library}}
+\subsubsection[{uart3\+\_\+puts\+\_\+p}]{\setlength{\rightskip}{0pt plus 5cm}void uart3\+\_\+puts\+\_\+p (
+\begin{DoxyParamCaption}
+\item[{const char $\ast$}]{s}
+\end{DoxyParamCaption}
+)}\label{group__avr-uart_gad7d9650ed5fa2929e840aace337a3476}
+
+
+Put string from program memory to ringbuffer for transmitting via U\+S\+A\+R\+T3 (only available on selected A\+Tmega) 
+
+\begin{DoxySeeAlso}{See also}
+uart\+\_\+puts\+\_\+p 
+\end{DoxySeeAlso}
+
+\begin{DoxyCode}
+1429 \{
+1430     \textcolor{keyword}{register} \textcolor{keywordtype}{char} c;
+1431 
+1432     \textcolor{keywordflow}{while} ( (c = pgm\_read\_byte(progmem\_s++)) ) \{
+1433         \hyperlink{group__avr-uart_gaedb6deebd5dc189b7ab7a49b655eedd7}{uart3\_putc}(c);
+1434     \}
+1435 
+1436 \} \textcolor{comment}{/* uart3\_puts\_p */}
+\end{DoxyCode}
